@@ -2,7 +2,7 @@ name: Update Iran Proxies
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # هر 6 ساعت یکبار
+    - cron: '0 */7 * * *'  # هر 6 ساعت یکبار
   workflow_dispatch:
     inputs:
       manual_trigger:
