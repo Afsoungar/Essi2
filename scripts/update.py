@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 """
 اسکریپت مدیریت پروکسی‌های ایرانی
-ویژگی‌ها:
-- دریافت پروکسی‌های جدید از منابع مختلف (همه پروتکل‌ها)
-- حذف تکراری‌ها
-- مدیریت پروکسی‌های قدیمی بر اساس دو شرط همزمان
-- حفظ حداقل 50 پروکسی فعال
+بررسی مستقیم IP از سرویس‌های آنلاین با سیستم fallback
 """
 
 import yaml
@@ -18,57 +14,222 @@ import time
 import base64
 import json
 import re
+import shutil
 from urllib.parse import urlparse, parse_qs
 from bs4 import BeautifulSoup
-from typing import List, Dict, Any, Tuple, Set
+from typing import List, Dict, Any, Tuple, Set, Optional
+import threading
+
+class Logger:
+    """سیستم لاگ‌گیری پیشرفته با مدیریت خودکار فضای دیسک"""
+    def __init__(self, log_dir="output/logs"):
+        self.log_dir = log_dir
+        os.makedirs(self.log_dir, exist_ok=True)
+        
+        # حذف لاگ‌های قدیمی‌تر از 2 هفته
+        self.clean_old_logs()
+        
+        # فایل لاگ با timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.log_file = os.path.join(self.log_dir, f"proxy_update_{timestamp}.log")
+        self.console_log_file = os.path.join(self.log_dir, "latest.log")
+        
+        # باز کردن فایل‌ها
+        self.log_fd = open(self.log_file, 'w', encoding='utf-8')
+        self.console_log_fd = open(self.console_log_file, 'w', encoding='utf-8')
+        
+        # آمارها
+        self.stats = {
+            'total_proxies_received': 0,
+            'iranian_proxies': 0,
+            'non_iranian_proxies': 0,
+            'active_proxies_found': 0,
+            'inactive_proxies': 0,
+            'duplicates_found': 0,
+            'proxies_added': 0,
+            'proxies_removed': 0,
+            'ip_checks': 0,
+            'ip_cache_hits': 0,
+            'api_requests': 0,
+            'api_failures': 0,
+            'sources_used': 0,
+            'sources_failed': 0,
+            'old_logs_deleted': 0
+        }
+    
+    def clean_old_logs(self):
+        """حذف لاگ‌های قدیمی‌تر از 2 هفته"""
+        cutoff_date = datetime.now() - timedelta(days=14)
+        deleted_count = 0
+        
+        if os.path.exists(self.log_dir):
+            for filename in os.listdir(self.log_dir):
+                if filename.endswith('.log'):
+                    file_path = os.path.join(self.log_dir, filename)
+                    
+                    # استخراج تاریخ از نام فایل (اگر format داشته باشد)
+                    try:
+                        # فرمت: proxy_update_YYYYMMDD_HHMMSS.log
+                        if filename.startswith('proxy_update_'):
+                            date_str = filename[13:21]  # YYYYMMDD
+                            file_date = datetime.strptime(date_str, "%Y%m%d")
+                            
+                            if file_date < cutoff_date:
+                                os.remove(file_path)
+                                deleted_count += 1
+                    except:
+                        # اگر نتوانستیم تاریخ را استخراج کنیم، بر اساس زمان تغییر فایل
+                        file_mtime = datetime.fromtimestamp(os.path.getmtime(file_path))
+                        if file_mtime < cutoff_date:
+                            os.remove(file_path)
+                            deleted_count += 1
+        
+        self.stats['old_logs_deleted'] = deleted_count
+        if deleted_count > 0:
+            print(f"🗑️  حذف {deleted_count} فایل لاگ قدیمی (بیشتر از 2 هفته)")
+    
+    def log(self, message: str, level: str = "INFO"):
+        """ذخیره لاگ در فایل و نمایش در کنسول"""
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        formatted_message = f"[{timestamp}] [{level}] {message}"
+        
+        # چاپ در کنسول
+        print(formatted_message)
+        
+        # ذخیره در فایل‌ها
+        self.log_fd.write(formatted_message + "\n")
+        self.console_log_fd.write(formatted_message + "\n")
+        
+        # flush برای اطمینان از ذخیره
+        self.log_fd.flush()
+        self.console_log_fd.flush()
+    
+    def update_stat(self, stat_name: str, value: int = 1):
+        """به‌روزرسانی آمار"""
+        if stat_name in self.stats:
+            self.stats[stat_name] += value
+    
+    def print_stats(self):
+        """چاپ آمار کامل"""
+        self.log("\n" + "="*80, "STATS")
+        self.log("📊 آمار کامل فرآیند به‌روزرسانی پروکسی", "STATS")
+        self.log("="*80, "STATS")
+        
+        self.log(f"📥 دریافت از منابع:", "STATS")
+        self.log(f"   • منابع استفاده شده: {self.stats['sources_used']}", "STATS")
+        self.log(f"   • منابع شکست خورده: {self.stats['sources_failed']}", "STATS")
+        self.log(f"   • کل پروکسی‌های دریافتی: {self.stats['total_proxies_received']:,}", "STATS")
+        self.log(f"   • پروکسی‌های ایرانی شناسایی شده: {self.stats['iranian_proxies']:,}", "STATS")
+        self.log(f"   • پروکسی‌های غیرایرانی حذف شده: {self.stats['non_iranian_proxies']:,}", "STATS")
+        
+        self.log(f"\n🔍 بررسی سلامت:", "STATS")
+        self.log(f"   • پروکسی‌های فعال: {self.stats['active_proxies_found']:,}", "STATS")
+        self.log(f"   • پروکسی‌های غیرفعال: {self.stats['inactive_proxies']:,}", "STATS")
+        
+        self.log(f"\n🔄 پردازش:", "STATS")
+        self.log(f"   • پروکسی‌های اضافه شده: {self.stats['proxies_added']:,}", "STATS")
+        self.log(f"   • پروکسی‌های حذف شده (قدیمی): {self.stats['proxies_removed']:,}", "STATS")
+        self.log(f"   • پروکسی‌های تکراری: {self.stats['duplicates_found']:,}", "STATS")
+        
+        self.log(f"\n🌐 بررسی IP:", "STATS")
+        self.log(f"   • بررسی‌های IP انجام شده: {self.stats['ip_checks']:,}", "STATS")
+        self.log(f"   • استفاده از کش IP: {self.stats['ip_cache_hits']:,}", "STATS")
+        self.log(f"   • درخواست‌های API: {self.stats['api_requests']:,}", "STATS")
+        self.log(f"   • خطاهای API: {self.stats['api_failures']:,}", "STATS")
+        
+        self.log(f"\n🗑️  مدیریت فایل‌ها:", "STATS")
+        self.log(f"   • لاگ‌های قدیمی حذف شده: {self.stats['old_logs_deleted']}", "STATS")
+        
+        self.log("="*80, "STATS")
+    
+    def close(self):
+        """بستن فایل‌های لاگ"""
+        self.log_fd.close()
+        self.console_log_fd.close()
 
 class IranProxyManager:
     def __init__(self, config_path: str = "output/config.yaml"):
-        """
-        مقداردهی اولیه مدیر پروکسی
-        """
         self.config_path = config_path
+        self.logger = Logger()
         self.config = self.load_config()
         self.failed_sources = []
+        self.ip_cache = {}
+        self.lock = threading.Lock()
         
-        # منابع ایرانی (همان ریپوی قبلی + منابع جدید)
+        # منابع کامل ایرانی
         self.SOURCES = [
-            ("https://www.freeproxy.world/?type=http&anonymity=&country=IR", "html-http"),
-            ("https://www.freeproxy.world/?type=socks5&anonymity=&country=IR", "html-socks5"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&country=IR", "socks5"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR", "http"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR", "http"),
-            ("https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", "socks5"),
-            ("https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "socks5"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt", "vmess"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vless.txt", "vless"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt", "ss"),
-            ("https://proxyhub.me/en/ir-http-proxy-list.html", "html-http"),
-            ("https://proxyhub.me/en/ir-sock5-proxy-list.html", "html-socks5"),
-            ("https://www.proxydocker.com/en/socks5-list/country/Iran", "html-socks5"),
-            ("https://www.proxydocker.com/en/proxylist/search?need=all&type=http-https&anonymity=all&port=&country=Iran&city=&state=all", "html-http"),
+            # HTML-based sources
+            ("https://www.freeproxy.world/?type=http&anonymity=&country=IR", "html-http", "freeproxy.world"),
+            ("https://www.freeproxy.world/?type=socks5&anonymity=&country=IR", "html-socks5", "freeproxy.world"),
+            ("https://proxyhub.me/en/ir-http-proxy-list.html", "html-http", "proxyhub.me"),
+            ("https://proxyhub.me/en/ir-sock5-proxy-list.html", "html-socks5", "proxyhub.me"),
+            ("https://www.proxydocker.com/en/socks5-list/country/Iran", "html-socks5", "proxydocker"),
+            ("https://www.proxydocker.com/en/proxylist/search?need=all&type=http-https&anonymity=all&port=&country=Iran&city=&state=all", "html-http", "proxydocker"),
+            
+            # API-based sources
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&country=IR", "socks5", "proxyscrape"),
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR", "http", "proxyscrape"),
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR", "http", "proxyscrape"),
+            
+            # GitHub text-based sources
+            ("https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", "socks5", "github"),
+            ("https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "socks5", "github"),
+            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt", "vmess", "github"),
+            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vless.txt", "vless", "github"),
+            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt", "ss", "github"),
+            
             # منابع جدید ایرانی
-            ("https://raw.githubusercontent.com/iranxray/hope/main/singbox", "vless"),
-            ("https://raw.githubusercontent.com/yebekhe/TelegramV2rayCollector/main/singbox", "vless"),
-            ("https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sb", "ss"),
-            ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess"),
-            ("https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt", "mixed"),
-            ("https://raw.githubusercontent.com/BlueSkyXN/9.DDFHP/main/1", "mixed"),
+            ("https://raw.githubusercontent.com/iranxray/hope/main/singbox", "vless", "github-iran"),
+            ("https://raw.githubusercontent.com/yebekhe/TelegramV2rayCollector/main/singbox", "vless", "github-iran"),
+            ("https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sb", "ss", "github"),
+            ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess", "github"),
+            ("https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt", "mixed", "github"),
+            ("https://raw.githubusercontent.com/BlueSkyXN/9.DDFHP/main/1", "mixed", "github"),
         ]
+        
+        # سرویس‌های بررسی IP با سیستم fallback
+        self.IP_CHECK_SERVICES = [
+            {
+                'name': 'ip-api.com',
+                'url': 'http://ip-api.com/json/{ip}?fields=status,countryCode,query',
+                'field': 'countryCode',
+                'timeout': 3,
+                'max_retries': 2
+            },
+            {
+                'name': 'ipapi.co',
+                'url': 'https://ipapi.co/{ip}/country/',
+                'field': 'text',
+                'timeout': 3,
+                'max_retries': 2
+            },
+            {
+                'name': 'ipinfo.io',
+                'url': 'https://ipinfo.io/{ip}/country',
+                'field': 'text',
+                'timeout': 3,
+                'max_retries': 2
+            },
+        ]
+    
+    def __del__(self):
+        self.logger.close()
     
     def load_config(self) -> Dict[str, Any]:
         """بارگذاری فایل کانفیگ"""
         try:
             if os.path.exists(self.config_path):
                 with open(self.config_path, 'r', encoding='utf-8') as f:
-                    config = yaml.safe_load(f) or {"proxies": [], "metadata": {}}
-                    print(f"📂 فایل کانفیگ با {len(config.get('proxies', []))} پروکسی بارگذاری شد")
-                    return config
-            else:
-                print("📂 فایل کانفیگ یافت نشد. ایجاد فایل جدید...")
-                return {"proxies": [], "metadata": {}}
+                    content = f.read()
+                    if content.strip():
+                        config = yaml.safe_load(content)
+                        if config and 'proxies' in config:
+                            self.logger.log(f"فایل کانفیگ با {len(config['proxies'])} پروکسی بارگذاری شد")
+                            return config
+            self.logger.log("فایل کانفیگ یافت نشد. ایجاد فایل جدید...")
+            return {"proxies": [], "metadata": {}}
         except Exception as e:
-            print(f"❌ خطا در بارگذاری کانفیگ: {e}")
+            self.logger.log(f"خطا در بارگذاری کانفیگ: {e}", "ERROR")
             return {"proxies": [], "metadata": {}}
     
     def save_config(self):
@@ -76,81 +237,186 @@ class IranProxyManager:
         try:
             os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
             
-            # به‌روزرسانی metadata
-            self.config['metadata'] = {
-                'total_count': len(self.config.get('proxies', [])),
-                'last_updated': datetime.utcnow().isoformat(),
-                'retention_days': 3,
-                'min_proxies': 50,
-                'sources_used': len(self.SOURCES)
+            cleaned_proxies = []
+            for proxy in self.config.get('proxies', []):
+                if not all(key in proxy for key in ['server', 'port', 'type', 'added_date']):
+                    continue
+                
+                cleaned_proxy = {
+                    'name': proxy.get('name', f"{proxy['server']}:{proxy['port']}"),
+                    'type': str(proxy['type']),
+                    'server': str(proxy['server']),
+                    'port': int(proxy['port']),
+                    'added_date': str(proxy['added_date']),
+                    'last_checked': str(proxy.get('last_checked', proxy['added_date'])),
+                    'is_active': bool(proxy.get('is_active', True)),
+                    'country': str(proxy.get('country', 'IR')),
+                }
+                
+                optional_fields = ['ping', 'source', 'uuid', 'cipher', 'password', 'network', 'tls']
+                for field in optional_fields:
+                    if field in proxy:
+                        cleaned_proxy[field] = proxy[field]
+                
+                cleaned_proxies.append(cleaned_proxy)
+            
+            final_config = {
+                'proxies': cleaned_proxies,
+                'metadata': {
+                    'total_count': len(cleaned_proxies),
+                    'active_count': len([p for p in cleaned_proxies if p['is_active']]),
+                    'last_updated': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'retention_days': 3,
+                    'min_proxies': 50,
+                    'sources_used': len(self.SOURCES),
+                    'log_retention_days': 14,
+                    'log_file': self.logger.log_file
+                }
             }
             
             with open(self.config_path, 'w', encoding='utf-8') as f:
-                yaml.dump(self.config, f, default_flow_style=False, 
-                         allow_unicode=True, sort_keys=False, width=120)
+                yaml.dump(final_config, f, 
+                         default_flow_style=False, 
+                         allow_unicode=True, 
+                         sort_keys=False,
+                         indent=2)
             
-            print(f"💾 فایل کانفیگ ذخیره شد ({len(self.config.get('proxies', []))} پروکسی)")
+            self.logger.log(f"فایل کانفیگ ذخیره شد ({len(cleaned_proxies)} پروکسی)")
             return True
         except Exception as e:
-            print(f"❌ خطا در ذخیره کانفیگ: {e}")
+            self.logger.log(f"خطا در ذخیره کانفیگ: {e}", "ERROR")
             return False
     
-    def is_alive(self, ip: str, port: int, timeout: int = 7) -> Tuple[bool, int]:
+    def is_alive(self, ip: str, port: int, timeout: int = 5) -> Tuple[bool, int]:
         """بررسی فعال بودن پروکسی"""
         try:
             start = time.time()
             s = socket.create_connection((ip, port), timeout=timeout)
             s.close()
             ping = int((time.time() - start) * 1000)
+            if ping > 0:
+                self.logger.update_stat('active_proxies_found')
             return True, ping
         except:
+            self.logger.update_stat('inactive_proxies')
             return False, 0
+    
+    def is_private_ip(self, ip: str) -> bool:
+        """بررسی IP خصوصی"""
+        private_ranges = [
+            ('10.0.0.0', '10.255.255.255'),
+            ('172.16.0.0', '172.31.255.255'),
+            ('192.168.0.0', '192.168.255.255'),
+            ('127.0.0.0', '127.255.255.255'),
+            ('169.254.0.0', '169.254.255.255'),
+        ]
+        
+        ip_int = self.ip_to_int(ip)
+        for start, end in private_ranges:
+            if ip_int >= self.ip_to_int(start) and ip_int <= self.ip_to_int(end):
+                return True
+        return False
+    
+    def ip_to_int(self, ip: str) -> int:
+        """تبدیل IP به عدد صحیح"""
+        parts = ip.split('.')
+        return (int(parts[0]) << 24) + (int(parts[1]) << 16) + (int(parts[2]) << 8) + int(parts[3])
+    
+    def check_ip_service(self, service: dict, ip: str) -> Optional[str]:
+        """بررسی IP با یک سرویس خاص"""
+        self.logger.update_stat('api_requests')
+        
+        for attempt in range(service['max_retries']):
+            try:
+                url = service['url'].format(ip=ip)
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+                
+                response = requests.get(url, timeout=service['timeout'], headers=headers)
+                
+                if response.status_code == 200:
+                    if service['field'] == 'text':
+                        country = response.text.strip()
+                        if len(country) == 2:
+                            return country
+                    else:
+                        data = response.json()
+                        if service['field'] in data:
+                            country = data[service['field']]
+                            if country and len(country) == 2:
+                                return country
+                
+                # مدیریت محدودیت‌ها
+                if response.status_code == 429:
+                    self.logger.log(f"محدودیت درخواست در {service['name']}، انتظار...", "WARNING")
+                    time.sleep(2)
+                    
+            except requests.exceptions.Timeout:
+                self.logger.log(f"تایم‌اوت در {service['name']} (تلاش {attempt+1})", "WARNING")
+                continue
+            except requests.exceptions.ConnectionError:
+                self.logger.log(f"خطای اتصال در {service['name']}", "WARNING")
+                continue
+            except Exception as e:
+                self.logger.log(f"خطا در {service['name']}: {str(e)[:50]}", "WARNING")
+                continue
+        
+        self.logger.update_stat('api_failures')
+        return None
+    
+    def check_ip_country(self, ip: str) -> Optional[str]:
+        """بررسی کشور IP با استفاده از سرویس‌های آنلاین با fallback"""
+        # بررسی کش
+        with self.lock:
+            if ip in self.ip_cache:
+                self.logger.update_stat('ip_cache_hits')
+                return self.ip_cache[ip]
+        
+        self.logger.update_stat('ip_checks')
+        
+        # رد IPهای خصوصی
+        if self.is_private_ip(ip):
+            with self.lock:
+                self.ip_cache[ip] = None
+            return None
+        
+        # بررسی با سرویس‌های مختلف
+        country = None
+        service_used = None
+        
+        for service in self.IP_CHECK_SERVICES:
+            result = self.check_ip_service(service, ip)
+            if result:
+                country = result
+                service_used = service['name']
+                break
+        
+        # ذخیره در کش
+        with self.lock:
+            self.ip_cache[ip] = country
+        
+        if country:
+            self.logger.log(f"   🔍 IP {ip} → کشور: {country} (سرویس: {service_used})", "DEBUG")
+        else:
+            self.logger.log(f"   ⚠️ IP {ip} → کشور نامشخص", "DEBUG")
+        
+        return country
     
     def ip_is_ir(self, ip: str) -> bool:
         """بررسی ایرانی بودن IP"""
-        try:
-            # ابتدا از API رایگان استفاده می‌کنیم
-            r = requests.get(f"http://ip-api.com/json/{ip}", timeout=5)
-            if r.status_code == 200:
-                data = r.json()
-                return data.get("countryCode") == "IR"
-        except:
-            pass
+        country = self.check_ip_country(ip)
+        is_iran = country == 'IR'
         
-        # اگر API کار نکرد، از رنج‌های IP ایرانی استفاده می‌کنیم
-        iran_ranges = [
-            '5.', '31.', '37.', '46.', '62.', '77.', '78.', '79.', 
-            '85.', '86.', '87.', '89.', '91.', '92.', '93.', '94.', 
-            '95.', '98.', '185.', '188.', '212.'
-        ]
-        return any(ip.startswith(prefix) for prefix in iran_ranges)
-    
-    def normalize_proxy_address(self, proxy_address: str) -> str:
-        """نرمال‌سازی آدرس پروکسی"""
-        if not proxy_address:
-            return ""
+        if country and not is_iran:
+            self.logger.update_stat('non_iranian_proxies')
         
-        proxy_address = proxy_address.strip()
-        
-        # حذف پروتکل‌ها
-        for protocol in ['http://', 'https://', 'socks4://', 'socks5://', 'socks://']:
-            if proxy_address.lower().startswith(protocol):
-                proxy_address = proxy_address[len(protocol):]
-        
-        # تقسیم به IP و پورت
-        parts = proxy_address.split(':')
-        if len(parts) == 2:
-            ip, port = parts
-            ip = ip.strip()
-            port = port.strip()
-            return f"{ip}:{port}".lower()
-        
-        return proxy_address.lower()
+        return is_iran
     
     def parse_ss(self, url: str) -> Dict[str, Any]:
         """پارس کردن لینک Shadowsocks"""
         try:
-            url = url[5:]  # حذف ss://
+            url = url[5:]
             if "#" in url:
                 url, tag = url.split("#", 1)
             else:
@@ -201,10 +467,11 @@ class IranProxyManager:
         except:
             return None
     
-    def fetch_html_proxies(self, url: str, proxy_type: str) -> List[Tuple[str, str, str]]:
+    def fetch_html_proxies(self, url: str, proxy_type: str, source_name: str) -> List[Tuple[str, str, str]]:
         """استخراج پروکسی از صفحات HTML"""
         proxies = []
         try:
+            self.logger.log(f"   📄 استخراج از HTML ({source_name})...", "DEBUG")
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             res = requests.get(url, headers=headers, timeout=15)
             res.raise_for_status()
@@ -219,7 +486,8 @@ class IranProxyManager:
                         continue
                     ip = cols[0].get_text(strip=True)
                     port = cols[1].get_text(strip=True)
-                    proxies.append((ip, port, "socks5" if "socks5" in proxy_type else "http"))
+                    if ip and port:
+                        proxies.append((ip, port, "socks5" if "socks5" in proxy_type else "http"))
             else:
                 rows = soup.find_all("tr")
                 for row in rows:
@@ -227,225 +495,284 @@ class IranProxyManager:
                     if len(cols) < 2:
                         continue
                     ip, port = cols[0].text.strip(), cols[1].text.strip()
-                    if not re.match(r"^\d+\.\d+\.\d+\.\d+$", ip):
-                        continue
-                    proxies.append((ip, port, "socks5" if "socks5" in proxy_type else "http"))
+                    if ip and port and re.match(r"^\d+\.\d+\.\d+\.\d+$", ip):
+                        proxies.append((ip, port, "socks5" if "socks5" in proxy_type else "http"))
 
+            self.logger.log(f"   ✅ {len(proxies)} پروکسی از HTML استخراج شد", "DEBUG")
             return proxies
         except Exception as e:
-            print(f"⚠️ خطا در دریافت از {url}: {e}")
+            self.logger.log(f"   ❌ خطا در استخراج HTML: {str(e)[:50]}", "WARNING")
+            return []
+    
+    def fetch_source_proxies(self, url: str, ptype: str, source_name: str) -> List[Dict[str, Any]]:
+        """دریافت پروکسی از یک منبع خاص"""
+        proxies = []
+        
+        try:
+            self.logger.update_stat('sources_used')
+            self.logger.log(f"🔍 دریافت از [{source_name}]: {url[:60]}...")
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+            response = requests.get(url, timeout=20, headers=headers)
+            
+            if response.status_code != 200:
+                self.logger.log(f"   ❌ خطا HTTP {response.status_code}", "WARNING")
+                self.failed_sources.append(url)
+                self.logger.update_stat('sources_failed')
+                return []
+            
+            # اگر منبع HTML است
+            if ptype.startswith("html-"):
+                html_proxies = self.fetch_html_proxies(url, ptype, source_name)
+                total_lines = len(html_proxies)
+                self.logger.update_stat('total_proxies_received', total_lines)
+                
+                added_count = 0
+                skipped_non_iran = 0
+                
+                for ip, port, proto in html_proxies:
+                    # بررسی IP ایرانی
+                    if not self.ip_is_ir(ip):
+                        skipped_non_iran += 1
+                        continue
+                    
+                    self.logger.update_stat('iranian_proxies')
+                    alive, ping = self.is_alive(ip, int(port))
+                    
+                    proxy_data = {
+                        'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
+                        'type': proto,
+                        'server': ip,
+                        'port': int(port),
+                        'added_date': datetime.now().strftime('%Y-%m-%d'),
+                        'last_checked': datetime.now().strftime('%Y-%m-%d'),
+                        'is_active': alive,
+                        'country': 'IR',
+                        'ping': ping if alive else 0,
+                        'source': url,
+                        'source_name': source_name
+                    }
+                    proxies.append(proxy_data)
+                    added_count += 1
+                
+                # گزارش برای این منبع HTML
+                self.logger.log(f"   📊 نتایج از {source_name}:", "INFO")
+                self.logger.log(f"     ✅ پروکسی‌های ایرانی اضافه شده: {added_count}", "INFO")
+                if skipped_non_iran > 0:
+                    self.logger.log(f"     ❌ پروکسی‌های غیرایرانی حذف شده: {skipped_non_iran}", "INFO")
+                
+                return proxies
+            
+            # برای منابع متنی/API
+            lines = response.text.strip().splitlines()
+            total_lines = len(lines)
+            self.logger.update_stat('total_proxies_received', total_lines)
+            
+            self.logger.log(f"   📄 {total_lines} خط دریافت شد", "DEBUG")
+            
+            added_count = 0
+            skipped_non_iran = 0
+            skipped_invalid = 0
+            
+            for line_num, line in enumerate(lines, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                
+                try:
+                    # پردازش VMESS
+                    if ptype == "vmess" and line.startswith("vmess://"):
+                        decoded = base64.b64decode(line[8:] + "==").decode()
+                        conf = json.loads(decoded)
+                        ip = conf.get("add")
+                        port = conf.get("port")
+                        
+                        if not ip or not port:
+                            skipped_invalid += 1
+                            continue
+                        
+                        # بررسی IP ایرانی
+                        if not self.ip_is_ir(ip):
+                            skipped_non_iran += 1
+                            continue
+                        
+                        self.logger.update_stat('iranian_proxies')
+                        alive, ping = self.is_alive(ip, port)
+                        
+                        proxy_data = {
+                            'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
+                            'type': 'vmess',
+                            'server': ip,
+                            'port': int(port),
+                            'uuid': conf.get("id"),
+                            'alterId': int(conf.get("aid", 0)),
+                            'cipher': conf.get("cipher", "auto"),
+                            'tls': conf.get("tls") == "tls",
+                            'network': conf.get("net", "tcp"),
+                            'added_date': datetime.now().strftime('%Y-%m-%d'),
+                            'last_checked': datetime.now().strftime('%Y-%m-%d'),
+                            'is_active': alive,
+                            'country': 'IR',
+                            'ping': ping if alive else 0,
+                            'source': url,
+                            'source_name': source_name
+                        }
+                        
+                        if conf.get("net") == "ws":
+                            proxy_data["ws-opts"] = {
+                                'path': conf.get("path", "/"),
+                                'headers': {'Host': conf.get("host", "")}
+                            }
+                        
+                        proxies.append(proxy_data)
+                        added_count += 1
+                    
+                    # پردازش VLESS
+                    elif ptype == "vless" and line.startswith("vless://"):
+                        conf = self.parse_vless(line)
+                        if not conf:
+                            skipped_invalid += 1
+                            continue
+                        
+                        ip = conf.get("server")
+                        
+                        # بررسی IP ایرانی
+                        if not ip or not self.ip_is_ir(ip):
+                            skipped_non_iran += 1
+                            continue
+                        
+                        self.logger.update_stat('iranian_proxies')
+                        alive, ping = self.is_alive(ip, conf["port"])
+                        conf["added_date"] = datetime.now().strftime('%Y-%m-%d')
+                        conf["last_checked"] = datetime.now().strftime('%Y-%m-%d')
+                        conf["is_active"] = alive
+                        conf["country"] = 'IR'
+                        conf["ping"] = ping if alive else 0
+                        conf["source"] = url
+                        conf["source_name"] = source_name
+                        conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
+                        
+                        proxies.append(conf)
+                        added_count += 1
+                    
+                    # پردازش Shadowsocks
+                    elif ptype == "ss" and line.startswith("ss://"):
+                        conf = self.parse_ss(line)
+                        if not conf:
+                            skipped_invalid += 1
+                            continue
+                        
+                        ip = conf.get("server")
+                        
+                        # بررسی IP ایرانی
+                        if not ip or not self.ip_is_ir(ip):
+                            skipped_non_iran += 1
+                            continue
+                        
+                        self.logger.update_stat('iranian_proxies')
+                        alive, ping = self.is_alive(ip, conf["port"])
+                        conf["added_date"] = datetime.now().strftime('%Y-%m-%d')
+                        conf["last_checked"] = datetime.now().strftime('%Y-%m-%d')
+                        conf["is_active"] = alive
+                        conf["country"] = 'IR'
+                        conf["ping"] = ping if alive else 0
+                        conf["source"] = url
+                        conf["source_name"] = source_name
+                        conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
+                        
+                        proxies.append(conf)
+                        added_count += 1
+                    
+                    # پردازش HTTP/SOCKS5/MIXED
+                    elif ":" in line and ptype in ["http", "socks5", "mixed"]:
+                        parts = line.split(":")
+                        if len(parts) >= 2:
+                            ip = parts[0].strip()
+                            port = parts[1].strip()
+                            
+                            if not re.match(r"^\d+\.\d+\.\d+\.\d+$", ip):
+                                skipped_invalid += 1
+                                continue
+                            
+                            proto = ptype
+                            if proto == "mixed":
+                                proto = "http" if len(parts) == 2 else "socks5"
+                            
+                            # بررسی IP ایرانی
+                            if not self.ip_is_ir(ip):
+                                skipped_non_iran += 1
+                                continue
+                            
+                            self.logger.update_stat('iranian_proxies')
+                            alive, ping = self.is_alive(ip, int(port))
+                            
+                            proxy_data = {
+                                'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
+                                'type': proto,
+                                'server': ip,
+                                'port': int(port),
+                                'added_date': datetime.now().strftime('%Y-%m-%d'),
+                                'last_checked': datetime.now().strftime('%Y-%m-%d'),
+                                'is_active': alive,
+                                'country': 'IR',
+                                'ping': ping if alive else 0,
+                                'source': url,
+                                'source_name': source_name
+                            }
+                            proxies.append(proxy_data)
+                            added_count += 1
+                        else:
+                            skipped_invalid += 1
+                
+                except Exception as e:
+                    skipped_invalid += 1
+                    continue
+            
+            # گزارش برای این منبع
+            self.logger.log(f"   📊 نتایج از {source_name}:", "INFO")
+            self.logger.log(f"     ✅ پروکسی‌های ایرانی اضافه شده: {added_count}", "INFO")
+            if skipped_non_iran > 0:
+                self.logger.log(f"     ❌ پروکسی‌های غیرایرانی حذف شده: {skipped_non_iran}", "INFO")
+            if skipped_invalid > 0:
+                self.logger.log(f"     ⚠️  خطوط نامعتبر: {skipped_invalid}", "INFO")
+            
+            return proxies
+            
+        except Exception as e:
+            self.logger.log(f"   ⚠️ خطا در دریافت از منبع: {str(e)[:50]}", "ERROR")
             self.failed_sources.append(url)
+            self.logger.update_stat('sources_failed')
             return []
     
     def fetch_all_proxies(self) -> List[Dict[str, Any]]:
         """دریافت همه پروکسی‌ها از منابع"""
-        proxies_all = []
-        seen_keys = set()  # برای جلوگیری از تکراری‌ها
+        all_proxies = []
+        seen_keys = set()
         
-        print(f"\n📥 دریافت پروکسی‌ها از {len(self.SOURCES)} منبع:")
-        print("-" * 50)
+        self.logger.log(f"\n📥 شروع دریافت پروکسی‌ها از {len(self.SOURCES)} منبع:")
+        self.logger.log("=" * 70)
         
-        for url, ptype in self.SOURCES:
-            try:
-                print(f"🔍 منبع: {url[:60]}...")
-                
-                if ptype.startswith("html-"):
-                    extracted = self.fetch_html_proxies(url, ptype)
-                    print(f"   📄 {len(extracted)} پروکسی از HTML استخراج شد")
-                    
-                    for ip, port, proto in extracted:
-                        if ip in [p.get('server') for p in proxies_all if p.get('type') == proto]:
-                            continue
-                        
-                        if not self.ip_is_ir(ip):
-                            continue
-                        
-                        alive, ping = self.is_alive(ip, int(port))
-                        
-                        proxy_data = {
-                            "name": f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
-                            "type": proto,
-                            "server": ip,
-                            "port": int(port),
-                            "added_date": datetime.now().strftime('%Y-%m-%d'),
-                            "last_checked": datetime.now().strftime('%Y-%m-%d'),
-                            "is_active": alive,
-                            "country": "IR",
-                            "ping": ping if alive else 0,
-                            "source": url
-                        }
-                        proxies_all.append(proxy_data)
-                    continue
-
-                # دریافت از منابع متنی/API
-                response = requests.get(url, timeout=20, 
-                                      headers={"User-Agent": "Mozilla/5.0"})
-                
-                if response.status_code != 200:
-                    print(f"   ❌ خطا HTTP {response.status_code}")
-                    self.failed_sources.append(url)
-                    continue
-                
-                lines = response.text.strip().splitlines()
-                added_from_source = 0
-                
-                for line in lines:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    
-                    try:
-                        # پردازش VMESS
-                        if ptype == "vmess" and line.startswith("vmess://"):
-                            decoded = base64.b64decode(line[8:] + "==").decode()
-                            conf = json.loads(decoded)
-                            ip = conf.get("add")
-                            port = conf.get("port")
-                            
-                            if not ip or not port or not self.ip_is_ir(ip):
-                                continue
-                            
-                            key = f"{ip}:{port}-vmess"
-                            if key in seen_keys:
-                                continue
-                            seen_keys.add(key)
-                            
-                            alive, ping = self.is_alive(ip, port)
-                            proxy_data = {
-                                "name": f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
-                                "type": "vmess",
-                                "server": ip,
-                                "port": int(port),
-                                "uuid": conf.get("id"),
-                                "alterId": int(conf.get("aid", 0)),
-                                "cipher": conf.get("cipher", "auto"),
-                                "tls": conf.get("tls") == "tls",
-                                "network": conf.get("net", "tcp"),
-                                "added_date": datetime.now().strftime('%Y-%m-%d'),
-                                "last_checked": datetime.now().strftime('%Y-%m-%d'),
-                                "is_active": alive,
-                                "country": "IR",
-                                "ping": ping if alive else 0,
-                                "source": url
-                            }
-                            
-                            if conf.get("net") == "ws":
-                                proxy_data["ws-opts"] = {
-                                    "path": conf.get("path", "/"),
-                                    "headers": {"Host": conf.get("host", "")}
-                                }
-                            
-                            proxies_all.append(proxy_data)
-                            added_from_source += 1
-                        
-                        # پردازش VLESS
-                        elif ptype == "vless" and line.startswith("vless://"):
-                            conf = self.parse_vless(line)
-                            if not conf or not self.ip_is_ir(conf["server"]):
-                                continue
-                            
-                            key = f"{conf['server']}:{conf['port']}-vless"
-                            if key in seen_keys:
-                                continue
-                            seen_keys.add(key)
-                            
-                            alive, ping = self.is_alive(conf["server"], conf["port"])
-                            conf["added_date"] = datetime.now().strftime('%Y-%m-%d')
-                            conf["last_checked"] = datetime.now().strftime('%Y-%m-%d')
-                            conf["is_active"] = alive
-                            conf["country"] = "IR"
-                            conf["ping"] = ping if alive else 0
-                            conf["source"] = url
-                            conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
-                            
-                            proxies_all.append(conf)
-                            added_from_source += 1
-                        
-                        # پردازش Shadowsocks
-                        elif ptype == "ss" and line.startswith("ss://"):
-                            conf = self.parse_ss(line)
-                            if not conf or not self.ip_is_ir(conf["server"]):
-                                continue
-                            
-                            key = f"{conf['server']}:{conf['port']}-ss"
-                            if key in seen_keys:
-                                continue
-                            seen_keys.add(key)
-                            
-                            alive, ping = self.is_alive(conf["server"], conf["port"])
-                            conf["added_date"] = datetime.now().strftime('%Y-%m-%d')
-                            conf["last_checked"] = datetime.now().strftime('%Y-%m-%d')
-                            conf["is_active"] = alive
-                            conf["country"] = "IR"
-                            conf["ping"] = ping if alive else 0
-                            conf["source"] = url
-                            conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
-                            
-                            proxies_all.append(conf)
-                            added_from_source += 1
-                        
-                        # پردازش HTTP/SOCKS5
-                        elif ":" in line and ptype in ["http", "socks5", "mixed"]:
-                            parts = line.split(":")
-                            if len(parts) >= 2:
-                                ip = parts[0].strip()
-                                port = parts[1].strip()
-                                
-                                if not re.match(r"^\d+\.\d+\.\d+\.\d+$", ip):
-                                    continue
-                                
-                                proto = ptype
-                                if proto == "mixed":
-                                    proto = "http" if len(parts) == 2 else "socks5"
-                                
-                                key = f"{ip}:{port}-{proto}"
-                                if key in seen_keys:
-                                    continue
-                                seen_keys.add(key)
-                                
-                                if not self.ip_is_ir(ip):
-                                    continue
-                                
-                                alive, ping = self.is_alive(ip, int(port))
-                                
-                                proxy_data = {
-                                    "name": f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
-                                    "type": proto,
-                                    "server": ip,
-                                    "port": int(port),
-                                    "added_date": datetime.now().strftime('%Y-%m-%d'),
-                                    "last_checked": datetime.now().strftime('%Y-%m-%d'),
-                                    "is_active": alive,
-                                    "country": "IR",
-                                    "ping": ping if alive else 0,
-                                    "source": url
-                                }
-                                proxies_all.append(proxy_data)
-                                added_from_source += 1
-                    
-                    except Exception as e:
-                        continue
-                
-                if added_from_source > 0:
-                    print(f"   ✅ {added_from_source} پروکسی جدید")
-                else:
-                    print(f"   ℹ️  هیچ پروکسی جدیدی")
+        for url, ptype, source_name in self.SOURCES:
+            proxies = self.fetch_source_proxies(url, ptype, source_name)
             
-            except Exception as e:
-                print(f"   ⚠️  خطا: {str(e)[:40]}")
-                self.failed_sources.append(url)
+            # حذف تکراری‌ها
+            filtered_proxies = []
+            for proxy in proxies:
+                key = f"{proxy.get('server', '')}:{proxy.get('port', 0)}-{proxy.get('type', '')}"
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    filtered_proxies.append(proxy)
+                else:
+                    self.logger.update_stat('duplicates_found')
+            
+            all_proxies.extend(filtered_proxies)
+            self.logger.log(f"   از {source_name}: {len(filtered_proxies)} پروکسی منحصربه‌فرد ایرانی")
         
-        print("-" * 50)
-        print(f"📊 مجموع {len(proxies_all)} پروکسی دریافت شد")
-        return proxies_all
+        self.logger.log("=" * 70)
+        self.logger.log(f"📊 مجموع {len(all_proxies)} پروکسی ایرانی از {len(self.SOURCES)} منبع دریافت شد")
+        return all_proxies
     
     def add_new_proxies(self, new_proxies: List[Dict[str, Any]]) -> Tuple[int, int]:
-        """
-        اضافه کردن پروکسی‌های جدید به لیست موجود
-        
-        Returns:
-            (تعداد اضافه شده, تعداد تکراری)
-        """
+        """اضافه کردن پروکسی‌های جدید به لیست موجود"""
         existing_keys = set()
         for proxy in self.config.get('proxies', []):
             key = f"{proxy.get('server', '')}:{proxy.get('port', 0)}-{proxy.get('type', '')}"
@@ -459,18 +786,15 @@ class IranProxyManager:
             if key not in existing_keys:
                 self.config.setdefault('proxies', []).append(proxy)
                 added_count += 1
+                self.logger.update_stat('proxies_added')
             else:
                 duplicate_count += 1
+                self.logger.update_stat('duplicates_found')
         
         return added_count, duplicate_count
     
     def should_remove_old_proxies(self) -> Tuple[bool, List[Dict], int]:
-        """
-        بررسی شرایط حذف پروکسی‌های قدیمی
-        
-        شرط ۱: تعداد کل پروکسی‌ها > ۵۰
-        شرط ۲: پروکسی‌های قدیمی‌تر از ۳ روز وجود داشته باشند
-        """
+        """بررسی شرایط حذف پروکسی‌های قدیمی"""
         total_proxies = len(self.config.get('proxies', []))
         
         # شرط ۱: تعداد کل باید بیشتر از ۵۰ باشد
@@ -502,37 +826,32 @@ class IranProxyManager:
         return should_remove, old_proxies, excess_count
     
     def remove_old_proxies_with_conditions(self) -> int:
-        """
-        حذف پروکسی‌های قدیمی در صورت برقراری شرایط
-        """
+        """حذف پروکسی‌های قدیمی در صورت برقراری شرایط"""
         should_remove, old_proxies, excess_count = self.should_remove_old_proxies()
         
         if not should_remove:
             return 0
         
-        # ایجاد مجموعه از کلیدهای پروکسی‌های قدیمی برای حذف سریع‌تر
         old_keys_to_remove = set()
-        for proxy in old_proxies[:excess_count]:  # فقط به تعداد اضافی
+        for proxy in old_proxies[:excess_count]:
             key = f"{proxy.get('server', '')}:{proxy.get('port', 0)}-{proxy.get('type', '')}"
             old_keys_to_remove.add(key)
         
-        # فیلتر کردن لیست پروکسی‌ها
         remaining_proxies = []
         removed_count = 0
         
         for proxy in self.config.get('proxies', []):
             key = f"{proxy.get('server', '')}:{proxy.get('port', 0)}-{proxy.get('type', '')}"
             
-            # اگر پروکسی در لیست حذف بود و هنوز نیاز به حذف داریم
             if key in old_keys_to_remove and removed_count < excess_count:
                 removed_count += 1
-                continue  # حذف این پروکسی
+                self.logger.update_stat('proxies_removed')
+                self.logger.log(f"   🗑️ حذف پروکسی قدیمی: {proxy.get('server')}:{proxy.get('port')} (تاریخ: {proxy.get('added_date')})", "INFO")
+                continue
             
             remaining_proxies.append(proxy)
         
-        # به‌روزرسانی لیست
         self.config['proxies'] = remaining_proxies
-        
         return removed_count
     
     def ensure_minimum_proxies(self):
@@ -540,295 +859,161 @@ class IranProxyManager:
         active_proxies = [p for p in self.config.get('proxies', []) if p.get('is_active', False)]
         
         if len(active_proxies) >= 50:
-            print(f"✅ {len(active_proxies)} پروکسی فعال موجود است (کافی است)")
+            self.logger.log(f"✅ {len(active_proxies)} پروکسی فعال موجود است (کافی است)")
             return
         
         needed = 50 - len(active_proxies)
-        print(f"⚠️  فقط {len(active_proxies)} پروکسی فعال داریم. نیاز به {needed} پروکسی بیشتر")
+        self.logger.log(f"⚠️ فقط {len(active_proxies)} پروکسی فعال داریم. نیاز به {needed} پروکسی بیشتر")
         
         # منابع اضافی برای مواقع اضطراری
         emergency_sources = [
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all", "http"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all", "socks5"),
-            ("https://www.proxyscan.io/download?type=http", "http"),
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all", "http", "emergency"),
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all", "socks5", "emergency"),
+            ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess", "emergency"),
         ]
         
-        print("🔍 تلاش برای دریافت پروکسی‌های بیشتر از منابع اضافی...")
+        self.logger.log("🔍 تلاش برای دریافت پروکسی‌های بیشتر از منابع اضطراری...")
         
-        # اضافه کردن منابع اضطراری موقتاً
         original_sources = self.SOURCES.copy()
         self.SOURCES.extend(emergency_sources)
         
-        # دریافت پروکسی‌های بیشتر
         new_emergency_proxies = self.fetch_all_proxies()
         added, _ = self.add_new_proxies(new_emergency_proxies)
         
-        # بازگرداندن منابع اصلی
         self.SOURCES = original_sources
         
         if added > 0:
-            print(f"✅ {added} پروکسی اضطراری اضافه شد")
+            self.logger.log(f"✅ {added} پروکسی اضطراری اضافه شد")
         else:
-            print("❌ نتوانستیم پروکسی اضطراری اضافه کنیم")
-    
-    def create_clash_config(self):
-        """ایجاد کانفیگ Clash نهایی"""
-        proxy_names_all = []
-        proxy_names_clean = []
-        
-        for proxy in self.config.get('proxies', []):
-            name = proxy.get('name', f"{proxy.get('server')}:{proxy.get('port')}")
-            if name:
-                proxy_names_all.append(name)
-                if proxy.get('is_active', False):
-                    proxy_names_clean.append(name)
-        
-        # اگر هیچ پروکسی نداریم، DIRECT اضافه کن
-        if not proxy_names_all:
-            proxy_names_all.append("DIRECT")
-            proxy_names_clean.append("DIRECT")
-        
-        clash_config = {
-            "mixed-port": 7890,
-            "allow-lan": True,
-            "mode": "Rule",
-            "log-level": "info",
-            "proxies": self.config.get('proxies', []),
-            "proxy-groups": [
-                {
-                    "name": "MAIN", 
-                    "type": "select", 
-                    "proxies": ["IR-AUTO", "IR-BALANCE", "IR-ALL", "IR-ALL-RAW"]
-                },
-                {
-                    "name": "IR-ALL", 
-                    "type": "select", 
-                    "proxies": proxy_names_clean
-                },
-                {
-                    "name": "IR-ALL-RAW", 
-                    "type": "select", 
-                    "proxies": proxy_names_all
-                },
-                {
-                    "name": "IR-AUTO", 
-                    "type": "fallback", 
-                    "proxies": proxy_names_all, 
-                    "url": "http://www.gstatic.com/generate_204", 
-                    "interval": 300,
-                    "tolerance": 50
-                },
-                {
-                    "name": "IR-BALANCE", 
-                    "type": "load-balance", 
-                    "strategy": "round-robin", 
-                    "proxies": proxy_names_all, 
-                    "url": "http://www.gstatic.com/generate_204", 
-                    "interval": 300
-                }
-            ],
-            "rules": [
-                "MATCH,MAIN"
-            ]
-        }
-        
-        return clash_config
-    
-    def analyze_proxies(self):
-        """تحلیل و ارائه آمار پروکسی‌ها"""
-        proxies = self.config.get('proxies', [])
-        today = datetime.now()
-        
-        # آمار سن پروکسی‌ها
-        age_stats = {
-            'today': 0,      # 0 روز
-            '1_day': 0,      # 1 روز
-            '2_days': 0,     # 2 روز
-            '3_days': 0,     # 3 روز
-            'older': 0       # بیشتر از 3 روز
-        }
-        
-        # آمار نوع پروتکل
-        protocol_stats = {}
-        
-        # آمار کشورها
-        country_stats = {}
-        
-        # محاسبه آمار
-        for proxy in proxies:
-            # آمار سن
-            try:
-                added_date = datetime.strptime(proxy['added_date'], '%Y-%m-%d')
-                age_days = (today - added_date).days
-                
-                if age_days == 0:
-                    age_stats['today'] += 1
-                elif age_days == 1:
-                    age_stats['1_day'] += 1
-                elif age_days == 2:
-                    age_stats['2_days'] += 1
-                elif age_days == 3:
-                    age_stats['3_days'] += 1
-                else:
-                    age_stats['older'] += 1
-            except:
-                age_stats['older'] += 1
-            
-            # آمار پروتکل
-            protocol = proxy.get('type', 'unknown')
-            protocol_stats[protocol] = protocol_stats.get(protocol, 0) + 1
-            
-            # آمار کشور
-            country = proxy.get('country', 'UNKNOWN')
-            country_stats[country] = country_stats.get(country, 0) + 1
-        
-        return {
-            'total': len(proxies),
-            'active': len([p for p in proxies if p.get('is_active', False)]),
-            'age_stats': age_stats,
-            'protocol_stats': protocol_stats,
-            'country_stats': country_stats
-        }
+            self.logger.log("❌ نتوانستیم پروکسی اضافی پیدا کنیم")
     
     def run(self) -> bool:
         """اجرای اصلی"""
-        print("=" * 70)
-        print("🚀 شروع فرآیند به‌روزرسانی پروکسی‌های ایرانی")
-        print("=" * 70)
+        self.logger.log("=" * 80)
+        self.logger.log("🚀 شروع فرآیند به‌روزرسانی پروکسی‌های ایرانی")
+        self.logger.log(f"🌐 تعداد منابع: {len(self.SOURCES)} منبع ایرانی")
+        self.logger.log("🔍 سیستم: بررسی مستقیم IP از سرویس‌های آنلاین با fallback")
+        self.logger.log("=" * 80)
         
         try:
             # 1. وضعیت اولیه
             initial_count = len(self.config.get('proxies', []))
             initial_active = len([p for p in self.config.get('proxies', []) 
                                  if p.get('is_active', False)])
-            print(f"📊 وضعیت اولیه:")
-            print(f"   • تعداد کل پروکسی‌ها: {initial_count}")
-            print(f"   • پروکسی‌های فعال: {initial_active}")
-            print(f"   • حداقل مورد نیاز: 50")
+            self.logger.log(f"📊 وضعیت اولیه:")
+            self.logger.log(f"   • تعداد کل پروکسی‌ها: {initial_count}")
+            self.logger.log(f"   • پروکسی‌های فعال: {initial_active}")
+            self.logger.log(f"   • حداقل مورد نیاز: 50")
             
             # 2. دریافت پروکسی‌های جدید
             new_proxies = self.fetch_all_proxies()
-            print(f"\n📥 {len(new_proxies)} پروکسی جدید دریافت شد")
+            self.logger.log(f"\n📥 {len(new_proxies)} پروکسی ایرانی دریافت شد")
             
             # 3. اضافه کردن پروکسی‌های جدید
             added_count, duplicate_count = self.add_new_proxies(new_proxies)
-            print(f"\n➕ اضافه کردن پروکسی‌های جدید:")
-            print(f"   ✅ {added_count} پروکسی جدید اضافه شد")
+            self.logger.log(f"\n➕ اضافه کردن پروکسی‌های جدید:")
+            self.logger.log(f"   ✅ {added_count} پروکسی ایرانی جدید اضافه شد")
             if duplicate_count > 0:
-                print(f"   ⚠️  {duplicate_count} پروکسی تکراری نادیده گرفته شد")
-            
-            # **جزئیات دقیق اضافه شدن (این بخش جدید اضافه شده)**
-            print(f"\n📋 جزئیات دقیق اضافه شدن:")
-            print(f"   • پروکسی‌های موجود از قبل: {initial_count}")
-            print(f"   • پروکسی‌های جدید دریافت‌شده: {len(new_proxies)}")
-            print(f"   • پروکسی‌های جدید اضافه‌شده: {added_count}")
-            print(f"   • پروکسی‌های تکراری (از قبل وجود داشتند): {duplicate_count}")
-            print(f"   • تعداد بعد از اضافه کردن: {len(self.config.get('proxies', []))}")
-            
-            if added_count > 0:
-                print(f"   ✅ تأیید: {added_count} پروکسی جدید به لیست اضافه شدند")
-            else:
-                print(f"   ℹ️  همه پروکسی‌های دریافت‌شده از قبل موجود بودند")
+                self.logger.log(f"   ⚠️ {duplicate_count} پروکسی تکراری نادیده گرفته شد")
             
             # 4. بررسی شرایط حذف
-            print(f"\n🗑️  بررسی شرایط حذف پروکسی‌های قدیمی:")
+            self.logger.log(f"\n🗑️ بررسی شرایط حذف پروکسی‌های قدیمی:")
             total_after_add = len(self.config.get('proxies', []))
-            print(f"   تعداد پروکسی‌ها بعد از اضافه کردن: {total_after_add}")
+            self.logger.log(f"   تعداد پروکسی‌ها بعد از اضافه کردن: {total_after_add}")
             
             should_remove, old_proxies, excess_count = self.should_remove_old_proxies()
             
             if should_remove:
-                print(f"   ✓ شرط ۱: تعداد پروکسی‌ها ({total_after_add}) > ۵۰")
-                print(f"   ✓ شرط ۲: {len(old_proxies)} پروکسی قدیمی‌تر از ۳ روز")
-                print(f"   ⚡ هر دو شرط برقرار است → حذف قدیمی‌ها")
+                self.logger.log(f"   ✓ شرط ۱: تعداد پروکسی‌ها ({total_after_add}) > ۵۰")
+                self.logger.log(f"   ✓ شرط ۲: {len(old_proxies)} پروکسی قدیمی‌تر از ۳ روز")
+                self.logger.log(f"   ⚡ هر دو شرط برقرار است → حذف قدیمی‌ها")
                 
                 removed_count = self.remove_old_proxies_with_conditions()
                 if removed_count > 0:
-                    print(f"   ✅ {removed_count} پروکسی قدیمی حذف شدند")
-                else:
-                    print(f"   ℹ️  با وجود شرایط، پروکسی‌ای حذف نشد")
+                    self.logger.log(f"   ✅ {removed_count} پروکسی قدیمی حذف شدند")
             else:
-                print(f"   ⏸️  شرایط حذف برقرار نیست:")
+                self.logger.log(f"   ⏸️ شرایط حذف برقرار نیست:")
                 if total_after_add <= 50:
-                    print(f"     ✗ تعداد کل ({total_after_add}) ≤ ۵۰")
+                    self.logger.log(f"     ✗ تعداد کل ({total_after_add}) ≤ ۵۰")
                 if len(old_proxies) == 0:
-                    print(f"     ✗ پروکسی قدیمی‌تر از ۳ روز وجود ندارد")
+                    self.logger.log(f"     ✗ پروکسی قدیمی‌تر از ۳ روز وجود ندارد")
             
             # 5. بررسی حداقل تعداد
-            print(f"\n📊 بررسی حداقل تعداد پروکسی...")
+            self.logger.log(f"\n📊 بررسی حداقل تعداد پروکسی...")
             self.ensure_minimum_proxies()
             
-            # 6. ایجاد کانفیگ Clash
-            print(f"\n⚙️  ایجاد کانفیگ Clash...")
-            clash_config = self.create_clash_config()
-            self.config.update(clash_config)
-            
-            # 7. ذخیره فایل
-            print(f"\n💾 ذخیره تغییرات...")
+            # 6. ذخیره فایل
+            self.logger.log(f"\n💾 ذخیره تغییرات...")
             if not self.save_config():
+                self.logger.log("❌ خطا در ذخیره‌سازی!", "ERROR")
                 return False
+            
+            # 7. نمایش آمار کامل
+            self.logger.print_stats()
             
             # 8. گزارش نهایی
             final_count = len(self.config.get('proxies', []))
             final_active = len([p for p in self.config.get('proxies', []) 
                                if p.get('is_active', False)])
-            analysis = self.analyze_proxies()
             
-            print(f"\n" + "=" * 70)
-            print("📈 گزارش نهایی")
-            print("=" * 70)
+            self.logger.log("\n" + "=" * 80)
+            self.logger.log("📈 گزارش نهایی")
+            self.logger.log("=" * 80)
+            self.logger.log(f"📊 تعداد کل پروکسی‌ها: {final_count}")
+            self.logger.log(f"✅ پروکسی‌های فعال: {final_active}")
+            self.logger.log(f"📈 تغییرات کل: {final_count - initial_count:+d} پروکسی")
+            self.logger.log(f"📈 تغییرات فعال: {final_active - initial_active:+d} پروکسی")
             
-            print(f"\n📊 آمار پروکسی‌ها:")
-            print(f"   • مجموع: {analysis['total']}")
-            print(f"   • فعال: {analysis['active']}")
+            # گزارش کش IP
+            iran_ips = len([c for c in self.ip_cache.values() if c == 'IR'])
+            non_iran_ips = len([c for c in self.ip_cache.values() if c != 'IR' and c is not None])
+            unknown_ips = len([c for c in self.ip_cache.values() if c is None])
             
-            print(f"\n📅 توزیع سن:")
-            print(f"   • امروزی: {analysis['age_stats']['today']}")
-            print(f"   • ۱ روزه: {analysis['age_stats']['1_day']}")
-            print(f"   • ۲ روزه: {analysis['age_stats']['2_days']}")
-            print(f"   • ۳ روزه: {analysis['age_stats']['3_days']}")
-            print(f"   • قدیمی: {analysis['age_stats']['older']}")
+            self.logger.log(f"\n🔍 گزارش بررسی IP:")
+            self.logger.log(f"   • IPهای ایرانی: {iran_ips}")
+            self.logger.log(f"   • IPهای غیرایرانی: {non_iran_ips}")
+            self.logger.log(f"   • IPهای نامشخص: {unknown_ips}")
+            self.logger.log(f"   • کل IPهای بررسی شده: {len(self.ip_cache)}")
             
-            print(f"\n🔌 توزیع پروتکل:")
-            for protocol, count in analysis['protocol_stats'].items():
-                print(f"   • {protocol}: {count}")
-            
-            print(f"\n🌍 توزیع کشورها:")
-            for country, count in analysis['country_stats'].items():
-                print(f"   • {country}: {count}")
-            
-            print(f"\n📈 تغییرات کلی: {final_count - initial_count:+d} پروکسی")
-            print(f"📈 تغییرات فعال: {final_active - initial_active:+d} پروکسی")
+            # گزارش منابع
+            successful_sources = len(self.SOURCES) - len(self.failed_sources)
+            self.logger.log(f"\n🌐 گزارش منابع:")
+            self.logger.log(f"   • منابع موفق: {successful_sources}/{len(self.SOURCES)}")
+            self.logger.log(f"   • منابع شکست خورده: {len(self.failed_sources)}")
             
             if final_active >= 50:
-                print(f"\n✅ موفقیت: {final_active} پروکسی فعال موجود است")
+                self.logger.log(f"\n✅ موفقیت: {final_active} پروکسی ایرانی فعال موجود است")
             else:
-                print(f"\n⚠️  هشدار: فقط {final_active} پروکسی فعال موجود است")
+                self.logger.log(f"\n⚠️ هشدار: فقط {final_active} پروکسی ایرانی فعال موجود است")
             
             if self.failed_sources:
-                print(f"\n❌ منابع شکست‌خورده ({len(self.failed_sources)}):")
-                for s in self.failed_sources[:3]:
-                    print(f"   - {s}")
-                if len(self.failed_sources) > 3:
-                    print(f"   - و {len(self.failed_sources) - 3} منبع دیگر")
+                self.logger.log(f"\n❌ منابع شکست‌خورده ({len(self.failed_sources)}):")
+                for s in self.failed_sources[:5]:
+                    self.logger.log(f"   - {s}")
+                if len(self.failed_sources) > 5:
+                    self.logger.log(f"   - و {len(self.failed_sources) - 5} منبع دیگر")
             
-            print("\n" + "=" * 70)
+            self.logger.log(f"\n📁 فایل لاگ: {self.logger.log_file}")
+            self.logger.log(f"📁 فایل کانفیگ: {self.config_path}")
+            self.logger.log("=" * 80)
+            
             return True
             
         except KeyboardInterrupt:
-            print("\n\n⏹️  عملیات توسط کاربر متوقف شد")
+            self.logger.log("\n\n⏹️ عملیات توسط کاربر متوقف شد", "WARNING")
             return False
         except Exception as e:
-            print(f"\n❌ خطای غیرمنتظره: {e}")
+            self.logger.log(f"\n❌ خطای غیرمنتظره: {e}", "ERROR")
             import traceback
-            traceback.print_exc()
+            self.logger.log(traceback.format_exc(), "ERROR")
             return False
 
 def main():
     """تابع اصلی"""
-    print("🔧 مدیر پروکسی‌های ایرانی - نسخه پیشرفته")
+    print("🔧 مدیر پروکسی‌های ایرانی - سیستم بررسی مستقیم IP")
     print("📅 " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    print("⚡ همه پروتکل‌ها: HTTP, SOCKS5, VMESS, VLESS, Shadowsocks")
+    print(f"🌐 {len(IranProxyManager().SOURCES)} منبع ایرانی")
+    print("🔍 استفاده از سرویس‌های آنلاین با سیستم fallback")
     
     manager = IranProxyManager()
     success = manager.run()
