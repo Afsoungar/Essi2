@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 اسکریپت مدیریت پروکسی‌های ایرانی
 بررسی مستقیم IP از سرویس‌های آنلاین با سیستم fallback
