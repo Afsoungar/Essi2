@@ -48,27 +48,35 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # حذف فایل قدیمی config اگر وجود دارد
-        rm -f output/config.yaml
+        # اول تغییرات جدید را بگیر (حل مشکل کد قدیمی)
+        git pull origin main --rebase
         
-        # از آخرین تغییرات آپدیت شو
-        git fetch origin
-        git reset --hard origin/main
+        # لاگ‌های قدیمی را بررسی کن
+        echo "📁 بررسی فایل‌های لاگ..."
+        ls -la output/logs/ 2>/dev/null || echo "📁 پوشه logs وجود ندارد"
         
-        # دوباره اسکریپت را اجرا کن (با اطلاعات جدید)
+        # اسکریپت را اجرا کن (با کد جدید)
+        echo "🚀 اجرای اسکریپت با تغییرات جدید..."
         python scripts/update.py
         
-        # فقط فایل config را اضافه کن
-        git add output/config.yaml
+        # فقط فایل config و latest.log را اضافه کن
+        git add output/config.yaml output/logs/latest.log 2>/dev/null || true
         
         # اگر تغییری وجود دارد commit کن
         if ! git diff --cached --quiet; then
           COMMIT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
           git commit -m "🤖 Update proxy list - $COMMIT_DATE"
           
-          # Push با force (مطمئن شو کار می‌کند)
+          # Push تغییرات
           git push origin HEAD:main
           echo "✅ Changes pushed successfully"
+          
+          # نمایش لاگ آخرین اجرا
+          echo "📋 آخرین لاگ:"
+          tail -20 output/logs/latest.log 2>/dev/null || echo "⚠️ فایل لاگ پیدا نشد"
         else
           echo "⚠️ No changes to commit"
+          # نمایش وضعیت فعلی
+          echo "📊 وضعیت فعلی:"
+          ls -la output/ 2>/dev/null || echo "📁 پوشه output وجود ندارد"
         fi
