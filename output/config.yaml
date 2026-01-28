@@ -228,9 +228,33 @@ proxies:
 metadata:
   total_count: 19
   active_count: 3
-  last_updated: '2026-01-28 07:13:53'
+  last_updated: '2026-01-28 07:45:23'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260128_052755.log
+  log_file: output/logs/proxy_update_20260128_071654.log
+  source_priority:
+    github-vmess: 100
+    github-vless: -5
+    github-ss: -5
+    github-hope: -5
+    github-telegram: -5
+    github-ss-aggr: -5
+    github-freefq: -5
+    proxyscrape-socks5: -5
+    proxyscrape-http: 20
+    proxyscrape-https: 20
+    github-socks5: 50
+    github-hookzof: -5
+    github-nowalls: -5
+    github-ddfhp: -5
+    proxyhub-http: -5
+    proxyhub-socks5: -5
+    proxydocker-socks5: -5
+    proxydocker-http: -5
+    freeproxy-http: -5
+    freeproxy-socks5: -5
+    emergency-http: 100
+    emergency-socks5: -10
+    emergency-vmess: -10
