@@ -14,7 +14,7 @@ import time
 import base64
 import json
 import re
-import shutil
+import random
 from urllib.parse import urlparse, parse_qs
 from bs4 import BeautifulSoup
 from typing import List, Dict, Any, Tuple, Set, Optional
@@ -46,7 +46,7 @@ class Logger:
         }
         
         # حذف لاگ‌های قدیمی‌تر از 2 هفته
-        self.clean_old_logs()  # حالا self.stats تعریف شده
+        self.clean_old_logs()
         
         # فایل لاگ با timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -155,6 +155,15 @@ class IranProxyManager:
         self.failed_sources = []
         self.ip_cache = {}
         self.lock = threading.Lock()
+        
+        # User-Agent های مختلف برای جلوگیری از بلاک
+        self.USER_AGENTS = [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/122.0",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/121.0.0.0 Safari/537.36",
+        ]
         
         # منابع کامل ایرانی
         self.SOURCES = [
@@ -329,9 +338,7 @@ class IranProxyManager:
         for attempt in range(service['max_retries']):
             try:
                 url = service['url'].format(ip=ip)
-                headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                }
+                headers = self.get_headers()
                 
                 response = requests.get(url, timeout=service['timeout'], headers=headers)
                 
@@ -350,7 +357,7 @@ class IranProxyManager:
                 # مدیریت محدودیت‌ها
                 if response.status_code == 429:
                     self.logger.log(f"محدودیت درخواست در {service['name']}، انتظار...", "WARNING")
-                    time.sleep(2)
+                    time.sleep(3)
                     
             except requests.exceptions.Timeout:
                 self.logger.log(f"تایم‌اوت در {service['name']} (تلاش {attempt+1})", "WARNING")
@@ -364,6 +371,24 @@ class IranProxyManager:
         
         self.logger.update_stat('api_failures')
         return None
+    
+    def get_headers(self):
+        """ایجاد headers با User-Agent تصادفی"""
+        return {
+            "User-Agent": random.choice(self.USER_AGENTS),
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate, br",
+            "DNT": "1",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": "none",
+            "Sec-Fetch-User": "?1",
+            "Cache-Control": "max-age=0",
+            "Referer": "https://www.google.com/"
+        }
     
     def check_ip_country(self, ip: str) -> Optional[str]:
         """بررسی کشور IP با استفاده از سرویس‌های آنلاین با fallback"""
@@ -472,7 +497,11 @@ class IranProxyManager:
         proxies = []
         try:
             self.logger.log(f"   📄 استخراج از HTML ({source_name})...", "DEBUG")
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+            headers = self.get_headers()
+            
+            # تأخیر تصادفی بین ۱ تا ۳ ثانیه برای جلوگیری از بلاک
+            time.sleep(random.uniform(1, 3))
+            
             res = requests.get(url, headers=headers, timeout=15)
             res.raise_for_status()
             soup = BeautifulSoup(res.text, "html.parser")
@@ -511,14 +540,32 @@ class IranProxyManager:
         try:
             self.logger.update_stat('sources_used')
             self.logger.log(f"🔍 دریافت از [{source_name}]: {url[:60]}...")
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-            response = requests.get(url, timeout=20, headers=headers)
+            
+            headers = self.get_headers()
+            
+            # تأخیر تصادفی بین درخواست‌ها
+            time.sleep(random.uniform(2, 4))
+            
+            response = requests.get(url, timeout=25, headers=headers)
             
             if response.status_code != 200:
-                self.logger.log(f"   ❌ خطا HTTP {response.status_code}", "WARNING")
-                self.failed_sources.append(url)
-                self.logger.update_stat('sources_failed')
-                return []
+                if response.status_code == 403:
+                    self.logger.log(f"   ⚠️ دسترسی ممنوع (403) - تغییر User-Agent و تلاش مجدد...", "WARNING")
+                    # تلاش مجدد با User-Agent متفاوت
+                    headers = self.get_headers()
+                    time.sleep(5)
+                    response = requests.get(url, timeout=25, headers=headers)
+                    
+                    if response.status_code != 200:
+                        self.logger.log(f"   ❌ خطا HTTP {response.status_code} (تلاش دوم)", "WARNING")
+                        self.failed_sources.append(url)
+                        self.logger.update_stat('sources_failed')
+                        return []
+                else:
+                    self.logger.log(f"   ❌ خطا HTTP {response.status_code}", "WARNING")
+                    self.failed_sources.append(url)
+                    self.logger.update_stat('sources_failed')
+                    return []
             
             # اگر منبع HTML است
             if ptype.startswith("html-"):
@@ -766,6 +813,10 @@ class IranProxyManager:
             
             all_proxies.extend(filtered_proxies)
             self.logger.log(f"   از {source_name}: {len(filtered_proxies)} پروکسی منحصربه‌فرد ایرانی")
+            
+            # تأخیر بین منابع مختلف برای جلوگیری از بلاک
+            if source_name in ['freeproxy.world', 'proxyhub.me', 'proxydocker']:
+                time.sleep(random.uniform(3, 6))
         
         self.logger.log("=" * 70)
         self.logger.log(f"📊 مجموع {len(all_proxies)} پروکسی ایرانی از {len(self.SOURCES)} منبع دریافت شد")
