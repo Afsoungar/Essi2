@@ -273,9 +273,9 @@ proxies:
 metadata:
   total_count: 19
   active_count: 3
-  last_updated: '2026-01-28 16:04:52'
+  last_updated: '2026-01-28 17:44:10'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260128_141950.log
+  log_file: output/logs/proxy_update_20260128_164515.log
