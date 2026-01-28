@@ -2,7 +2,7 @@ name: Update Iran Proxies
 
 on:
   schedule:
-    - cron: '0 */7 * * *'  # هر 6 ساعت یکبار
+    - cron: '0 */6 * * *'  # هر 6 ساعت یکبار
   workflow_dispatch:
     inputs:
       manual_trigger:
@@ -16,7 +16,7 @@ permissions:
 jobs:
   update-proxies:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 120
     
     steps:
     - name: 📥 Checkout repository
