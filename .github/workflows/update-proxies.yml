@@ -42,11 +42,12 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # اول تغییرات جدید را بگیر (حل مشکل کد قدیمی)
+        # اول تغییرات جدید را بگیر و merge کن
         echo "📥 دریافت آخرین تغییرات از main..."
-        git pull origin main --rebase --autostash
+        git fetch origin
+        git merge origin/main --no-edit || git merge --abort
         
-        # اسکریپت را فقط یک بار اجرا کن
+        # اسکریپت را اجرا کن
         echo "🚀 اجرای اسکریپت به‌روزرسانی..."
         python scripts/update.py
         
@@ -58,8 +59,11 @@ jobs:
           COMMIT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
           git commit -m "🤖 Update proxy list - $COMMIT_DATE"
           
-          # Push تغییرات
-          git push origin HEAD:main
+          # دوباره تغییرات را بگیر قبل از push
+          git pull origin main --rebase --autostash
+          
+          # Push تغییرات با force اگر لازم باشد
+          git push origin HEAD:main || git push origin HEAD:main --force
           echo "✅ Changes pushed successfully"
           
           # نمایش خلاصه
@@ -68,7 +72,3 @@ jobs:
         else
           echo "⚠️ No changes to commit"
         fi
-        
-        # نمایش حجم فایل‌ها
-        echo "💾 حجم فایل‌ها:"
-        du -h output/config.yaml 2>/dev/null || echo "⚠️ config.yaml وجود ندارد"
