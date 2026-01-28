@@ -71,7 +71,7 @@ jobs:
 import json, yaml, os
 with open('$TEMP_RESULTS', 'r') as f:
     data = json.load(f)
-    
+
 # ساخت config از نتایج ذخیره شده
 config = {'proxies': data['proxies'], 'metadata': data['metadata']}
 
