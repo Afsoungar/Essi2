@@ -15,10 +15,10 @@ import base64
 import json
 import re
 import random
+import threading
 from urllib.parse import urlparse, parse_qs
 from bs4 import BeautifulSoup
 from typing import List, Dict, Any, Tuple, Set, Optional
-import threading
 
 class Logger:
     """سیستم لاگ‌گیری پیشرفته با مدیریت خودکار فضای دیسک"""
@@ -109,6 +109,11 @@ class Logger:
         if stat_name in self.stats:
             self.stats[stat_name] += value
     
+    def print_debug_info(self, current_source: int, total_sources: int, proxies_checked: int, iranian_found: int):
+        """نمایش اطلاعات دیباگ"""
+        if current_source > 0:
+            self.log(f"   🎯 [{current_source}/{total_sources}] | 📊 [{iranian_found}/{proxies_checked}]", "DEBUG")
+    
     def print_stats(self):
         """چاپ آمار کامل"""
         self.log("\n" + "="*80, "STATS")
@@ -156,74 +161,142 @@ class IranProxyManager:
         self.ip_cache = {}
         self.lock = threading.Lock()
         
-        # User-Agent های مختلف برای جلوگیری از بلاک
-        self.USER_AGENTS = [
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/122.0",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/121.0.0.0 Safari/537.36",
-        ]
-        
-        # منابع کامل ایرانی
-        self.SOURCES = [
-            # HTML-based sources
-            ("https://www.freeproxy.world/?type=http&anonymity=&country=IR", "html-http", "freeproxy.world"),
-            ("https://www.freeproxy.world/?type=socks5&anonymity=&country=IR", "html-socks5", "freeproxy.world"),
-            ("https://proxyhub.me/en/ir-http-proxy-list.html", "html-http", "proxyhub.me"),
-            ("https://proxyhub.me/en/ir-sock5-proxy-list.html", "html-socks5", "proxyhub.me"),
-            ("https://www.proxydocker.com/en/socks5-list/country/Iran", "html-socks5", "proxydocker"),
-            ("https://www.proxydocker.com/en/proxylist/search?need=all&type=http-https&anonymity=all&port=&country=Iran&city=&state=all", "html-http", "proxydocker"),
+        # منابع اصلی (ترتیب اولویت بر اساس عملکرد گذشته)
+        self.base_sources = [
+            # GitHub-based sources (معمولاً پایدارترین)
+            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt", "vmess", "github-vmess"),
+            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vless.txt", "vless", "github-vless"),
+            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt", "ss", "github-ss"),
+            ("https://raw.githubusercontent.com/iranxray/hope/main/singbox", "vless", "github-hope"),
+            ("https://raw.githubusercontent.com/yebekhe/TelegramV2rayCollector/main/singbox", "vless", "github-telegram"),
+            ("https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sb", "ss", "github-ss-aggr"),
+            ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess", "github-freefq"),
             
             # API-based sources
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&country=IR", "socks5", "proxyscrape"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR", "http", "proxyscrape"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR", "http", "proxyscrape"),
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&country=IR", "socks5", "proxyscrape-socks5"),
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR", "http", "proxyscrape-http"),
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR", "http", "proxyscrape-https"),
             
-            # GitHub text-based sources
-            ("https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", "socks5", "github"),
-            ("https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "socks5", "github"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt", "vmess", "github"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vless.txt", "vless", "github"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt", "ss", "github"),
-            
-            # منابع جدید ایرانی
-            ("https://raw.githubusercontent.com/iranxray/hope/main/singbox", "vless", "github-iran"),
-            ("https://raw.githubusercontent.com/yebekhe/TelegramV2rayCollector/main/singbox", "vless", "github-iran"),
-            ("https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sb", "ss", "github"),
-            ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess", "github"),
-            ("https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt", "mixed", "github"),
-            ("https://raw.githubusercontent.com/BlueSkyXN/9.DDFHP/main/1", "mixed", "github"),
-
+            # Other text sources
+            ("https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", "socks5", "github-socks5"),
+            ("https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "socks5", "github-hookzof"),
+            ("https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt", "mixed", "github-nowalls"),
+            ("https://raw.githubusercontent.com/BlueSkyXN/9.DDFHP/main/1", "mixed", "github-ddfhp"),
         ]
         
-        # سرویس‌های بررسی IP با سیستم fallback
+        # منابع HTML (مشکل‌دار - آخر می‌روند)
+        self.html_sources = [
+            ("https://proxyhub.me/en/ir-http-proxy-list.html", "html-http", "proxyhub-http"),
+            ("https://proxyhub.me/en/ir-sock5-proxy-list.html", "html-socks5", "proxyhub-socks5"),
+            ("https://www.proxydocker.com/en/socks5-list/country/Iran", "html-socks5", "proxydocker-socks5"),
+            ("https://www.proxydocker.com/en/proxylist/search?need=all&type=http-https&anonymity=all&port=&country=Iran&city=&state=all", "html-http", "proxydocker-http"),
+            ("https://www.freeproxy.world/?type=http&anonymity=&country=IR", "html-http", "freeproxy-http"),
+            ("https://www.freeproxy.world/?type=socks5&anonymity=&country=IR", "html-socks5", "freeproxy-socks5"),
+        ]
+        
+        # منابع اضطراری (همیشه آخر)
+        self.emergency_sources = [
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all", "http", "emergency-http"),
+            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all", "socks5", "emergency-socks5"),
+            ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess", "emergency-vmess"),
+        ]
+        
+        # بارگذاری اولویت‌های قبلی
+        self.source_priority = self.load_source_priority()
+        self.SOURCES = self.organize_sources_by_priority()
+        
+        # سرویس‌های بررسی IP
         self.IP_CHECK_SERVICES = [
-            {
-                'name': 'ip-api.com',
-                'url': 'http://ip-api.com/json/{ip}?fields=status,countryCode,query',
-                'field': 'countryCode',
-                'timeout': 3,
-                'max_retries': 2
-            },
-            {
-                'name': 'ipapi.co',
-                'url': 'https://ipapi.co/{ip}/country/',
-                'field': 'text',
-                'timeout': 3,
-                'max_retries': 2
-            },
-            {
-                'name': 'ipinfo.io',
-                'url': 'https://ipinfo.io/{ip}/country',
-                'field': 'text',
-                'timeout': 3,
-                'max_retries': 2
-            },
+            {'name': 'ip-api.com', 'url': 'http://ip-api.com/json/{ip}?fields=status,countryCode,query', 'field': 'countryCode', 'timeout': 3, 'max_retries': 2},
+            {'name': 'ipapi.co', 'url': 'https://ipapi.co/{ip}/country/', 'field': 'text', 'timeout': 3, 'max_retries': 2},
+            {'name': 'ipinfo.io', 'url': 'https://ipinfo.io/{ip}/country', 'field': 'text', 'timeout': 3, 'max_retries': 2},
+        ]
+        
+        # User-Agent های متنوع
+        self.USER_AGENTS = [
+            # Chrome
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+            # Firefox
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/122.0",
+            # Edge
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0",
+            # Safari
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15",
+            # Opera
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 OPR/107.0.0.0",
+            # ربات‌ها
+            "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+            "FacebookExternalHit/1.1 (+http://www.facebook.com/externalhit_uatext.php)",
+            "DuckDuckBot/1.0; (+http://duckduckgo.com/duckduckbot.html)",
+            "Twitterbot/1.0",
+            "Bingbot/2.0 (+http://www.bing.com/bingbot.htm)",
+            # موبایل
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (Linux; Android 14; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.210 Mobile Safari/537.36",
+            # ساده
+            "curl/7.88.1",
+            "Wget/1.21.4",
+            "Lynx/2.8.9dev.3 libwww-FM/2.14 SSL-MM/1.4.1",
+            # قدیمی
+            "Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14",
+            "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0)",
         ]
     
     def __del__(self):
         self.logger.close()
+    
+    def load_source_priority(self) -> Dict[str, int]:
+        """بارگذاری اولویت منابع از کانفیگ"""
+        try:
+            if os.path.exists(self.config_path):
+                with open(self.config_path, 'r', encoding='utf-8') as f:
+                    config = yaml.safe_load(f)
+                    if config and 'metadata' in config and 'source_priority' in config['metadata']:
+                        return config['metadata']['source_priority']
+        except:
+            pass
+        return {}
+    
+    def organize_sources_by_priority(self) -> List[Tuple[str, str, str]]:
+        """سازماندهی منابع بر اساس اولویت"""
+        # ترکیب همه منابع
+        all_sources = self.base_sources + self.html_sources + self.emergency_sources
+        
+        # اگر اولویت وجود ندارد، لیست اصلی را برگردان
+        if not self.source_priority:
+            return all_sources
+        
+        # دسته‌بندی بر اساس عملکرد
+        successful_sources = []
+        failed_sources = []
+        unknown_sources = []
+        
+        for source in all_sources:
+            url, ptype, name = source
+            if name in self.source_priority:
+                if self.source_priority[name] > 0:
+                    successful_sources.append((source, self.source_priority[name]))
+                else:
+                    failed_sources.append(source)
+            else:
+                unknown_sources.append(source)
+        
+        # مرتب‌سازی منابع موفق بر اساس اولویت (بیشترین اول)
+        successful_sources.sort(key=lambda x: x[1], reverse=True)
+        
+        # ترکیب نهایی: منابع موفق → منابع ناشناخته → منابع ناموفق → منابع اضطراری
+        final_list = [src[0] for src in successful_sources] + unknown_sources + failed_sources + self.emergency_sources
+        
+        return final_list
+    
+    def update_source_priority(self, source_name: str, proxy_count: int):
+        """به‌روزرسانی اولویت منبع"""
+        # هر پروکسی +۱۰ امتیاز، شکست -۵ امتیاز
+        score = proxy_count * 10 if proxy_count > 0 else -5
+        current_score = self.source_priority.get(source_name, 0)
+        self.source_priority[source_name] = max(-50, min(100, current_score + score))
     
     def load_config(self) -> Dict[str, Any]:
         """بارگذاری فایل کانفیگ"""
@@ -270,19 +343,20 @@ class IranProxyManager:
                 
                 cleaned_proxies.append(cleaned_proxy)
             
-            final_config = {
-                'proxies': cleaned_proxies,
-                'metadata': {
-                    'total_count': len(cleaned_proxies),
-                    'active_count': len([p for p in cleaned_proxies if p['is_active']]),
-                    'last_updated': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    'retention_days': 3,
-                    'min_proxies': 50,
-                    'sources_used': len(self.SOURCES),
-                    'log_retention_days': 14,
-                    'log_file': self.logger.log_file
-                }
+            # ذخیره اولویت منابع
+            metadata = {
+                'total_count': len(cleaned_proxies),
+                'active_count': len([p for p in cleaned_proxies if p['is_active']]),
+                'last_updated': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'retention_days': 3,
+                'min_proxies': 50,
+                'sources_used': len(self.SOURCES),
+                'log_retention_days': 14,
+                'log_file': self.logger.log_file,
+                'source_priority': self.source_priority
             }
+            
+            final_config = {'proxies': cleaned_proxies, 'metadata': metadata}
             
             with open(self.config_path, 'w', encoding='utf-8') as f:
                 yaml.dump(final_config, f, 
@@ -355,7 +429,6 @@ class IranProxyManager:
                             if country and len(country) == 2:
                                 return country
                 
-                # مدیریت محدودیت‌ها
                 if response.status_code == 429:
                     self.logger.log(f"محدودیت درخواست در {service['name']}، انتظار...", "WARNING")
                     time.sleep(3)
@@ -393,7 +466,6 @@ class IranProxyManager:
     
     def check_ip_country(self, ip: str) -> Optional[str]:
         """بررسی کشور IP با استفاده از سرویس‌های آنلاین با fallback"""
-        # بررسی کش
         with self.lock:
             if ip in self.ip_cache:
                 self.logger.update_stat('ip_cache_hits')
@@ -401,13 +473,11 @@ class IranProxyManager:
         
         self.logger.update_stat('ip_checks')
         
-        # رد IPهای خصوصی
         if self.is_private_ip(ip):
             with self.lock:
                 self.ip_cache[ip] = None
             return None
         
-        # بررسی با سرویس‌های مختلف
         country = None
         service_used = None
         
@@ -418,7 +488,6 @@ class IranProxyManager:
                 service_used = service['name']
                 break
         
-        # ذخیره در کش
         with self.lock:
             self.ip_cache[ip] = country
         
@@ -500,10 +569,9 @@ class IranProxyManager:
             self.logger.log(f"   📄 استخراج از HTML ({source_name})...", "DEBUG")
             headers = self.get_headers()
             
-            # تأخیر تصادفی بین ۱ تا ۳ ثانیه برای جلوگیری از بلاک
-            time.sleep(random.uniform(1, 3))
+            time.sleep(random.uniform(2, 5))
             
-            res = requests.get(url, headers=headers, timeout=15)
+            res = requests.get(url, headers=headers, timeout=20)
             res.raise_for_status()
             soup = BeautifulSoup(res.text, "html.parser")
 
@@ -534,63 +602,160 @@ class IranProxyManager:
             self.logger.log(f"   ❌ خطا در استخراج HTML: {str(e)[:50]}", "WARNING")
             return []
     
-    def fetch_source_proxies(self, url: str, ptype: str, source_name: str) -> List[Dict[str, Any]]:
+    def fetch_source_proxies(self, url: str, ptype: str, source_name: str, source_index: int, total_sources: int) -> List[Dict[str, Any]]:
         """دریافت پروکسی از یک منبع خاص"""
         proxies = []
         
-        try:
-            self.logger.update_stat('sources_used')
-            self.logger.log(f"🔍 دریافت از [{source_name}]: {url[:60]}...")
-            
-            headers = self.get_headers()
-            
-            # تأخیر تصادفی بین درخواست‌ها
-            time.sleep(random.uniform(2, 4))
-            
-            response = requests.get(url, timeout=25, headers=headers)
-            
-            if response.status_code != 200:
-                if response.status_code == 403:
-                    self.logger.log(f"   ⚠️ دسترسی ممنوع (403) - تغییر User-Agent و تلاش مجدد...", "WARNING")
-                    # تلاش مجدد با User-Agent متفاوت
-                    headers = self.get_headers()
-                    time.sleep(5)
-                    response = requests.get(url, timeout=25, headers=headers)
-                    
-                    if response.status_code != 200:
-                        self.logger.log(f"   ❌ خطا HTTP {response.status_code} (تلاش دوم)", "WARNING")
+        # تلاش‌های متعدد
+        for attempt in range(5):
+            try:
+                self.logger.update_stat('sources_used')
+                current_total = self.logger.stats['total_proxies_received']
+                current_iranian = self.logger.stats['iranian_proxies']
+                self.logger.log(f"🔍 [{source_index}/{total_sources}] دریافت از [{source_name}]...", "INFO")
+                self.logger.print_debug_info(source_index, total_sources, current_total, current_iranian)
+                
+                headers = self.get_headers()
+                
+                # تأخیر تصادفی
+                delay = random.uniform(2, 6) if attempt > 0 else random.uniform(1, 3)
+                time.sleep(delay)
+                
+                response = requests.get(url, timeout=30, headers=headers)
+                
+                if response.status_code == 200:
+                    break
+                elif response.status_code == 403:
+                    self.logger.log(f"   ⚠️ دسترسی ممنوع (403) - تلاش {attempt+1}/5", "WARNING")
+                    if attempt < 4:
+                        time.sleep(random.uniform(5, 10))
+                        continue
+                    else:
+                        self.logger.log(f"   ❌ بعد از ۵ تلاش موفق نشدیم", "ERROR")
                         self.failed_sources.append(url)
                         self.logger.update_stat('sources_failed')
+                        self.update_source_priority(source_name, 0)
                         return []
                 else:
-                    self.logger.log(f"   ❌ خطا HTTP {response.status_code}", "WARNING")
+                    self.logger.log(f"   ❌ خطا HTTP {response.status_code} (تلاش {attempt+1})", "WARNING")
+                    if attempt < 4:
+                        time.sleep(3)
+                        continue
+                    else:
+                        self.failed_sources.append(url)
+                        self.logger.update_stat('sources_failed')
+                        self.update_source_priority(source_name, 0)
+                        return []
+                        
+            except requests.exceptions.Timeout:
+                self.logger.log(f"   ⏱️ تایم‌اوت (تلاش {attempt+1}/5)", "WARNING")
+                if attempt < 4:
+                    time.sleep(5)
+                    continue
+                else:
                     self.failed_sources.append(url)
                     self.logger.update_stat('sources_failed')
+                    self.update_source_priority(source_name, 0)
                     return []
+            except Exception as e:
+                self.logger.log(f"   ⚠️ خطا: {str(e)[:50]} (تلاش {attempt+1}/5)", "WARNING")
+                if attempt < 4:
+                    time.sleep(3)
+                    continue
+                else:
+                    self.failed_sources.append(url)
+                    self.logger.update_stat('sources_failed')
+                    self.update_source_priority(source_name, 0)
+                    return []
+        
+        # اگر منبع HTML است
+        if ptype.startswith("html-"):
+            html_proxies = self.fetch_html_proxies(url, ptype, source_name)
+            total_lines = len(html_proxies)
+            self.logger.update_stat('total_proxies_received', total_lines)
             
-            # اگر منبع HTML است
-            if ptype.startswith("html-"):
-                html_proxies = self.fetch_html_proxies(url, ptype, source_name)
-                total_lines = len(html_proxies)
-                self.logger.update_stat('total_proxies_received', total_lines)
+            added_count = 0
+            skipped_non_iran = 0
+            
+            for ip, port, proto in html_proxies:
+                if not self.ip_is_ir(ip):
+                    skipped_non_iran += 1
+                    continue
                 
-                added_count = 0
-                skipped_non_iran = 0
+                self.logger.update_stat('iranian_proxies')
+                alive, ping = self.is_alive(ip, int(port))
                 
-                for ip, port, proto in html_proxies:
-                    # بررسی IP ایرانی
+                proxy_data = {
+                    'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
+                    'type': proto,
+                    'server': ip,
+                    'port': int(port),
+                    'added_date': datetime.now().strftime('%Y-%m-%d'),
+                    'last_checked': datetime.now().strftime('%Y-%m-%d'),
+                    'is_active': alive,
+                    'country': 'IR',
+                    'ping': ping if alive else 0,
+                    'source': url,
+                    'source_name': source_name
+                }
+                proxies.append(proxy_data)
+                added_count += 1
+            
+            # به‌روزرسانی اولویت منبع
+            self.update_source_priority(source_name, added_count)
+            
+            self.logger.log(f"   📊 نتایج: {added_count}✅ | {skipped_non_iran}❌", "INFO")
+            self.logger.print_debug_info(source_index, total_sources, 
+                                       self.logger.stats['total_proxies_received'],
+                                       self.logger.stats['iranian_proxies'])
+            
+            return proxies
+        
+        # برای منابع متنی/API
+        lines = response.text.strip().splitlines()
+        total_lines = len(lines)
+        self.logger.update_stat('total_proxies_received', total_lines)
+        
+        self.logger.log(f"   📄 {total_lines} خط دریافت شد", "DEBUG")
+        
+        added_count = 0
+        skipped_non_iran = 0
+        skipped_invalid = 0
+        
+        for line_num, line in enumerate(lines, 1):
+            line = line.strip()
+            if not line:
+                continue
+            
+            try:
+                # پردازش VMESS
+                if ptype == "vmess" and line.startswith("vmess://"):
+                    decoded = base64.b64decode(line[8:] + "==").decode()
+                    conf = json.loads(decoded)
+                    ip = conf.get("add")
+                    port = conf.get("port")
+                    
+                    if not ip or not port:
+                        skipped_invalid += 1
+                        continue
+                    
                     if not self.ip_is_ir(ip):
                         skipped_non_iran += 1
                         continue
                     
                     self.logger.update_stat('iranian_proxies')
-                    alive, ping = self.is_alive(ip, int(port))
+                    alive, ping = self.is_alive(ip, port)
                     
                     proxy_data = {
                         'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
-                        'type': proto,
+                        'type': 'vmess',
                         'server': ip,
                         'port': int(port),
+                        'uuid': conf.get("id"),
+                        'alterId': int(conf.get("aid", 0)),
+                        'cipher': conf.get("cipher", "auto"),
+                        'tls': conf.get("tls") == "tls",
+                        'network': conf.get("net", "tcp"),
                         'added_date': datetime.now().strftime('%Y-%m-%d'),
                         'last_checked': datetime.now().strftime('%Y-%m-%d'),
                         'is_active': alive,
@@ -599,63 +764,97 @@ class IranProxyManager:
                         'source': url,
                         'source_name': source_name
                     }
+                    
+                    if conf.get("net") == "ws":
+                        proxy_data["ws-opts"] = {
+                            'path': conf.get("path", "/"),
+                            'headers': {'Host': conf.get("host", "")}
+                        }
+                    
                     proxies.append(proxy_data)
                     added_count += 1
                 
-                # گزارش برای این منبع HTML
-                self.logger.log(f"   📊 نتایج از {source_name}:", "INFO")
-                self.logger.log(f"     ✅ پروکسی‌های ایرانی اضافه شده: {added_count}", "INFO")
-                if skipped_non_iran > 0:
-                    self.logger.log(f"     ❌ پروکسی‌های غیرایرانی حذف شده: {skipped_non_iran}", "INFO")
+                # پردازش VLESS
+                elif ptype == "vless" and line.startswith("vless://"):
+                    conf = self.parse_vless(line)
+                    if not conf:
+                        skipped_invalid += 1
+                        continue
+                    
+                    ip = conf.get("server")
+                    
+                    if not ip or not self.ip_is_ir(ip):
+                        skipped_non_iran += 1
+                        continue
+                    
+                    self.logger.update_stat('iranian_proxies')
+                    alive, ping = self.is_alive(ip, conf["port"])
+                    conf["added_date"] = datetime.now().strftime('%Y-%m-%d')
+                    conf["last_checked"] = datetime.now().strftime('%Y-%m-%d')
+                    conf["is_active"] = alive
+                    conf["country"] = 'IR'
+                    conf["ping"] = ping if alive else 0
+                    conf["source"] = url
+                    conf["source_name"] = source_name
+                    conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
+                    
+                    proxies.append(conf)
+                    added_count += 1
                 
-                return proxies
-            
-            # برای منابع متنی/API
-            lines = response.text.strip().splitlines()
-            total_lines = len(lines)
-            self.logger.update_stat('total_proxies_received', total_lines)
-            
-            self.logger.log(f"   📄 {total_lines} خط دریافت شد", "DEBUG")
-            
-            added_count = 0
-            skipped_non_iran = 0
-            skipped_invalid = 0
-            
-            for line_num, line in enumerate(lines, 1):
-                line = line.strip()
-                if not line:
-                    continue
+                # پردازش Shadowsocks
+                elif ptype == "ss" and line.startswith("ss://"):
+                    conf = self.parse_ss(line)
+                    if not conf:
+                        skipped_invalid += 1
+                        continue
+                    
+                    ip = conf.get("server")
+                    
+                    if not ip or not self.ip_is_ir(ip):
+                        skipped_non_iran += 1
+                        continue
+                    
+                    self.logger.update_stat('iranian_proxies')
+                    alive, ping = self.is_alive(ip, conf["port"])
+                    conf["added_date"] = datetime.now().strftime('%Y-%m-%d')
+                    conf["last_checked"] = datetime.now().strftime('%Y-%m-%d')
+                    conf["is_active"] = alive
+                    conf["country"] = 'IR'
+                    conf["ping"] = ping if alive else 0
+                    conf["source"] = url
+                    conf["source_name"] = source_name
+                    conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
+                    
+                    proxies.append(conf)
+                    added_count += 1
                 
-                try:
-                    # پردازش VMESS
-                    if ptype == "vmess" and line.startswith("vmess://"):
-                        decoded = base64.b64decode(line[8:] + "==").decode()
-                        conf = json.loads(decoded)
-                        ip = conf.get("add")
-                        port = conf.get("port")
+                # پردازش HTTP/SOCKS5/MIXED
+                elif ":" in line and ptype in ["http", "socks5", "mixed"]:
+                    parts = line.split(":")
+                    if len(parts) >= 2:
+                        ip = parts[0].strip()
+                        port = parts[1].strip()
                         
-                        if not ip or not port:
+                        if not re.match(r"^\d+\.\d+\.\d+\.\d+$", ip):
                             skipped_invalid += 1
                             continue
                         
-                        # بررسی IP ایرانی
+                        proto = ptype
+                        if proto == "mixed":
+                            proto = "http" if len(parts) == 2 else "socks5"
+                        
                         if not self.ip_is_ir(ip):
                             skipped_non_iran += 1
                             continue
                         
                         self.logger.update_stat('iranian_proxies')
-                        alive, ping = self.is_alive(ip, port)
+                        alive, ping = self.is_alive(ip, int(port))
                         
                         proxy_data = {
                             'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
-                            'type': 'vmess',
+                            'type': proto,
                             'server': ip,
                             'port': int(port),
-                            'uuid': conf.get("id"),
-                            'alterId': int(conf.get("aid", 0)),
-                            'cipher': conf.get("cipher", "auto"),
-                            'tls': conf.get("tls") == "tls",
-                            'network': conf.get("net", "tcp"),
                             'added_date': datetime.now().strftime('%Y-%m-%d'),
                             'last_checked': datetime.now().strftime('%Y-%m-%d'),
                             'is_active': alive,
@@ -664,143 +863,36 @@ class IranProxyManager:
                             'source': url,
                             'source_name': source_name
                         }
-                        
-                        if conf.get("net") == "ws":
-                            proxy_data["ws-opts"] = {
-                                'path': conf.get("path", "/"),
-                                'headers': {'Host': conf.get("host", "")}
-                            }
-                        
                         proxies.append(proxy_data)
                         added_count += 1
-                    
-                    # پردازش VLESS
-                    elif ptype == "vless" and line.startswith("vless://"):
-                        conf = self.parse_vless(line)
-                        if not conf:
-                            skipped_invalid += 1
-                            continue
-                        
-                        ip = conf.get("server")
-                        
-                        # بررسی IP ایرانی
-                        if not ip or not self.ip_is_ir(ip):
-                            skipped_non_iran += 1
-                            continue
-                        
-                        self.logger.update_stat('iranian_proxies')
-                        alive, ping = self.is_alive(ip, conf["port"])
-                        conf["added_date"] = datetime.now().strftime('%Y-%m-%d')
-                        conf["last_checked"] = datetime.now().strftime('%Y-%m-%d')
-                        conf["is_active"] = alive
-                        conf["country"] = 'IR'
-                        conf["ping"] = ping if alive else 0
-                        conf["source"] = url
-                        conf["source_name"] = source_name
-                        conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
-                        
-                        proxies.append(conf)
-                        added_count += 1
-                    
-                    # پردازش Shadowsocks
-                    elif ptype == "ss" and line.startswith("ss://"):
-                        conf = self.parse_ss(line)
-                        if not conf:
-                            skipped_invalid += 1
-                            continue
-                        
-                        ip = conf.get("server")
-                        
-                        # بررسی IP ایرانی
-                        if not ip or not self.ip_is_ir(ip):
-                            skipped_non_iran += 1
-                            continue
-                        
-                        self.logger.update_stat('iranian_proxies')
-                        alive, ping = self.is_alive(ip, conf["port"])
-                        conf["added_date"] = datetime.now().strftime('%Y-%m-%d')
-                        conf["last_checked"] = datetime.now().strftime('%Y-%m-%d')
-                        conf["is_active"] = alive
-                        conf["country"] = 'IR'
-                        conf["ping"] = ping if alive else 0
-                        conf["source"] = url
-                        conf["source_name"] = source_name
-                        conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
-                        
-                        proxies.append(conf)
-                        added_count += 1
-                    
-                    # پردازش HTTP/SOCKS5/MIXED
-                    elif ":" in line and ptype in ["http", "socks5", "mixed"]:
-                        parts = line.split(":")
-                        if len(parts) >= 2:
-                            ip = parts[0].strip()
-                            port = parts[1].strip()
-                            
-                            if not re.match(r"^\d+\.\d+\.\d+\.\d+$", ip):
-                                skipped_invalid += 1
-                                continue
-                            
-                            proto = ptype
-                            if proto == "mixed":
-                                proto = "http" if len(parts) == 2 else "socks5"
-                            
-                            # بررسی IP ایرانی
-                            if not self.ip_is_ir(ip):
-                                skipped_non_iran += 1
-                                continue
-                            
-                            self.logger.update_stat('iranian_proxies')
-                            alive, ping = self.is_alive(ip, int(port))
-                            
-                            proxy_data = {
-                                'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
-                                'type': proto,
-                                'server': ip,
-                                'port': int(port),
-                                'added_date': datetime.now().strftime('%Y-%m-%d'),
-                                'last_checked': datetime.now().strftime('%Y-%m-%d'),
-                                'is_active': alive,
-                                'country': 'IR',
-                                'ping': ping if alive else 0,
-                                'source': url,
-                                'source_name': source_name
-                            }
-                            proxies.append(proxy_data)
-                            added_count += 1
-                        else:
-                            skipped_invalid += 1
-                
-                except Exception as e:
-                    skipped_invalid += 1
-                    continue
+                    else:
+                        skipped_invalid += 1
             
-            # گزارش برای این منبع
-            self.logger.log(f"   📊 نتایج از {source_name}:", "INFO")
-            self.logger.log(f"     ✅ پروکسی‌های ایرانی اضافه شده: {added_count}", "INFO")
-            if skipped_non_iran > 0:
-                self.logger.log(f"     ❌ پروکسی‌های غیرایرانی حذف شده: {skipped_non_iran}", "INFO")
-            if skipped_invalid > 0:
-                self.logger.log(f"     ⚠️  خطوط نامعتبر: {skipped_invalid}", "INFO")
-            
-            return proxies
-            
-        except Exception as e:
-            self.logger.log(f"   ⚠️ خطا در دریافت از منبع: {str(e)[:50]}", "ERROR")
-            self.failed_sources.append(url)
-            self.logger.update_stat('sources_failed')
-            return []
+            except Exception as e:
+                skipped_invalid += 1
+                continue
+        
+        # به‌روزرسانی اولویت منبع
+        self.update_source_priority(source_name, added_count)
+        
+        self.logger.log(f"   📊 نتایج: {added_count}✅ | {skipped_non_iran}❌ | {skipped_invalid}⚠️", "INFO")
+        self.logger.print_debug_info(source_index, total_sources,
+                                   self.logger.stats['total_proxies_received'],
+                                   self.logger.stats['iranian_proxies'])
+        
+        return proxies
     
     def fetch_all_proxies(self) -> List[Dict[str, Any]]:
         """دریافت همه پروکسی‌ها از منابع"""
         all_proxies = []
         seen_keys = set()
         
-        self.logger.log(f"\n📥 شروع دریافت پروکسی‌ها از {len(self.SOURCES)} منبع:")
+        total_sources = len(self.SOURCES)
+        self.logger.log(f"\n📥 شروع دریافت پروکسی‌ها از {total_sources} منبع:")
         self.logger.log("=" * 70)
         
-        for url, ptype, source_name in self.SOURCES:
-            proxies = self.fetch_source_proxies(url, ptype, source_name)
+        for idx, (url, ptype, source_name) in enumerate(self.SOURCES, 1):
+            proxies = self.fetch_source_proxies(url, ptype, source_name, idx, total_sources)
             
             # حذف تکراری‌ها
             filtered_proxies = []
@@ -813,14 +905,14 @@ class IranProxyManager:
                     self.logger.update_stat('duplicates_found')
             
             all_proxies.extend(filtered_proxies)
-            self.logger.log(f"   از {source_name}: {len(filtered_proxies)} پروکسی منحصربه‌فرد ایرانی")
             
-            # تأخیر بین منابع مختلف برای جلوگیری از بلاک
-            if source_name in ['freeproxy.world', 'proxyhub.me', 'proxydocker']:
-                time.sleep(random.uniform(3, 6))
+            # تأخیر بین منابع
+            if idx < total_sources:
+                delay = random.uniform(1, 3)
+                time.sleep(delay)
         
         self.logger.log("=" * 70)
-        self.logger.log(f"📊 مجموع {len(all_proxies)} پروکسی ایرانی از {len(self.SOURCES)} منبع دریافت شد")
+        self.logger.log(f"📊 مجموع {len(all_proxies)} پروکسی ایرانی از {total_sources} منبع دریافت شد")
         return all_proxies
     
     def add_new_proxies(self, new_proxies: List[Dict[str, Any]]) -> Tuple[int, int]:
@@ -849,14 +941,11 @@ class IranProxyManager:
         """بررسی شرایط حذف پروکسی‌های قدیمی"""
         total_proxies = len(self.config.get('proxies', []))
         
-        # شرط ۱: تعداد کل باید بیشتر از ۵۰ باشد
         if total_proxies <= 50:
             return False, [], 0
         
-        # محاسبه تعداد اضافی
         excess_count = total_proxies - 50
         
-        # شرط ۲: یافتن پروکسی‌های قدیمی‌تر از ۳ روز
         today = datetime.now()
         cutoff_date = today - timedelta(days=3)
         
@@ -869,10 +958,8 @@ class IranProxyManager:
             except (ValueError, KeyError):
                 continue
         
-        # مرتب‌سازی بر اساس تاریخ (قدیمی‌ترین اول)
         old_proxies.sort(key=lambda x: datetime.strptime(x['added_date'], '%Y-%m-%d'))
         
-        # بررسی آیا هر دو شرط برقرارند
         should_remove = len(old_proxies) > 0 and excess_count > 0
         
         return should_remove, old_proxies, excess_count
@@ -917,17 +1004,10 @@ class IranProxyManager:
         needed = 50 - len(active_proxies)
         self.logger.log(f"⚠️ فقط {len(active_proxies)} پروکسی فعال داریم. نیاز به {needed} پروکسی بیشتر")
         
-        # منابع اضافی برای مواقع اضطراری
-        emergency_sources = [
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all", "http", "emergency"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all", "socks5", "emergency"),
-            ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess", "emergency"),
-        ]
-        
         self.logger.log("🔍 تلاش برای دریافت پروکسی‌های بیشتر از منابع اضطراری...")
         
         original_sources = self.SOURCES.copy()
-        self.SOURCES.extend(emergency_sources)
+        self.SOURCES = self.emergency_sources
         
         new_emergency_proxies = self.fetch_all_proxies()
         added, _ = self.add_new_proxies(new_emergency_proxies)
@@ -943,7 +1023,7 @@ class IranProxyManager:
         """اجرای اصلی"""
         self.logger.log("=" * 80)
         self.logger.log("🚀 شروع فرآیند به‌روزرسانی پروکسی‌های ایرانی")
-        self.logger.log(f"🌐 تعداد منابع: {len(self.SOURCES)} منبع ایرانی")
+        self.logger.log(f"🌐 تعداد منابع: {len(self.SOURCES)} منبع")
         self.logger.log("🔍 سیستم: بررسی مستقیم IP از سرویس‌های آنلاین با fallback")
         self.logger.log("=" * 80)
         
@@ -1033,6 +1113,20 @@ class IranProxyManager:
             self.logger.log(f"   • منابع موفق: {successful_sources}/{len(self.SOURCES)}")
             self.logger.log(f"   • منابع شکست خورده: {len(self.failed_sources)}")
             
+            # نمایش بهترین و بدترین منابع
+            if self.source_priority:
+                sorted_sources = sorted(self.source_priority.items(), key=lambda x: x[1], reverse=True)
+                best_sources = sorted_sources[:3]
+                worst_sources = sorted_sources[-3:] if len(sorted_sources) >= 3 else sorted_sources
+                
+                self.logger.log(f"\n🏆 بهترین منابع:")
+                for name, score in best_sources:
+                    self.logger.log(f"   • {name}: {score} امتیاز")
+                
+                self.logger.log(f"\n📉 بدترین منابع:")
+                for name, score in worst_sources:
+                    self.logger.log(f"   • {name}: {score} امتیاز")
+            
             if final_active >= 50:
                 self.logger.log(f"\n✅ موفقیت: {final_active} پروکسی ایرانی فعال موجود است")
             else:
@@ -1064,7 +1158,7 @@ def main():
     """تابع اصلی"""
     print("🔧 مدیر پروکسی‌های ایرانی - سیستم بررسی مستقیم IP")
     print("📅 " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    print(f"🌐 {len(IranProxyManager().SOURCES)} منبع ایرانی")
+    print(f"🌐 {len(IranProxyManager().SOURCES)} منبع")
     print("🔍 استفاده از سرویس‌های آنلاین با سیستم fallback")
     
     manager = IranProxyManager()
