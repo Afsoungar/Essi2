@@ -26,19 +26,7 @@ class Logger:
         self.log_dir = log_dir
         os.makedirs(self.log_dir, exist_ok=True)
         
-        # حذف لاگ‌های قدیمی‌تر از 2 هفته
-        self.clean_old_logs()
-        
-        # فایل لاگ با timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.log_file = os.path.join(self.log_dir, f"proxy_update_{timestamp}.log")
-        self.console_log_file = os.path.join(self.log_dir, "latest.log")
-        
-        # باز کردن فایل‌ها
-        self.log_fd = open(self.log_file, 'w', encoding='utf-8')
-        self.console_log_fd = open(self.console_log_file, 'w', encoding='utf-8')
-        
-        # آمارها
+        # آمارها - باید قبل از clean_old_logs تعریف شوند
         self.stats = {
             'total_proxies_received': 0,
             'iranian_proxies': 0,
@@ -56,6 +44,18 @@ class Logger:
             'sources_failed': 0,
             'old_logs_deleted': 0
         }
+        
+        # حذف لاگ‌های قدیمی‌تر از 2 هفته
+        self.clean_old_logs()  # حالا self.stats تعریف شده
+        
+        # فایل لاگ با timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.log_file = os.path.join(self.log_dir, f"proxy_update_{timestamp}.log")
+        self.console_log_file = os.path.join(self.log_dir, "latest.log")
+        
+        # باز کردن فایل‌ها
+        self.log_fd = open(self.log_file, 'w', encoding='utf-8')
+        self.console_log_fd = open(self.console_log_file, 'w', encoding='utf-8')
     
     def clean_old_logs(self):
         """حذف لاگ‌های قدیمی‌تر از 2 هفته"""
