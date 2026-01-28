@@ -16,7 +16,7 @@ permissions:
 jobs:
   update-proxies:
     runs-on: ubuntu-latest
-    timeout-minutes: 360  # افزایش به 2 ساعت
+    timeout-minutes: 360
     
     steps:
     - name: 📥 Checkout repository
@@ -37,38 +37,260 @@ jobs:
         pip install -r requirements.txt
         pip install beautifulsoup4 lxml
     
-    - name: 💾 Commit and push changes
+    - name: 💾 هوشمند: مدیریت تغییرات با کش موقت
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # اول تغییرات جدید را بگیر و merge کن
-        echo "📥 دریافت آخرین تغییرات از main..."
+        # مسیر فایل موقت برای ذخیره نتایج
+        TEMP_RESULTS="temp_proxy_results.json"
+        TEMP_LOCK="temp_lock.file"
+        
+        # تابع برای نمایش وضعیت
+        show_status() {
+          echo "📊 $1"
+        }
+        
+        # تابع برای پاک کردن فایل‌های موقت (اگر از اجرای قبلی باقی مانده)
+        cleanup_temp_files() {
+          show_status "پاک کردن فایل‌های موقت قدیمی..."
+          rm -f "$TEMP_RESULTS" "$TEMP_LOCK" 2>/dev/null || true
+        }
+        
+        # تابع برای اجرای اسکریپت و ذخیره نتایج در فایل موقت
+        run_update_and_save() {
+          show_status "اجرای اسکریپت به‌روزرسانی و ذخیره نتایج..."
+          
+          # اگر فایل موقت از قبل وجود دارد، استفاده کن
+          if [ -f "$TEMP_RESULTS" ] && [ -s "$TEMP_RESULTS" ]; then
+            show_status "📁 استفاده از نتایج ذخیره شده قبلی..."
+            
+            # کپی فایل موقت به خروجی
+            mkdir -p output/logs
+            if python -c "
+import json, yaml, os
+with open('$TEMP_RESULTS', 'r') as f:
+    data = json.load(f)
+    
+# ساخت config از نتایج ذخیره شده
+config = {'proxies': data['proxies'], 'metadata': data['metadata']}
+
+# ذخیره config
+os.makedirs('output', exist_ok=True)
+with open('output/config.yaml', 'w', encoding='utf-8') as f:
+    yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+
+# ساخت لاگ
+import datetime
+log_content = '''نتایج از کش موقت بارگذاری شد
+تاریخ: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+تعداد پروکسی‌ها: {len(data['proxies'])}
+منابع استفاده شده: {data['metadata'].get('sources_used', 0)}
+پروکسی‌های ایرانی: {data['metadata'].get('iranian_proxies', 0)}
+'''.strip()
+
+os.makedirs('output/logs', exist_ok=True)
+with open('output/logs/latest.log', 'w', encoding='utf-8') as f:
+    f.write(log_content)
+
+print('✅ نتایج از کش بارگذاری شد')
+            "; then
+              echo "✅ استفاده از نتایج کش موفق بود"
+              return 0
+            fi
+          fi
+          
+          # اگر نتایج ذخیره شده نداریم، اجرا کن
+          show_status "🔍 استخراج پروکسی‌ها از منابع..."
+          python scripts/update.py
+          
+          # بررسی موفقیت اجرا
+          if [ ! -f "output/config.yaml" ]; then
+            echo "❌ فایل config ساخته نشد!"
+            return 1
+          fi
+          
+          # ذخیره نتایج در فایل موقت برای مراحل بعدی
+          show_status "💾 ذخیره نتایج در فایل موقت..."
+          if python -c "
+import json, yaml, os, datetime
+
+# خواندن config
+with open('output/config.yaml', 'r', encoding='utf-8') as f:
+    config = yaml.safe_load(f)
+
+# ذخیره در JSON
+results = {
+    'proxies': config.get('proxies', []),
+    'metadata': config.get('metadata', {}),
+    'saved_at': datetime.datetime.now().isoformat()
+}
+
+with open('$TEMP_RESULTS', 'w', encoding='utf-8') as f:
+    json.dump(results, f, indent=2)
+
+print(f'✅ نتایج در فایل موقت ذخیره شد ({len(results[\"proxies\"])} پروکسی)')
+          "; then
+            echo "✅ نتایج ذخیره شد"
+          fi
+          
+          return 0
+        }
+        
+        # تابع برای commit و push
+        commit_and_push() {
+          show_status "اضافه کردن فایل‌ها..."
+          git add -f output/ 2>/dev/null || true
+          
+          if ! git diff --cached --quiet; then
+            COMMIT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+            git commit -m "🤖 Update proxy list - $COMMIT_DATE"
+            
+            show_status "آپلود تغییرات..."
+            if git push origin HEAD:main; then
+              echo "✅ Push موفقیت‌آمیز"
+              return 0
+            else
+              echo "❌ Push ناموفق"
+              return 1
+            fi
+          else
+            echo "⚠️ No changes to commit"
+            return 0
+          fi
+        }
+        
+        # === شروع: پاک کردن فایل‌های موقت قدیمی ===
+        cleanup_temp_files
+        
+        # === راه‌حل ۱: روش معمولی ===
+        show_status "🔄 راه‌حل ۱: روش معمولی..."
         git fetch origin
-        git merge origin/main --no-edit || git merge --abort
         
-        # اسکریپت را اجرا کن
-        echo "🚀 اجرای اسکریپت به‌روزرسانی..."
-        python scripts/update.py
-        
-        # فایل‌های تغییر کرده را اضافه کن
-        git add output/config.yaml output/logs/latest.log 2>/dev/null || true
-        
-        # اگر تغییری وجود دارد commit کن
-        if ! git diff --cached --quiet; then
-          COMMIT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
-          git commit -m "🤖 Update proxy list - $COMMIT_DATE"
-          
-          # دوباره تغییرات را بگیر قبل از push
-          git pull origin main --rebase --autostash
-          
-          # Push تغییرات با force اگر لازم باشد
-          git push origin HEAD:main || git push origin HEAD:main --force
-          echo "✅ Changes pushed successfully"
-          
-          # نمایش خلاصه
-          echo "📋 خلاصه اجرا:"
-          tail -5 output/logs/latest.log 2>/dev/null || echo "⚠️ فایل لاگ پیدا نشد"
+        # سعی کن merge کنی
+        if git merge origin/main --no-ff --no-edit; then
+          echo "✅ Merge موفقیت‌آمیز"
         else
-          echo "⚠️ No changes to commit"
+          echo "⚠️ Merge با conflict مواجه شد، ادامه با حالت فعلی"
+          git merge --abort 2>/dev/null || true
         fi
+        
+        # اجرای اسکریپت (یا استفاده از کش)
+        if run_update_and_save; then
+          if commit_and_push; then
+            echo "🎉 راه‌حل ۱ موفق بود!"
+            cleanup_temp_files  # پاک کردن فایل موقت بعد از موفقیت
+            exit 0
+          fi
+        fi
+        
+        # === راه‌حل ۲: rebase ===
+        show_status "🔄 راه‌حل ۲: تلاش با rebase..."
+        git fetch origin
+        
+        # reset به origin/main
+        git reset --hard origin/main 2>/dev/null || true
+        
+        # اجرای دوباره اسکریپت (یا استفاده از کش)
+        if run_update_and_save; then
+          # با --force push کن
+          git add -f output/ 2>/dev/null || true
+          
+          if ! git diff --cached --quiet; then
+            COMMIT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+            git commit -m "🤖 Update proxy list - $COMMIT_DATE"
+            
+            if git push origin HEAD:main --force-with-lease; then
+              echo "✅ راه‌حل ۲ با force موفق بود!"
+              cleanup_temp_files  # پاک کردن فایل موقت
+              exit 0
+            fi
+          fi
+        fi
+        
+        # === راه‌حل ۳: پاک کردن و ساخت جدید ===
+        show_status "🔄 راه‌حل ۳: پاک کردن و ساخت از نو (آخرین راه‌حل)..."
+        
+        # ۱. کاملاً پاک کن و از نو بگیر
+        git fetch origin
+        git reset --hard origin/main
+        git clean -fd -x  # با -x فایل‌های ignore شده هم پاک می‌شوند
+        
+        # ۲. پوشه output را پاک کن
+        rm -rf output/ 2>/dev/null || true
+        mkdir -p output/logs
+        
+        # ۳. استفاده از نتایج کش (اگر وجود دارد)
+        if [ -f "$TEMP_RESULTS" ] && [ -s "$TEMP_RESULTS" ]; then
+          show_status "📁 استفاده از نتایج ذخیره شده (مرحله آخر)..."
+          
+          python -c "
+import json, yaml, os, datetime
+with open('$TEMP_RESULTS', 'r') as f:
+    data = json.load(f)
+
+config = {'proxies': data['proxies'], 'metadata': data['metadata']}
+
+os.makedirs('output', exist_ok=True)
+with open('output/config.yaml', 'w', encoding='utf-8') as f:
+    yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+
+# آپدیت metadata
+config['metadata']['last_updated'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+config['metadata']['source'] = 'cached_results'
+
+with open('output/config.yaml', 'w', encoding='utf-8') as f:
+    yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+
+print(f'✅ نتایج از کش بارگذاری شد ({len(data[\"proxies\"])} پروکسی)')
+          "
+        else
+          # ۴. اگر کش وجود ندارد، اسکریپت را اجرا کن
+          show_status "🔍 استخراج پروکسی‌ها (اجرای جدید)..."
+          python scripts/update.py
+        fi
+        
+        # ۵. بررسی فایل config
+        if [ ! -f "output/config.yaml" ]; then
+          echo "❌ فایل config ساخته نشد!"
+          cleanup_temp_files
+          exit 1
+        fi
+        
+        # ۶. اضافه کردن و commit
+        git add output/
+        COMMIT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+        git commit -m "🤖 Update proxy list - $COMMIT_DATE"
+        
+        # ۷. push با force مطلق
+        if git push origin HEAD:main --force; then
+          echo "✅ راه‌حل ۳ (آخرین راه‌حل) موفق بود!"
+          
+          # نمایش اطلاعات
+          if [ -f "output/config.yaml" ]; then
+            echo "📊 اطلاعات نهایی:"
+            python -c "
+import yaml, os
+with open('output/config.yaml', 'r', encoding='utf-8') as f:
+    config = yaml.safe_load(f)
+proxies = config.get('proxies', [])
+active = sum(1 for p in proxies if p.get('is_active', False))
+print(f'   • کل پروکسی‌ها: {len(proxies)}')
+print(f'   • پروکسی‌های فعال: {active}')
+            "
+          fi
+          
+          cleanup_temp_files  # پاک کردن فایل موقت بعد از موفقیت
+          exit 0
+        else
+          echo "❌ حتی آخرین راه‌حل هم جواب نداد!"
+          cleanup_temp_files
+          exit 1
+        fi
+    
+    # پاک کردن فایل‌های موقت در صورت هرگونه خطا (به عنوان fallback)
+    - name: 🧹 پاکسازی نهایی فایل‌های موقت
+      if: always()
+      run: |
+        rm -f temp_proxy_results.json temp_lock.file 2>/dev/null || true
+        echo "✅ فایل‌های موقت پاک شدند"
