@@ -16,7 +16,7 @@ permissions:
 jobs:
   update-proxies:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 360  # افزایش به 2 ساعت
     
     steps:
     - name: 📥 Checkout repository
@@ -37,29 +37,20 @@ jobs:
         pip install -r requirements.txt
         pip install beautifulsoup4 lxml
     
-    - name: 🚀 Run update script
-      run: |
-        echo "Starting proxy update process..."
-        python scripts/update.py
-        echo "Update script completed!"
-    
     - name: 💾 Commit and push changes
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
         # اول تغییرات جدید را بگیر (حل مشکل کد قدیمی)
-        git pull origin main --rebase
+        echo "📥 دریافت آخرین تغییرات از main..."
+        git pull origin main --rebase --autostash
         
-        # لاگ‌های قدیمی را بررسی کن
-        echo "📁 بررسی فایل‌های لاگ..."
-        ls -la output/logs/ 2>/dev/null || echo "📁 پوشه logs وجود ندارد"
-        
-        # اسکریپت را اجرا کن (با کد جدید)
-        echo "🚀 اجرای اسکریپت با تغییرات جدید..."
+        # اسکریپت را فقط یک بار اجرا کن
+        echo "🚀 اجرای اسکریپت به‌روزرسانی..."
         python scripts/update.py
         
-        # فقط فایل config و latest.log را اضافه کن
+        # فایل‌های تغییر کرده را اضافه کن
         git add output/config.yaml output/logs/latest.log 2>/dev/null || true
         
         # اگر تغییری وجود دارد commit کن
@@ -71,12 +62,13 @@ jobs:
           git push origin HEAD:main
           echo "✅ Changes pushed successfully"
           
-          # نمایش لاگ آخرین اجرا
-          echo "📋 آخرین لاگ:"
-          tail -20 output/logs/latest.log 2>/dev/null || echo "⚠️ فایل لاگ پیدا نشد"
+          # نمایش خلاصه
+          echo "📋 خلاصه اجرا:"
+          tail -5 output/logs/latest.log 2>/dev/null || echo "⚠️ فایل لاگ پیدا نشد"
         else
           echo "⚠️ No changes to commit"
-          # نمایش وضعیت فعلی
-          echo "📊 وضعیت فعلی:"
-          ls -la output/ 2>/dev/null || echo "📁 پوشه output وجود ندارد"
         fi
+        
+        # نمایش حجم فایل‌ها
+        echo "💾 حجم فایل‌ها:"
+        du -h output/config.yaml 2>/dev/null || echo "⚠️ config.yaml وجود ندارد"
