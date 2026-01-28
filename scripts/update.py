@@ -170,30 +170,6 @@ class IranProxyManager:
             # HTML-based sources
             ("https://www.freeproxy.world/?type=http&anonymity=&country=IR", "html-http", "freeproxy.world"),
             ("https://www.freeproxy.world/?type=socks5&anonymity=&country=IR", "html-socks5", "freeproxy.world"),
-            ("https://proxyhub.me/en/ir-http-proxy-list.html", "html-http", "proxyhub.me"),
-            ("https://proxyhub.me/en/ir-sock5-proxy-list.html", "html-socks5", "proxyhub.me"),
-            ("https://www.proxydocker.com/en/socks5-list/country/Iran", "html-socks5", "proxydocker"),
-            ("https://www.proxydocker.com/en/proxylist/search?need=all&type=http-https&anonymity=all&port=&country=Iran&city=&state=all", "html-http", "proxydocker"),
-            
-            # API-based sources
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&country=IR", "socks5", "proxyscrape"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR", "http", "proxyscrape"),
-            ("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR", "http", "proxyscrape"),
-            
-            # GitHub text-based sources
-            ("https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", "socks5", "github"),
-            ("https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "socks5", "github"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt", "vmess", "github"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vless.txt", "vless", "github"),
-            ("https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt", "ss", "github"),
-            
-            # منابع جدید ایرانی
-            ("https://raw.githubusercontent.com/iranxray/hope/main/singbox", "vless", "github-iran"),
-            ("https://raw.githubusercontent.com/yebekhe/TelegramV2rayCollector/main/singbox", "vless", "github-iran"),
-            ("https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sb", "ss", "github"),
-            ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess", "github"),
-            ("https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt", "mixed", "github"),
-            ("https://raw.githubusercontent.com/BlueSkyXN/9.DDFHP/main/1", "mixed", "github"),
         ]
         
         # سرویس‌های بررسی IP با سیستم fallback
