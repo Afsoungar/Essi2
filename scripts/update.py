@@ -704,7 +704,10 @@ class IranProxyManager:
             # نمایش نتایج
             current_total = self.logger.stats['total_proxies_received']
             current_iranian = self.logger.stats['iranian_proxies']
-            self.logger.log(f"[{source_index}/{total_sources}] ✅ {source_name}: {added_count} پروکسی | [{current_iranian}/{current_total}]", "INFO")
+            current_total = self.logger.stats['total_proxies_received']
+            current_iranian = self.logger.stats['iranian_proxies']
+            self.logger.log(f"[{source_index}/{total_sources}] ✅ {source_name}: {added_count} پروکسی ایرانی", "INFO")
+            self.logger.log(f"   📊 وضعیت: [{current_iranian}/{current_total}] پروکسی ایرانی/کل", "DEBUG")
             
             return proxies
         
