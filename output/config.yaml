@@ -380,12 +380,62 @@ proxies:
   country: IR
   ping: 0
   source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 45.131.4.172:80 (20ms)
+  type: socks5
+  server: 45.131.4.172
+  port: 80
+  added_date: '2026-01-29'
+  last_checked: '2026-01-29'
+  is_active: true
+  country: IR
+  ping: 20
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 84.241.22.125:4145
+  type: socks5
+  server: 84.241.22.125
+  port: 4145
+  added_date: '2026-01-29'
+  last_checked: '2026-01-29'
+  is_active: false
+  country: IR
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 89.43.5.134:3629
+  type: socks5
+  server: 89.43.5.134
+  port: 3629
+  added_date: '2026-01-29'
+  last_checked: '2026-01-29'
+  is_active: false
+  country: IR
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 45.131.4.79:80 (18ms)
+  type: socks5
+  server: 45.131.4.79
+  port: 80
+  added_date: '2026-01-29'
+  last_checked: '2026-01-29'
+  is_active: true
+  country: IR
+  ping: 18
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 185.171.54.30:4153
+  type: socks5
+  server: 185.171.54.30
+  port: 4153
+  added_date: '2026-01-29'
+  last_checked: '2026-01-29'
+  is_active: false
+  country: IR
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 30
-  active_count: 6
-  last_updated: '2026-01-29 04:30:00'
+  total_count: 35
+  active_count: 8
+  last_updated: '2026-01-29 08:41:11'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260129_023706.log
+  log_file: output/logs/proxy_update_20260129_074333.log
