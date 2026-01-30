@@ -38,13 +38,6 @@ jobs:
         pip install PySocks requests beautifulsoup4 pyyaml lxml
         
 
-    - name: Fix Clash config
-      run: |
-        python scripts/fix_clash.py
-        
-    - name: Create Clash subscription
-      run: |
-        python scripts/create_subscription.py
     
     - name:  هوشمند مدیریت تغییرات
       run: |
