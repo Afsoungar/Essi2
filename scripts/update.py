@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-اسکریپت مدیریت پروکسی‌های ایرانی
-بررسی مستقیم IP از سرویس‌های آنلاین با سیستم fallback
+اسکریپت مدیریت پروکسی‌های ایرانی - نسخه نهایی
+با اصلاحات کامل برای کلش اندروید و اجرا در GitHub
 """
 
 import yaml
@@ -181,11 +181,11 @@ class IranProxyManager:
             ("https://raw.githubusercontent.com/freefq/free/master/v2", "vmess", "emergency-vmess"),
         ]
         
-        # سرویس‌های بررسی IP
+        # سرویس‌های بررسی IP با تایم‌اوت بیشتر
         self.IP_CHECK_SERVICES = [
-            {'name': 'ip-api.com', 'url': 'http://ip-api.com/json/{ip}?fields=status,countryCode,query', 'field': 'countryCode', 'timeout': 3, 'max_retries': 2},
-            {'name': 'ipapi.co', 'url': 'https://ipapi.co/{ip}/country/', 'field': 'text', 'timeout': 3, 'max_retries': 2},
-            {'name': 'ipinfo.io', 'url': 'https://ipinfo.io/{ip}/country', 'field': 'text', 'timeout': 3, 'max_retries': 2},
+            {'name': 'ip-api.com', 'url': 'http://ip-api.com/json/{ip}?fields=status,countryCode,query', 'field': 'countryCode', 'timeout': 10, 'max_retries': 3},
+            {'name': 'ipapi.co', 'url': 'https://ipapi.co/{ip}/country/', 'field': 'text', 'timeout': 10, 'max_retries': 3},
+            {'name': 'ipinfo.io', 'url': 'https://ipinfo.io/{ip}/country', 'field': 'text', 'timeout': 10, 'max_retries': 3},
         ]
         
         # User-Agent های متنوع
@@ -224,7 +224,7 @@ class IranProxyManager:
             return {"proxies": [], "metadata": {}}
     
     def save_config(self):
-        """ذخیره فایل کانفیگ با تصحیح alterId"""
+        """ذخیره فایل کانفیگ با اصلاحات کامل برای کلش اندروید"""
         try:
             os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
             
@@ -244,19 +244,46 @@ class IranProxyManager:
                     'country': str(proxy.get('country', 'IR')),
                 }
                 
+                # 🔥 **اضافه کردن udp: true برای کلش اندروید**
+                cleaned_proxy['udp'] = True
+                
                 # فیلدهای اختیاری استاندارد
                 optional_fields = ['ping', 'source', 'uuid', 'cipher', 'password', 'network', 'tls']
                 for field in optional_fields:
                     if field in proxy:
                         cleaned_proxy[field] = proxy[field]
                 
-                # تصحیح alterld به alterId (حل مشکل کلاینت‌های اندروید)
-                if 'alterld' in proxy:  # اشتباه تایپی با حرف L
-                    cleaned_proxy['alterId'] = proxy['alterld']
-                elif 'alterId' in proxy:  # درست
-                    cleaned_proxy['alterId'] = proxy['alterId']
-                elif cleaned_proxy['type'] == 'vmess':
-                    cleaned_proxy['alterId'] = 0  # مقدار پیش‌فرض
+                # 🔥 اصلاحات بحرانی برای کلش اندروید
+                if cleaned_proxy['type'] == 'vmess':
+                    # 1. تصحیح alterId: حداقل 4 برای کلش
+                    if 'alterld' in proxy:  # اشتباه تایپی
+                        cleaned_proxy['alterId'] = max(proxy['alterld'], 4)
+                    elif 'alterId' in proxy:
+                        cleaned_proxy['alterId'] = max(proxy['alterId'], 4)
+                    else:
+                        cleaned_proxy['alterId'] = 4
+                    
+                    # 2. تصحیح TLS برای پورت 443
+                    if cleaned_proxy['port'] == 443 and not cleaned_proxy.get('tls', False):
+                        cleaned_proxy['tls'] = True
+                        self.logger.log(f"   🔧 TLS فعال شد برای {cleaned_proxy['server']}:443", "DEBUG")
+                    
+                    # 3. تصحیح ws-opts برای کلش
+                    if 'ws-opts' in proxy:
+                        ws_opts = proxy['ws-opts']
+                        # اطمینان از وجود headers
+                        if 'headers' not in ws_opts:
+                            ws_opts['headers'] = {}
+                        # اگر Host خالی است، با server پر کن
+                        if 'Host' not in ws_opts['headers'] or not ws_opts['headers']['Host']:
+                            ws_opts['headers']['Host'] = cleaned_proxy['server']
+                            self.logger.log(f"   🔧 Host اصلاح شد برای {cleaned_proxy['server']}:{cleaned_proxy['port']}", "DEBUG")
+                        cleaned_proxy['ws-opts'] = ws_opts
+                    
+                    # 4. اضافه کردن sni اگر TLS فعال است
+                    if cleaned_proxy.get('tls', False) and 'sni' not in cleaned_proxy:
+                        host = cleaned_proxy.get('ws-opts', {}).get('headers', {}).get('Host', '')
+                        cleaned_proxy['sni'] = host if host else cleaned_proxy['server']
                 
                 # سایر فیلدهای خاص
                 if 'ws-opts' in proxy:
@@ -272,7 +299,11 @@ class IranProxyManager:
                 'min_proxies': 50,
                 'sources_used': len(self.SOURCES),
                 'log_retention_days': 14,
-                'log_file': self.logger.log_file
+                'log_file': self.logger.log_file,
+                'clash_compatible': True,
+                'alterId_min': 4,
+                'udp_enabled': True,
+                'fixed_hosts': True
             }
             
             final_config = {'proxies': cleaned_proxies, 'metadata': metadata}
@@ -284,23 +315,86 @@ class IranProxyManager:
                          sort_keys=False,
                          indent=2)
             
-            self.logger.log(f"فایل کانفیگ ذخیره شد ({len(cleaned_proxies)} پروکسی)")
+            self.logger.log(f"✅ فایل کانفیگ برای کلش اندروید ذخیره شد ({len(cleaned_proxies)} پروکسی)")
             return True
         except Exception as e:
-            self.logger.log(f"خطا در ذخیره کانفیگ: {e}", "ERROR")
+            self.logger.log(f"❌ خطا در ذخیره کانفیگ: {e}", "ERROR")
             return False
     
-    def is_alive(self, ip: str, port: int, timeout: int = 5) -> Tuple[bool, int]:
-        """بررسی فعال بودن پروکسی"""
+    def is_alive(self, ip: str, port: int, proxy_type: str = "tcp", timeout: int = 15) -> Tuple[bool, int]:
+        """بررسی فعال بودن پروکسی با تایم‌اوت بیشتر"""
         try:
             start = time.time()
-            s = socket.create_connection((ip, port), timeout=timeout)
-            s.close()
+            
+            # 🔥 **تست واقعی با درخواست HTTP برای پروکسی‌های HTTP/SOCKS5**
+            if proxy_type.lower() in ["http", "socks5"]:
+                return self.test_http_proxy(ip, port, proxy_type, timeout)
+            else:
+                # تست معمولی TCP برای vmess/vless
+                s = socket.create_connection((ip, port), timeout=timeout)
+                s.close()
+                ping = int((time.time() - start) * 1000)
+                if ping > 0:
+                    self.logger.update_stat('active_proxies_found')
+                return True, ping
+                
+        except socket.timeout:
+            self.logger.log(f"   ⏱️ تایم‌اوت برای {ip}:{port} ({proxy_type})", "DEBUG")
+            self.logger.update_stat('inactive_proxies')
+            return False, 0
+        except Exception as e:
+            self.logger.log(f"   ❌ خطا برای {ip}:{port}: {str(e)[:50]}", "DEBUG")
+            self.logger.update_stat('inactive_proxies')
+            return False, 0
+    
+    def test_http_proxy(self, ip: str, port: int, proxy_type: str, timeout: int = 15) -> Tuple[bool, int]:
+        """تست واقعی پروکسی HTTP/SOCKS5 با ارسال درخواست"""
+        try:
+            start = time.time()
+            
+            proxies = {}
+            if proxy_type.lower() == "http":
+                proxies = {
+                    'http': f"http://{ip}:{port}",
+                    'https': f"http://{ip}:{port}"
+                }
+            elif proxy_type.lower() == "socks5":
+                proxies = {
+                    'http': f"socks5://{ip}:{port}",
+                    'https': f"socks5://{ip}:{port}"
+                }
+            
+            # تست با یک سایت ساده
+            response = requests.get(
+                'http://httpbin.org/ip',
+                proxies=proxies,
+                timeout=timeout,
+                headers={'User-Agent': random.choice(self.USER_AGENTS)}
+            )
+            
             ping = int((time.time() - start) * 1000)
-            if ping > 0:
+            
+            if response.status_code == 200:
                 self.logger.update_stat('active_proxies_found')
-            return True, ping
-        except:
+                return True, ping
+            else:
+                self.logger.update_stat('inactive_proxies')
+                return False, 0
+                
+        except requests.exceptions.ProxyError:
+            self.logger.log(f"   🔧 Proxy error: {ip}:{port}", "DEBUG")
+            self.logger.update_stat('inactive_proxies')
+            return False, 0
+        except requests.exceptions.ConnectTimeout:
+            self.logger.log(f"   ⏱️ Connect timeout: {ip}:{port}", "DEBUG")
+            self.logger.update_stat('inactive_proxies')
+            return False, 0
+        except requests.exceptions.ReadTimeout:
+            self.logger.log(f"   ⏱️ Read timeout: {ip}:{port}", "DEBUG")
+            self.logger.update_stat('inactive_proxies')
+            return False, 0
+        except Exception as e:
+            self.logger.log(f"   ❌ HTTP test error: {ip}:{port} - {str(e)[:50]}", "DEBUG")
             self.logger.update_stat('inactive_proxies')
             return False, 0
     
@@ -478,7 +572,7 @@ class IranProxyManager:
             
             time.sleep(random.uniform(2, 5))
             
-            res = requests.get(url, headers=headers, timeout=20)
+            res = requests.get(url, headers=headers, timeout=30)
             res.raise_for_status()
             soup = BeautifulSoup(res.text, "html.parser")
 
@@ -508,7 +602,7 @@ class IranProxyManager:
             return []
     
     def fetch_source_proxies(self, url: str, ptype: str, source_name: str, source_index: int, total_sources: int) -> List[Dict[str, Any]]:
-        """دریافت پروکسی از یک منبع خاص"""
+        """دریافت پروکسی از یک منبع خاص با تایم‌اوت بیشتر"""
         proxies = []
         
         # نمایش اطلاعات فعلی
@@ -524,10 +618,11 @@ class IranProxyManager:
                 
                 headers = self.get_headers()
                 
-                delay = random.uniform(2, 4) if attempt > 0 else random.uniform(1, 2)
+                delay = random.uniform(2, 5) if attempt > 0 else random.uniform(1, 3)
                 time.sleep(delay)
                 
-                response = requests.get(url, timeout=25, headers=headers)
+                # تایم‌اوت بیشتر
+                response = requests.get(url, timeout=35, headers=headers)
                 
                 if response.status_code == 200:
                     break
@@ -588,7 +683,7 @@ class IranProxyManager:
                     continue
                 
                 self.logger.update_stat('iranian_proxies')
-                alive, ping = self.is_alive(ip, int(port))
+                alive, ping = self.is_alive(ip, int(port), proto)
                 
                 proxy_data = {
                     'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
@@ -601,7 +696,8 @@ class IranProxyManager:
                     'country': 'IR',
                     'ping': ping if alive else 0,
                     'source': url,
-                    'source_name': source_name
+                    'source_name': source_name,
+                    'udp': True  # 🔥 اضافه شد
                 }
                 proxies.append(proxy_data)
                 added_count += 1
@@ -655,13 +751,19 @@ class IranProxyManager:
                     self.logger.update_stat('iranian_proxies')
                     alive, ping = self.is_alive(ip, port)
                     
+                    # 🔥 تصحیح alterId هنگام دریافت
+                    alter_id = int(conf.get("aid", 0))
+                    if alter_id == 0:  # اگر 0 است، برای کلش اندروید به 4 تغییر بده
+                        alter_id = 4
+                        self.logger.log(f"   ⚡ alterId اصلاح شد: 0 → 4 برای {ip}:{port}", "DEBUG")
+                    
                     proxy_data = {
                         'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
                         'type': 'vmess',
                         'server': ip,
                         'port': int(port),
                         'uuid': conf.get("id"),
-                        'alterId': int(conf.get("aid", 0)),
+                        'alterId': alter_id,
                         'cipher': conf.get("cipher", "auto"),
                         'tls': conf.get("tls") == "tls",
                         'network': conf.get("net", "tcp"),
@@ -671,13 +773,19 @@ class IranProxyManager:
                         'country': 'IR',
                         'ping': ping if alive else 0,
                         'source': url,
-                        'source_name': source_name
+                        'source_name': source_name,
+                        'udp': True  # 🔥 اضافه شد
                     }
                     
                     if conf.get("net") == "ws":
+                        ws_headers = {'Host': conf.get("host", "")}
+                        # اگر Host خالی است، با IP پر کن
+                        if not ws_headers['Host']:
+                            ws_headers['Host'] = ip
+                        
                         proxy_data["ws-opts"] = {
                             'path': conf.get("path", "/"),
-                            'headers': {'Host': conf.get("host", "")}
+                            'headers': ws_headers
                         }
                     
                     proxies.append(proxy_data)
@@ -706,6 +814,7 @@ class IranProxyManager:
                     conf["source"] = url
                     conf["source_name"] = source_name
                     conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
+                    conf['udp'] = True  # 🔥 اضافه شد
                     
                     proxies.append(conf)
                     added_count += 1
@@ -733,6 +842,7 @@ class IranProxyManager:
                     conf["source"] = url
                     conf["source_name"] = source_name
                     conf["name"] = f"{conf['server']}:{conf['port']} ({ping}ms)" if alive else f"{conf['server']}:{conf['port']}"
+                    conf['udp'] = True  # 🔥 اضافه شد
                     
                     proxies.append(conf)
                     added_count += 1
@@ -757,7 +867,7 @@ class IranProxyManager:
                             continue
                         
                         self.logger.update_stat('iranian_proxies')
-                        alive, ping = self.is_alive(ip, int(port))
+                        alive, ping = self.is_alive(ip, int(port), proto)
                         
                         proxy_data = {
                             'name': f"{ip}:{port} ({ping}ms)" if alive else f"{ip}:{port}",
@@ -770,7 +880,8 @@ class IranProxyManager:
                             'country': 'IR',
                             'ping': ping if alive else 0,
                             'source': url,
-                            'source_name': source_name
+                            'source_name': source_name,
+                            'udp': True  # 🔥 اضافه شد
                         }
                         proxies.append(proxy_data)
                         added_count += 1
@@ -790,7 +901,7 @@ class IranProxyManager:
         return proxies
     
     def fetch_all_proxies(self) -> List[Dict[str, Any]]:
-        """دریافت همه پروکسی‌ها از منابع"""
+        """دریافت همه پروکسی‌ها از منابع با تاخیر هوشمند"""
         all_proxies = []
         seen_keys = set()
         
@@ -813,9 +924,18 @@ class IranProxyManager:
             
             all_proxies.extend(filtered_proxies)
             
-            # تأخیر بین منابع
+            # 🔥 تاخیر هوشمند بین منابع
             if idx < total_sources:
-                time.sleep(random.uniform(0.5, 1.5))
+                remaining = total_sources - idx
+                if remaining > 10:
+                    delay = random.uniform(3, 6)
+                elif remaining > 5:
+                    delay = random.uniform(2, 4)
+                else:
+                    delay = random.uniform(1, 2)
+                
+                self.logger.log(f"   ⏳ تاخیر {delay:.1f} ثانیه قبل از منبع بعدی...", "DEBUG")
+                time.sleep(delay)
         
         self.logger.log("=" * 70)
         self.logger.log(f"📊 مجموع {len(all_proxies)} پروکسی ایرانی از {total_sources} منبع دریافت شد")
@@ -932,12 +1052,98 @@ class IranProxyManager:
         else:
             self.logger.log("❌ نتوانستیم پروکسی اضافی پیدا کنیم")
     
+    def create_clash_config(self):
+        """ایجاد کانفیگ بهینه برای کلش اندروید"""
+        clash_path = "output/clash_config.yaml"
+        
+        if not self.config.get('proxies'):
+            self.logger.log("❌ هیچ پروکسی برای ایجاد کانفیگ کلش وجود ندارد", "WARNING")
+            return
+        
+        clash_proxies = []
+        
+        for proxy in self.config.get('proxies', []):
+            clash_proxy = {
+                'name': proxy.get('name', f"{proxy['server']}:{proxy['port']}"),
+                'type': proxy['type'],
+                'server': proxy['server'],
+                'port': proxy['port'],
+                'udp': True  # 🔥 همیشه true برای کلش
+            }
+            
+            if proxy['type'] == 'vmess':
+                clash_proxy.update({
+                    'uuid': proxy.get('uuid', ''),
+                    'alterId': max(proxy.get('alterId', 0), 4),
+                    'cipher': proxy.get('cipher', 'auto'),
+                    'tls': proxy.get('tls', False)
+                })
+                
+                if proxy.get('network') == 'ws':
+                    clash_proxy['network'] = 'ws'
+                    if 'ws-opts' in proxy:
+                        clash_proxy['ws-opts'] = proxy['ws-opts']
+                
+                if clash_proxy.get('tls', False):
+                    host = clash_proxy.get('ws-opts', {}).get('headers', {}).get('Host', '')
+                    clash_proxy['sni'] = host if host else proxy['server']
+            
+            elif proxy['type'] == 'ss':
+                if 'cipher' in proxy:
+                    clash_proxy['cipher'] = proxy['cipher']
+                if 'password' in proxy:
+                    clash_proxy['password'] = proxy['password']
+            
+            clash_proxies.append(clash_proxy)
+        
+        # ساختار کامل کلش
+        clash_config = {
+            'proxies': clash_proxies,
+            'proxy-groups': [
+                {
+                    'name': '🚀 Auto Select',
+                    'type': 'url-test',
+                    'proxies': [p['name'] for p in clash_proxies if p.get('is_active', True)],
+                    'url': 'http://www.gstatic.com/generate_204',
+                    'interval': 300
+                },
+                {
+                    'name': '🌍 Proxy',
+                    'type': 'select',
+                    'proxies': ['🚀 Auto Select', 'DIRECT']
+                }
+            ],
+            'rules': [
+                'DOMAIN-SUFFIX,google.com,🌍 Proxy',
+                'DOMAIN-SUFFIX,youtube.com,🌍 Proxy',
+                'DOMAIN-SUFFIX,telegram.org,🌍 Proxy',
+                'GEOIP,IR,DIRECT',
+                'MATCH,🌍 Proxy'
+            ],
+            'metadata': {
+                'generated': datetime.now().isoformat(),
+                'source': 'Iran Proxy Manager',
+                'total_proxies': len(clash_proxies),
+                'active_proxies': len([p for p in self.config.get('proxies', []) if p.get('is_active', False)])
+            }
+        }
+        
+        os.makedirs(os.path.dirname(clash_path), exist_ok=True)
+        with open(clash_path, 'w', encoding='utf-8') as f:
+            yaml.dump(clash_config, f, 
+                     default_flow_style=False, 
+                     allow_unicode=True,
+                     indent=2)
+        
+        self.logger.log(f"✅ کانفیگ کلش ایجاد شد: {clash_path}")
+        self.logger.log(f"   📊 {len(clash_proxies)} پروکسی در کانفیگ کلش")
+    
     def run(self) -> bool:
         """اجرای اصلی"""
         self.logger.log("=" * 80)
         self.logger.log("🚀 شروع فرآیند به‌روزرسانی پروکسی‌های ایرانی")
         self.logger.log(f"🌐 تعداد منابع: {len(self.SOURCES)} منبع")
-        self.logger.log("🔍 سیستم: بررسی مستقیم IP از سرویس‌های آنلاین با fallback")
+        self.logger.log("🔧 نسخه نهایی با اصلاحات کامل برای کلش اندروید")
         self.logger.log("=" * 80)
         
         try:
@@ -987,16 +1193,62 @@ class IranProxyManager:
             self.logger.log(f"\n📊 بررسی حداقل تعداد پروکسی...")
             self.ensure_minimum_proxies()
             
-            # 6. ذخیره فایل
+            # 6. 🔥 اعمال اصلاحات نهایی برای کلش
+            self.logger.log(f"\n🔧 اعمال اصلاحات نهایی برای کلش اندروید...")
+            
+            fix_count = 0
+            for proxy in self.config.get('proxies', []):
+                # 🔥 اضافه کردن udp: true برای همه
+                if 'udp' not in proxy:
+                    proxy['udp'] = True
+                    fix_count += 1
+                
+                if proxy['type'] == 'vmess':
+                    # اصلاح alterId اگر 0 یا کمتر از 4 است
+                    current_alter = proxy.get('alterId', 0)
+                    if current_alter < 4:
+                        proxy['alterId'] = 4
+                        self.logger.log(f"   ⚡ alterId اصلاح شد: {proxy['server']}:{proxy['port']} → 4", "DEBUG")
+                        fix_count += 1
+                    
+                    # اصلاح TLS برای پورت 443
+                    if proxy['port'] == 443 and not proxy.get('tls', False):
+                        proxy['tls'] = True
+                        self.logger.log(f"   ⚡ TLS فعال شد برای {proxy['server']}:443", "DEBUG")
+                        fix_count += 1
+                    
+                    # اصلاح Host خالی در ws-opts
+                    if 'ws-opts' in proxy:
+                        headers = proxy['ws-opts'].get('headers', {})
+                        if headers.get('Host', '') == '':
+                            headers['Host'] = proxy['server']
+                            proxy['ws-opts']['headers'] = headers
+                            self.logger.log(f"   ⚡ Host اصلاح شد: {proxy['server']}:{proxy['port']}", "DEBUG")
+                            fix_count += 1
+                    
+                    # اضافه کردن sni برای TLS
+                    if proxy.get('tls', False) and 'sni' not in proxy:
+                        host = proxy.get('ws-opts', {}).get('headers', {}).get('Host', '')
+                        proxy['sni'] = host if host else proxy['server']
+                        fix_count += 1
+            
+            if fix_count > 0:
+                self.logger.log(f"   ✅ {fix_count} اصلاح برای کلش اندروید اعمال شد")
+            
+            # 7. ایجاد کانفیگ کلش
+            self.logger.log(f"\n🎯 ایجاد کانفیگ بهینه برای کلش...")
+            self.create_clash_config()
+            
+            # 8. ذخیره فایل اصلی
             self.logger.log(f"\n💾 ذخیره تغییرات...")
             if not self.save_config():
                 self.logger.log("❌ خطا در ذخیره‌سازی!", "ERROR")
                 return False
             
-            # 7. نمایش آمار کامل
+            # 9. نمایش آمار کامل
             self.logger.print_stats()
             
-            # 8. گزارش نهایی
+            # 10. گزارش نهایی
             final_count = len(self.config.get('proxies', []))
             final_active = len([p for p in self.config.get('proxies', []) 
                                if p.get('is_active', False)])
@@ -1008,6 +1260,7 @@ class IranProxyManager:
             self.logger.log(f"✅ پروکسی‌های فعال: {final_active}")
             self.logger.log(f"📈 تغییرات کل: {final_count - initial_count:+d} پروکسی")
             self.logger.log(f"📈 تغییرات فعال: {final_active - initial_active:+d} پروکسی")
+            self.logger.log(f"🔧 اصلاحات اعمال شده: {fix_count}")
             
             # گزارش منابع
             successful_sources = len(self.SOURCES) - len(self.failed_sources)
@@ -1020,8 +1273,10 @@ class IranProxyManager:
             else:
                 self.logger.log(f"\n⚠️ هشدار: فقط {final_active} پروکسی ایرانی فعال موجود است")
             
-            self.logger.log(f"\n📁 فایل لاگ: {self.logger.log_file}")
-            self.logger.log(f"📁 فایل کانفیگ: {self.config_path}")
+            self.logger.log(f"\n📁 فایل‌های تولید شده:")
+            self.logger.log(f"   • {self.config_path} - کانفیگ اصلی")
+            self.logger.log(f"   • output/clash_config.yaml - کانفیگ کلش آماده")
+            self.logger.log(f"   • {self.logger.log_file} - فایل لاگ")
             self.logger.log("=" * 80)
             
             return True
@@ -1037,10 +1292,11 @@ class IranProxyManager:
 
 def main():
     """تابع اصلی"""
-    print("🔧 مدیر پروکسی‌های ایرانی - سیستم بررسی مستقیم IP")
+    print("🔧 مدیر پروکسی‌های ایرانی - نسخه نهایی")
     print("📅 " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     print(f"🌐 {len(IranProxyManager().SOURCES)} منبع")
-    print("🔍 استفاده از سرویس‌های آنلاین با سیستم fallback")
+    print("🔧 اصلاحات: udp:true, alterId≥4, TLS برای 443, Host پر")
+    print("⚡ تایم‌اوت: socket=15s, requests=35s")
     
     manager = IranProxyManager()
     success = manager.run()
