@@ -62,10 +62,11 @@ def create_clash_config():
         'proxy-groups': [
             {
                 'name': '🚀 Auto Select',
-                'type': 'url-test',
+                'type': 'fallback',
                 'proxies': [p['name'] for p in clash_proxies],
-                'url': 'http://www.gstatic.com/generate_204',
+                'url': 'http://google.com',
                 'interval': 300
+                'timeout': 60000
             },
             {
                 'name': '🌍 Proxy',
@@ -74,10 +75,6 @@ def create_clash_config():
             }
         ],
         'rules': [
-            'DOMAIN-SUFFIX,google.com,🌍 Proxy',
-            'DOMAIN-SUFFIX,youtube.com,🌍 Proxy',
-            'DOMAIN-SUFFIX,telegram.org,🌍 Proxy',
-            'GEOIP,IR,DIRECT',
             'MATCH,🌍 Proxy'
         ]
     }
