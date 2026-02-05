@@ -1175,15 +1175,37 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 78.38.84.85:1080
+  type: socks5
+  server: 78.38.84.85
+  port: 1080
+  added_date: '2026-02-05'
+  last_checked: '2026-02-05'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 94.74.172.135:80
+  type: socks5
+  server: 94.74.172.135
+  port: 80
+  added_date: '2026-02-05'
+  last_checked: '2026-02-05'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 99
+  total_count: 101
   active_count: 5
-  last_updated: '2026-02-05 09:40:20'
+  last_updated: '2026-02-05 16:38:56'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260205_075247.log
+  log_file: output/logs/proxy_update_20260205_145131.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
