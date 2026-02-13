@@ -1120,15 +1120,81 @@ proxies:
   udp: true
   ping: 0
   source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 81.12.124.8:5678
+  type: socks5
+  server: 81.12.124.8
+  port: 5678
+  added_date: '2026-02-13'
+  last_checked: '2026-02-13'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 194.48.198.135:7070
+  type: socks5
+  server: 194.48.198.135
+  port: 7070
+  added_date: '2026-02-13'
+  last_checked: '2026-02-13'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 89.42.198.79:4153
+  type: socks5
+  server: 89.42.198.79
+  port: 4153
+  added_date: '2026-02-13'
+  last_checked: '2026-02-13'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 31.130.182.247:3629
+  type: socks5
+  server: 31.130.182.247
+  port: 3629
+  added_date: '2026-02-13'
+  last_checked: '2026-02-13'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 185.42.226.218:4000
+  type: socks5
+  server: 185.42.226.218
+  port: 4000
+  added_date: '2026-02-13'
+  last_checked: '2026-02-13'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 213.233.161.245:4153
+  type: socks5
+  server: 213.233.161.245
+  port: 4153
+  added_date: '2026-02-13'
+  last_checked: '2026-02-13'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 94
+  total_count: 100
   active_count: 2
-  last_updated: '2026-02-13 16:46:37'
+  last_updated: '2026-02-13 23:30:13'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260213_144948.log
+  log_file: output/logs/proxy_update_20260213_214227.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
