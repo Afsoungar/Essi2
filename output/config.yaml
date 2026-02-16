@@ -1109,15 +1109,81 @@ proxies:
   udp: true
   ping: 0
   source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 87.251.152.225:8080
+  type: socks5
+  server: 87.251.152.225
+  port: 8080
+  added_date: '2026-02-16'
+  last_checked: '2026-02-16'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 2.190.91.213:8080
+  type: socks5
+  server: 2.190.91.213
+  port: 8080
+  added_date: '2026-02-16'
+  last_checked: '2026-02-16'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 77.104.75.97:5678
+  type: socks5
+  server: 77.104.75.97
+  port: 5678
+  added_date: '2026-02-16'
+  last_checked: '2026-02-16'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 104.167.26.95:3128
+  type: socks5
+  server: 104.167.26.95
+  port: 3128
+  added_date: '2026-02-16'
+  last_checked: '2026-02-16'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 94.101.179.153:9050
+  type: socks5
+  server: 94.101.179.153
+  port: 9050
+  added_date: '2026-02-16'
+  last_checked: '2026-02-16'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 185.171.54.36:4153
+  type: socks5
+  server: 185.171.54.36
+  port: 4153
+  added_date: '2026-02-16'
+  last_checked: '2026-02-16'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 93
+  total_count: 99
   active_count: 5
-  last_updated: '2026-02-16 16:44:29'
+  last_updated: '2026-02-16 23:26:11'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260216_145032.log
+  log_file: output/logs/proxy_update_20260216_213558.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
