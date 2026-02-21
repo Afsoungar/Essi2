@@ -637,15 +637,300 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 37.32.23.122:443
+  type: vmess
+  server: 37.32.23.122
+  port: 443
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /websocket/
+    headers:
+      Host: 37.32.23.122
+  sni: 37.32.23.122
+- name: 185.143.233.114:80 (138ms)
+  type: vmess
+  server: 185.143.233.114
+  port: 80
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 138
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: cf7f2d7c-d4f8-469a-bfd5-97484bb98d2c
+  cipher: auto
+  network: ws
+  tls: false
+  alterId: 4
+  ws-opts:
+    path: /
+    headers:
+      Host: 185.143.233.114
+- name: 185.24.255.24:80
+  type: vmess
+  server: 185.24.255.24
+  port: 80
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 80abb903-24e0-4dbd-9c2f-a57e9a267555
+  cipher: auto
+  network: ws
+  tls: false
+  alterId: 4
+  ws-opts:
+    path: /ws
+    headers:
+      Host: 185.24.255.24
+- name: 2.189.59.7:443
+  type: vmess
+  server: 2.189.59.7
+  port: 443
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /linkws
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 193.39.9.61:13909
+  type: vmess
+  server: 193.39.9.61
+  port: 13909
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: a24e44ff-2737-45a7-d0e2-e4ef93762741
+  cipher: auto
+  network: ws
+  tls: false
+  alterId: 4
+  ws-opts:
+    path: /
+    headers:
+      Host: 193.39.9.61
+- name: 2.189.59.5:443
+  type: vmess
+  server: 2.189.59.5
+  port: 443
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /linkws
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 2.189.59.6:443
+  type: vmess
+  server: 2.189.59.6
+  port: 443
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 2.189.59.3:443
+  type: vmess
+  server: 2.189.59.3
+  port: 443
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 2.189.59.4:443
+  type: vmess
+  server: 2.189.59.4
+  port: 443
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /linkws
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 79.175.162.141:3129
+  type: http
+  server: 79.175.162.141
+  port: 3129
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 104.167.26.95:3128
+  type: socks5
+  server: 104.167.26.95
+  port: 3128
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 79.127.35.243:5678
+  type: socks5
+  server: 79.127.35.243
+  port: 5678
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 94.182.44.187:5678
+  type: socks5
+  server: 94.182.44.187
+  port: 5678
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 193.151.136.223:8888
+  type: socks5
+  server: 193.151.136.223
+  port: 8888
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 217.219.173.237:8080
+  type: socks5
+  server: 217.219.173.237
+  port: 8080
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 213.233.161.246:4153
+  type: socks5
+  server: 213.233.161.246
+  port: 4153
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 85.133.227.182:80
+  type: socks5
+  server: 85.133.227.182
+  port: 80
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 91.216.71.35:443
+  type: http
+  server: 91.216.71.35
+  port: 443
+  added_date: '2026-02-21'
+  last_checked: '2026-02-21'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 metadata:
-  total_count: 58
-  active_count: 2
-  last_updated: '2026-02-21 04:22:05'
+  total_count: 76
+  active_count: 3
+  last_updated: '2026-02-21 09:29:29'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260221_023355.log
+  log_file: output/logs/proxy_update_20260221_073730.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
