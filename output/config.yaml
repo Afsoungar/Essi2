@@ -694,12 +694,12 @@ proxies:
 metadata:
   total_count: 55
   active_count: 1
-  last_updated: '2026-03-01 09:31:14'
+  last_updated: '2026-03-01 15:33:32'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260301_073638.log
+  log_file: output/logs/proxy_update_20260301_143023.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
