@@ -691,15 +691,26 @@ proxies:
   udp: true
   ping: 0
   source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 185.220.226.235:808
+  type: socks5
+  server: 185.220.226.235
+  port: 808
+  added_date: '2026-03-01'
+  last_checked: '2026-03-01'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 55
+  total_count: 56
   active_count: 1
-  last_updated: '2026-03-01 15:33:32'
+  last_updated: '2026-03-01 23:23:39'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260301_143023.log
+  log_file: output/logs/proxy_update_20260301_212950.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
