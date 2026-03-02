@@ -1,37 +1,4 @@
 proxies:
-- name: 193.56.118.1:1080
-  type: socks5
-  server: 193.56.118.1
-  port: 1080
-  added_date: '2026-02-27'
-  last_checked: '2026-02-27'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
-- name: 81.12.124.50:5678
-  type: socks5
-  server: 81.12.124.50
-  port: 5678
-  added_date: '2026-02-27'
-  last_checked: '2026-02-27'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
-- name: 5.160.103.246:8080
-  type: socks5
-  server: 5.160.103.246
-  port: 8080
-  added_date: '2026-02-27'
-  last_checked: '2026-02-27'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 - name: 185.186.240.9:1396
   type: http
   server: 185.186.240.9
@@ -616,15 +583,68 @@ proxies:
     headers:
       Host: obdii.cfd
   sni: obdii.cfd
+- name: 2.189.59.3:443
+  type: vmess
+  server: 2.189.59.3
+  port: 443
+  added_date: '2026-03-02'
+  last_checked: '2026-03-02'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 2.189.59.4:443
+  type: vmess
+  server: 2.189.59.4
+  port: 443
+  added_date: '2026-03-02'
+  last_checked: '2026-03-02'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /linkws
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 217.219.173.237:8080
+  type: socks5
+  server: 217.219.173.237
+  port: 8080
+  added_date: '2026-03-02'
+  last_checked: '2026-03-02'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
   total_count: 50
   active_count: 1
-  last_updated: '2026-03-02 16:12:58'
+  last_updated: '2026-03-02 23:24:31'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260302_145039.log
+  log_file: output/logs/proxy_update_20260302_214011.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
