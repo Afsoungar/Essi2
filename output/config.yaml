@@ -639,12 +639,12 @@ proxies:
 metadata:
   total_count: 50
   active_count: 1
-  last_updated: '2026-04-01 08:49:39'
+  last_updated: '2026-04-01 17:00:22'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260401_081810.log
+  log_file: output/logs/proxy_update_20260401_151302.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
