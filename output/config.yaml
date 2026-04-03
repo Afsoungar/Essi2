@@ -1,15 +1,4 @@
 proxies:
-- name: 5.236.252.37:8080
-  type: http
-  server: 5.236.252.37
-  port: 8080
-  added_date: '2026-03-02'
-  last_checked: '2026-03-02'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
 - name: 185.239.1.63:3129
   type: http
   server: 185.239.1.63
@@ -636,15 +625,26 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 185.83.114.7:80
+  type: http
+  server: 185.83.114.7
+  port: 80
+  added_date: '2026-04-03'
+  last_checked: '2026-04-03'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
 metadata:
   total_count: 50
   active_count: 1
-  last_updated: '2026-04-02 23:39:06'
+  last_updated: '2026-04-03 04:33:10'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260402_214517.log
+  log_file: output/logs/proxy_update_20260403_025424.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
