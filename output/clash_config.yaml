@@ -1,29 +1,9 @@
 metadata:
-  active_proxies: 1
-  generated: '2026-04-07T09:47:11.016146'
+  active_proxies: 3
+  generated: '2026-04-07T17:01:43.177157'
   source: Iran Proxy Manager
-  total_proxies: 51
+  total_proxies: 55
 proxies:
-- name: 80.75.213.22:3138
-  port: 3138
-  server: 80.75.213.22
-  type: http
-  udp: true
-- name: 194.48.198.135:7070
-  port: 7070
-  server: 194.48.198.135
-  type: http
-  udp: true
-- name: 31.25.92.114:8080
-  port: 8080
-  server: 31.25.92.114
-  type: http
-  udp: true
-- name: 45.86.7.235:8080
-  port: 8080
-  server: 45.86.7.235
-  type: http
-  udp: true
 - alterId: 4
   cipher: auto
   name: 37.32.23.122:443
@@ -346,14 +326,50 @@ proxies:
   server: 185.239.1.63
   type: http
   udp: true
+- name: 45.139.11.243:80
+  port: 80
+  server: 45.139.11.243
+  type: socks5
+  udp: true
+- name: 45.139.11.143:80
+  port: 80
+  server: 45.139.11.143
+  type: socks5
+  udp: true
+- name: 45.139.11.243:80 (585ms)
+  port: 80
+  server: 45.139.11.243
+  type: http
+  udp: true
+- name: 45.139.11.143:80 (522ms)
+  port: 80
+  server: 45.139.11.143
+  type: http
+  udp: true
+- name: 80.75.213.22:3138
+  port: 3138
+  server: 80.75.213.22
+  type: http
+  udp: true
+- name: 194.48.198.135:7070
+  port: 7070
+  server: 194.48.198.135
+  type: http
+  udp: true
+- name: 31.25.92.114:8080
+  port: 8080
+  server: 31.25.92.114
+  type: http
+  udp: true
+- name: 45.86.7.235:8080
+  port: 8080
+  server: 45.86.7.235
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
   proxies:
-  - 80.75.213.22:3138
-  - 194.48.198.135:7070
-  - 31.25.92.114:8080
-  - 45.86.7.235:8080
   - 37.32.23.122:443
   - 185.143.233.114:80 (105ms)
   - 185.24.255.24:80
@@ -401,6 +417,14 @@ proxy-groups:
   - 185.83.114.7:80
   - 45.139.11.134:80
   - 185.239.1.63:3129
+  - 45.139.11.243:80
+  - 45.139.11.143:80
+  - 45.139.11.243:80 (585ms)
+  - 45.139.11.143:80 (522ms)
+  - 80.75.213.22:3138
+  - 194.48.198.135:7070
+  - 31.25.92.114:8080
+  - 45.86.7.235:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy

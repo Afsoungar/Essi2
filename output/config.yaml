@@ -1,48 +1,4 @@
 proxies:
-- name: 80.75.213.22:3138
-  type: http
-  server: 80.75.213.22
-  port: 3138
-  added_date: '2026-03-02'
-  last_checked: '2026-03-02'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
-- name: 194.48.198.135:7070
-  type: http
-  server: 194.48.198.135
-  port: 7070
-  added_date: '2026-03-02'
-  last_checked: '2026-03-02'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
-- name: 31.25.92.114:8080
-  type: http
-  server: 31.25.92.114
-  port: 8080
-  added_date: '2026-03-02'
-  last_checked: '2026-03-02'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
-- name: 45.86.7.235:8080
-  type: http
-  server: 45.86.7.235
-  port: 8080
-  added_date: '2026-03-02'
-  last_checked: '2026-03-02'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 - name: 37.32.23.122:443
   type: vmess
   server: 37.32.23.122
@@ -647,15 +603,103 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 45.139.11.243:80
+  type: socks5
+  server: 45.139.11.243
+  port: 80
+  added_date: '2026-04-07'
+  last_checked: '2026-04-07'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 45.139.11.143:80
+  type: socks5
+  server: 45.139.11.143
+  port: 80
+  added_date: '2026-04-07'
+  last_checked: '2026-04-07'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 45.139.11.243:80 (585ms)
+  type: http
+  server: 45.139.11.243
+  port: 80
+  added_date: '2026-04-07'
+  last_checked: '2026-04-07'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 585
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 45.139.11.143:80 (522ms)
+  type: http
+  server: 45.139.11.143
+  port: 80
+  added_date: '2026-04-07'
+  last_checked: '2026-04-07'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 522
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 80.75.213.22:3138
+  type: http
+  server: 80.75.213.22
+  port: 3138
+  added_date: '2026-04-07'
+  last_checked: '2026-04-07'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 194.48.198.135:7070
+  type: http
+  server: 194.48.198.135
+  port: 7070
+  added_date: '2026-04-07'
+  last_checked: '2026-04-07'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 31.25.92.114:8080
+  type: http
+  server: 31.25.92.114
+  port: 8080
+  added_date: '2026-04-07'
+  last_checked: '2026-04-07'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 45.86.7.235:8080
+  type: http
+  server: 45.86.7.235
+  port: 8080
+  added_date: '2026-04-07'
+  last_checked: '2026-04-07'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 metadata:
-  total_count: 51
-  active_count: 1
-  last_updated: '2026-04-07 09:47:11'
+  total_count: 55
+  active_count: 3
+  last_updated: '2026-04-07 17:01:43'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260407_081634.log
+  log_file: output/logs/proxy_update_20260407_151656.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
