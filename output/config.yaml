@@ -1,59 +1,4 @@
 proxies:
-- name: 217.219.81.194:8080
-  type: http
-  server: 217.219.81.194
-  port: 8080
-  added_date: '2026-03-03'
-  last_checked: '2026-03-03'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
-- name: 91.239.192.169:2080
-  type: socks5
-  server: 91.239.192.169
-  port: 2080
-  added_date: '2026-03-03'
-  last_checked: '2026-03-03'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
-- name: 87.107.78.242:1543
-  type: socks5
-  server: 87.107.78.242
-  port: 1543
-  added_date: '2026-03-03'
-  last_checked: '2026-03-03'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
-- name: 217.218.242.75:5678
-  type: socks5
-  server: 217.218.242.75
-  port: 5678
-  added_date: '2026-03-03'
-  last_checked: '2026-03-03'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
-- name: 81.91.157.134:5678
-  type: socks5
-  server: 81.91.157.134
-  port: 5678
-  added_date: '2026-03-03'
-  last_checked: '2026-03-03'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 - name: 37.152.178.0:20246
   type: http
   server: 37.152.178.0
@@ -596,15 +541,110 @@ proxies:
     path: /
     headers:
       Host: 193.39.9.61
+- name: 2.189.59.5:443
+  type: vmess
+  server: 2.189.59.5
+  port: 443
+  added_date: '2026-04-08'
+  last_checked: '2026-04-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /linkws
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 2.189.59.6:443
+  type: vmess
+  server: 2.189.59.6
+  port: 443
+  added_date: '2026-04-08'
+  last_checked: '2026-04-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 2.189.59.3:443
+  type: vmess
+  server: 2.189.59.3
+  port: 443
+  added_date: '2026-04-08'
+  last_checked: '2026-04-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 2.189.59.4:443
+  type: vmess
+  server: 2.189.59.4
+  port: 443
+  added_date: '2026-04-08'
+  last_checked: '2026-04-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /linkws
+    headers:
+      Host: obdii.cfd
+  sni: obdii.cfd
+- name: 188.121.116.87:1080
+  type: socks5
+  server: 188.121.116.87
+  port: 1080
+  added_date: '2026-04-08'
+  last_checked: '2026-04-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
   total_count: 50
   active_count: 3
-  last_updated: '2026-04-08 03:44:30'
+  last_updated: '2026-04-08 09:58:17'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260408_031651.log
+  log_file: output/logs/proxy_update_20260408_081515.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
