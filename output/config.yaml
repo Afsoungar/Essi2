@@ -17623,12 +17623,12 @@ proxies:
 metadata:
   total_count: 1594
   active_count: 2
-  last_updated: '2026-04-18 09:06:31'
+  last_updated: '2026-04-18 15:31:54'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260418_080132.log
+  log_file: output/logs/proxy_update_20260418_144849.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
