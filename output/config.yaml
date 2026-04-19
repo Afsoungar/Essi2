@@ -11903,12 +11903,12 @@ proxies:
 metadata:
   total_count: 1074
   active_count: 2
-  last_updated: '2026-04-19 09:11:30'
+  last_updated: '2026-04-19 15:55:33'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260419_080918.log
+  log_file: output/logs/proxy_update_20260419_144853.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
