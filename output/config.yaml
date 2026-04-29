@@ -1,15 +1,4 @@
 proxies:
-- name: 188.121.116.212:1081
-  type: socks5
-  server: 188.121.116.212
-  port: 1081
-  added_date: '2026-04-17'
-  last_checked: '2026-04-17'
-  is_active: false
-  country: IR
-  udp: true
-  ping: 0
-  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all
 - name: 95.38.33.69:1081
   type: socks5
   server: 95.38.33.69
@@ -636,15 +625,26 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all
+- name: 62.60.131.232:5681
+  type: http
+  server: 62.60.131.232
+  port: 5681
+  added_date: '2026-04-29'
+  last_checked: '2026-04-29'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
 metadata:
   total_count: 50
   active_count: 1
-  last_updated: '2026-04-29 16:38:45'
+  last_updated: '2026-04-29 22:42:15'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260429_155751.log
+  log_file: output/logs/proxy_update_20260429_220432.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
