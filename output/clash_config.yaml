@@ -1,39 +1,9 @@
 metadata:
   active_proxies: 3
-  generated: '2026-05-26T23:34:08.350670'
+  generated: '2026-05-27T05:16:45.781129'
   source: Iran Proxy Manager
   total_proxies: 50
 proxies:
-- name: 188.121.116.171:1081
-  port: 1081
-  server: 188.121.116.171
-  type: socks5
-  udp: true
-- name: 188.121.116.38:3129
-  port: 3129
-  server: 188.121.116.38
-  type: socks5
-  udp: true
-- name: 188.121.116.168:3129
-  port: 3129
-  server: 188.121.116.168
-  type: socks5
-  udp: true
-- name: 217.219.217.37:8443
-  port: 8443
-  server: 217.219.217.37
-  type: socks5
-  udp: true
-- name: 217.219.217.200:1081
-  port: 1081
-  server: 217.219.217.200
-  type: socks5
-  udp: true
-- name: 188.121.116.187:3129
-  port: 3129
-  server: 188.121.116.187
-  type: socks5
-  udp: true
 - name: 176.126.120.48:8080
   port: 8080
   server: 176.126.120.48
@@ -341,16 +311,40 @@ proxies:
   server: 185.53.142.171
   type: socks5
   udp: true
+- name: 217.219.162.114:5678
+  port: 5678
+  server: 217.219.162.114
+  type: http
+  udp: true
+- name: 151.232.18.66:5678
+  port: 5678
+  server: 151.232.18.66
+  type: http
+  udp: true
+- name: 81.16.125.225:4145
+  port: 4145
+  server: 81.16.125.225
+  type: socks5
+  udp: true
+- name: 217.219.162.114:5678
+  port: 5678
+  server: 217.219.162.114
+  type: socks5
+  udp: true
+- name: 185.171.54.30:4153
+  port: 4153
+  server: 185.171.54.30
+  type: socks5
+  udp: true
+- name: 31.130.182.247:3629
+  port: 3629
+  server: 31.130.182.247
+  type: socks5
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
   proxies:
-  - 188.121.116.171:1081
-  - 188.121.116.38:3129
-  - 188.121.116.168:3129
-  - 217.219.217.37:8443
-  - 217.219.217.200:1081
-  - 188.121.116.187:3129
   - 176.126.120.48:8080
   - 217.219.217.243:1081
   - 188.121.116.108:3129
@@ -395,6 +389,12 @@ proxy-groups:
   - 185.53.142.171:20000 (1213ms)
   - 78.38.67.95:4153
   - 185.53.142.171:20000
+  - 217.219.162.114:5678
+  - 151.232.18.66:5678
+  - 81.16.125.225:4145
+  - 217.219.162.114:5678
+  - 185.171.54.30:4153
+  - 31.130.182.247:3629
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
