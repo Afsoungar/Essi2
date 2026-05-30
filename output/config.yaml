@@ -922,15 +922,59 @@ proxies:
   udp: true
   ping: 0
   source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 80.210.229.98:8080
+  type: http
+  server: 80.210.229.98
+  port: 8080
+  added_date: '2026-05-30'
+  last_checked: '2026-05-30'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 46.209.207.147:8080
+  type: http
+  server: 46.209.207.147
+  port: 8080
+  added_date: '2026-05-30'
+  last_checked: '2026-05-30'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 84.241.3.199:1080
+  type: socks5
+  server: 84.241.3.199
+  port: 1080
+  added_date: '2026-05-30'
+  last_checked: '2026-05-30'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 94.182.44.187:5678
+  type: socks5
+  server: 94.182.44.187
+  port: 5678
+  added_date: '2026-05-30'
+  last_checked: '2026-05-30'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 76
+  total_count: 80
   active_count: 5
-  last_updated: '2026-05-30 16:03:01'
+  last_updated: '2026-05-30 23:31:17'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260530_151456.log
+  log_file: output/logs/proxy_update_20260530_220427.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
