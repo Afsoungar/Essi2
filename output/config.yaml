@@ -1175,15 +1175,37 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 46.100.47.254:1081
+  type: http
+  server: 46.100.47.254
+  port: 1081
+  added_date: '2026-06-01'
+  last_checked: '2026-06-01'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 80.191.40.133:5678
+  type: http
+  server: 80.191.40.133
+  port: 5678
+  added_date: '2026-06-01'
+  last_checked: '2026-06-01'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
 metadata:
-  total_count: 99
+  total_count: 101
   active_count: 11
-  last_updated: '2026-06-01 20:13:41'
+  last_updated: '2026-06-01 23:36:35'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260601_192138.log
+  log_file: output/logs/proxy_update_20260601_230356.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
