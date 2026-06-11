@@ -1022,15 +1022,58 @@ proxies:
   udp: true
   ping: 0
   source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 37.32.23.122:443 (272ms)
+  type: vmess
+  server: 37.32.23.122
+  port: 443
+  added_date: '2026-06-11'
+  last_checked: '2026-06-11'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 272
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /websocket/
+    headers:
+      Host: 37.32.23.122
+  sni: 37.32.23.122
+- name: 46.209.15.187:8080
+  type: socks5
+  server: 46.209.15.187
+  port: 8080
+  added_date: '2026-06-11'
+  last_checked: '2026-06-11'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 78.38.67.95:4153
+  type: socks5
+  server: 78.38.67.95
+  port: 4153
+  added_date: '2026-06-11'
+  last_checked: '2026-06-11'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 86
-  active_count: 8
-  last_updated: '2026-06-11 05:29:09'
+  total_count: 89
+  active_count: 9
+  last_updated: '2026-06-11 12:15:50'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260611_044115.log
+  log_file: output/logs/proxy_update_20260611_112506.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
