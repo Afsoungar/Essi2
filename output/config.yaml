@@ -990,15 +990,81 @@ proxies:
   udp: true
   ping: 0
   source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 151.232.18.66:5678
+  type: socks5
+  server: 151.232.18.66
+  port: 5678
+  added_date: '2026-06-12'
+  last_checked: '2026-06-12'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 37.75.246.67:8080
+  type: http
+  server: 37.75.246.67
+  port: 8080
+  added_date: '2026-06-12'
+  last_checked: '2026-06-12'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 85.9.87.26:8080
+  type: http
+  server: 85.9.87.26
+  port: 8080
+  added_date: '2026-06-12'
+  last_checked: '2026-06-12'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 2.188.229.150:7020 (863ms)
+  type: http
+  server: 2.188.229.150
+  port: 7020
+  added_date: '2026-06-12'
+  last_checked: '2026-06-12'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 863
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 46.209.30.11:8080 (7090ms)
+  type: http
+  server: 46.209.30.11
+  port: 8080
+  added_date: '2026-06-12'
+  last_checked: '2026-06-12'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 7090
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 109.230.89.126:3129
+  type: http
+  server: 109.230.89.126
+  port: 3129
+  added_date: '2026-06-12'
+  last_checked: '2026-06-12'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 metadata:
-  total_count: 82
-  active_count: 8
-  last_updated: '2026-06-12 11:41:11'
+  total_count: 88
+  active_count: 10
+  last_updated: '2026-06-12 17:33:05'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260612_110440.log
+  log_file: output/logs/proxy_update_20260612_164840.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
