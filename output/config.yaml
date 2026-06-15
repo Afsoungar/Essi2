@@ -1144,15 +1144,131 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 185.112.151.147:101
+  type: ss
+  server: 185.112.151.147
+  port: 101
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt
+  cipher: aes-256-gcm
+  password: SnFKf1vmcpPDN8Rs
+- name: 78.157.40.105:14500
+  type: ss
+  server: 78.157.40.105
+  port: 14500
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt
+  cipher: aes-256-gcm
+  password: pZNq5KPuhe9sz1MV
+- name: 78.157.40.105:28222
+  type: ss
+  server: 78.157.40.105
+  port: 28222
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt
+  cipher: aes-256-gcm
+  password: QuY5J4qbFXht9dm8
+- name: 79.175.188.203:443 (7475ms)
+  type: http
+  server: 79.175.188.203
+  port: 443
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 7475
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 109.230.89.126:3129
+  type: http
+  server: 109.230.89.126
+  port: 3129
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 31.217.213.227:8090
+  type: socks5
+  server: 31.217.213.227
+  port: 8090
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 151.232.18.66:5678
+  type: socks5
+  server: 151.232.18.66
+  port: 5678
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 5.160.163.134:8080
+  type: socks5
+  server: 5.160.163.134
+  port: 8080
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 91.240.63.215:5678
+  type: socks5
+  server: 91.240.63.215
+  port: 5678
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 46.209.207.158:8080
+  type: http
+  server: 46.209.207.158
+  port: 8080
+  added_date: '2026-06-15'
+  last_checked: '2026-06-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 metadata:
-  total_count: 96
-  active_count: 8
-  last_updated: '2026-06-15 14:29:53'
+  total_count: 106
+  active_count: 9
+  last_updated: '2026-06-15 19:52:56'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260615_132053.log
+  log_file: output/logs/proxy_update_20260615_184250.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
