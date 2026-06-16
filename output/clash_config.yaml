@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 9
-  generated: '2026-06-16T06:22:32.234553'
+  active_proxies: 10
+  generated: '2026-06-16T12:59:35.986644'
   source: Iran Proxy Manager
-  total_proxies: 106
+  total_proxies: 119
 proxies:
 - name: 46.209.207.152:8080
   port: 8080
@@ -629,6 +629,71 @@ proxies:
   server: 78.39.253.48
   type: http
   udp: true
+- name: 78.39.253.49:8080
+  port: 8080
+  server: 78.39.253.49
+  type: http
+  udp: true
+- name: 80.191.40.133:5678
+  port: 5678
+  server: 80.191.40.133
+  type: http
+  udp: true
+- name: 81.91.159.14:7777
+  port: 7777
+  server: 81.91.159.14
+  type: http
+  udp: true
+- name: 81.12.70.99:8080
+  port: 8080
+  server: 81.12.70.99
+  type: http
+  udp: true
+- name: 46.245.123.30:1081
+  port: 1081
+  server: 46.245.123.30
+  type: http
+  udp: true
+- name: 94.182.199.250:8080
+  port: 8080
+  server: 94.182.199.250
+  type: socks5
+  udp: true
+- name: 193.178.203.141:8080
+  port: 8080
+  server: 193.178.203.141
+  type: socks5
+  udp: true
+- name: 185.109.62.59:443
+  port: 443
+  server: 185.109.62.59
+  type: http
+  udp: true
+- name: 2.181.34.250:8080 (3517ms)
+  port: 8080
+  server: 2.181.34.250
+  type: http
+  udp: true
+- name: 46.209.207.147:8080
+  port: 8080
+  server: 46.209.207.147
+  type: http
+  udp: true
+- name: 5.160.200.109:8088
+  port: 8088
+  server: 5.160.200.109
+  type: http
+  udp: true
+- name: 185.109.244.69:8080
+  port: 8080
+  server: 185.109.244.69
+  type: http
+  udp: true
+- name: 31.25.92.114:8080
+  port: 8080
+  server: 31.25.92.114
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -739,6 +804,19 @@ proxy-groups:
   - 93.126.23.193:8080
   - 195.181.40.34:8080
   - 78.39.253.48:8080
+  - 78.39.253.49:8080
+  - 80.191.40.133:5678
+  - 81.91.159.14:7777
+  - 81.12.70.99:8080
+  - 46.245.123.30:1081
+  - 94.182.199.250:8080
+  - 193.178.203.141:8080
+  - 185.109.62.59:443
+  - 2.181.34.250:8080 (3517ms)
+  - 46.209.207.147:8080
+  - 5.160.200.109:8088
+  - 185.109.244.69:8080
+  - 31.25.92.114:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
