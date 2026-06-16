@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 10
-  generated: '2026-06-16T12:59:35.986644'
+  active_proxies: 12
+  generated: '2026-06-16T19:15:38.911645'
   source: Iran Proxy Manager
-  total_proxies: 119
+  total_proxies: 131
 proxies:
 - name: 46.209.207.152:8080
   port: 8080
@@ -694,6 +694,66 @@ proxies:
   server: 31.25.92.114
   type: http
   udp: true
+- name: 2.188.229.150:7020 (6834ms)
+  port: 7020
+  server: 2.188.229.150
+  type: http
+  udp: true
+- name: 79.127.30.250:8080
+  port: 8080
+  server: 79.127.30.250
+  type: http
+  udp: true
+- name: 87.107.78.242:1543
+  port: 1543
+  server: 87.107.78.242
+  type: http
+  udp: true
+- name: 80.191.40.130:5678
+  port: 5678
+  server: 80.191.40.130
+  type: http
+  udp: true
+- name: 79.175.188.203:443
+  port: 443
+  server: 79.175.188.203
+  type: socks5
+  udp: true
+- name: 185.172.214.189:8080
+  port: 8080
+  server: 185.172.214.189
+  type: socks5
+  udp: true
+- name: 109.238.189.104:4145
+  port: 4145
+  server: 109.238.189.104
+  type: socks5
+  udp: true
+- name: 5.160.187.174:1080
+  port: 1080
+  server: 5.160.187.174
+  type: socks5
+  udp: true
+- name: 195.181.37.151:33333
+  port: 33333
+  server: 195.181.37.151
+  type: socks5
+  udp: true
+- name: 185.120.201.27:8080
+  port: 8080
+  server: 185.120.201.27
+  type: socks5
+  udp: true
+- name: 80.191.46.62:1090
+  port: 1090
+  server: 80.191.46.62
+  type: http
+  udp: true
+- name: 37.191.78.17:7070 (3163ms)
+  port: 7070
+  server: 37.191.78.17
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -817,6 +877,18 @@ proxy-groups:
   - 5.160.200.109:8088
   - 185.109.244.69:8080
   - 31.25.92.114:8080
+  - 2.188.229.150:7020 (6834ms)
+  - 79.127.30.250:8080
+  - 87.107.78.242:1543
+  - 80.191.40.130:5678
+  - 79.175.188.203:443
+  - 185.172.214.189:8080
+  - 109.238.189.104:4145
+  - 5.160.187.174:1080
+  - 195.181.37.151:33333
+  - 185.120.201.27:8080
+  - 80.191.46.62:1090
+  - 37.191.78.17:7070 (3163ms)
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
