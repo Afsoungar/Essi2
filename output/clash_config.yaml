@@ -1,8 +1,8 @@
 metadata:
   active_proxies: 13
-  generated: '2026-06-24T17:08:54.027877'
+  generated: '2026-06-24T23:13:58.582853'
   source: Iran Proxy Manager
-  total_proxies: 103
+  total_proxies: 104
 proxies:
 - name: 81.91.159.134:8443
   port: 8443
@@ -608,6 +608,11 @@ proxies:
   server: 46.209.15.187
   type: http
   udp: true
+- name: 85.9.87.26:8080
+  port: 8080
+  server: 85.9.87.26
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -715,6 +720,7 @@ proxy-groups:
   - 185.129.202.34:5678
   - 80.191.40.131:5678
   - 46.209.15.187:8080
+  - 85.9.87.26:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
