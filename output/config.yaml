@@ -1077,15 +1077,91 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 37.32.23.122:443 (273ms)
+  type: vmess
+  server: 37.32.23.122
+  port: 443
+  added_date: '2026-06-26'
+  last_checked: '2026-06-26'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 273
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
+  cipher: auto
+  network: ws
+  tls: true
+  alterId: 4
+  ws-opts:
+    path: /websocket/
+    headers:
+      Host: 37.32.23.122
+  sni: 37.32.23.122
+- name: 151.232.18.66:5678
+  type: socks5
+  server: 151.232.18.66
+  port: 5678
+  added_date: '2026-06-26'
+  last_checked: '2026-06-26'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 5.160.103.246:8080
+  type: socks5
+  server: 5.160.103.246
+  port: 8080
+  added_date: '2026-06-26'
+  last_checked: '2026-06-26'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 80.191.46.62:1090
+  type: socks5
+  server: 80.191.46.62
+  port: 1090
+  added_date: '2026-06-26'
+  last_checked: '2026-06-26'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 185.126.5.92:8080
+  type: http
+  server: 185.126.5.92
+  port: 8080
+  added_date: '2026-06-26'
+  last_checked: '2026-06-26'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 46.209.207.148:8080
+  type: http
+  server: 46.209.207.148
+  port: 8080
+  added_date: '2026-06-26'
+  last_checked: '2026-06-26'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 metadata:
-  total_count: 89
-  active_count: 10
-  last_updated: '2026-06-26 05:06:35'
+  total_count: 95
+  active_count: 11
+  last_updated: '2026-06-26 11:31:34'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260626_041518.log
+  log_file: output/logs/proxy_update_20260626_102530.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
