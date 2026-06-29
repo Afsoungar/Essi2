@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 6
-  generated: '2026-06-29T05:31:22.663059'
+  active_proxies: 7
+  generated: '2026-06-29T13:12:19.256836'
   source: Iran Proxy Manager
-  total_proxies: 80
+  total_proxies: 87
 proxies:
 - name: 46.209.207.147:8080
   port: 8080
@@ -503,6 +503,60 @@ proxies:
   server: 195.181.40.34
   type: http
   udp: true
+- alterId: 4
+  cipher: auto
+  name: 37.32.23.122:443 (277ms)
+  network: ws
+  port: 443
+  server: 37.32.23.122
+  sni: 37.32.23.122
+  tls: true
+  type: vmess
+  udp: true
+  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
+  ws-opts:
+    headers:
+      Host: 37.32.23.122
+    path: /websocket/
+- alterId: 4
+  cipher: auto
+  name: 185.231.181.82:8443
+  network: ws
+  port: 8443
+  server: 185.231.181.82
+  tls: false
+  type: vmess
+  udp: true
+  uuid: 37b0f4af-2fbb-4b40-92e2-894bf7bf598c
+  ws-opts:
+    headers:
+      Host: mim.emperorr.sbs
+    path: /ws
+- name: 5.202.120.123:3129
+  port: 3129
+  server: 5.202.120.123
+  type: http
+  udp: true
+- name: 185.126.5.92:8080
+  port: 8080
+  server: 185.126.5.92
+  type: http
+  udp: true
+- name: 79.175.188.203:443
+  port: 443
+  server: 79.175.188.203
+  type: http
+  udp: true
+- name: 151.232.18.66:5678
+  port: 5678
+  server: 151.232.18.66
+  type: socks5
+  udp: true
+- name: 81.16.113.168:8080
+  port: 8080
+  server: 81.16.113.168
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -587,6 +641,13 @@ proxy-groups:
   - 81.91.157.134:5678
   - 79.127.30.250:8080
   - 195.181.40.34:8080
+  - 37.32.23.122:443 (277ms)
+  - 185.231.181.82:8443
+  - 5.202.120.123:3129
+  - 185.126.5.92:8080
+  - 79.175.188.203:443
+  - 151.232.18.66:5678
+  - 81.16.113.168:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
