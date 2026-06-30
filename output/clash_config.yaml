@@ -1,248 +1,9 @@
 metadata:
-  active_proxies: 8
-  generated: '2026-06-29T23:19:07.617794'
+  active_proxies: 5
+  generated: '2026-06-30T04:48:45.056358'
   source: Iran Proxy Manager
-  total_proxies: 100
+  total_proxies: 75
 proxies:
-- name: 46.209.207.147:8080
-  port: 8080
-  server: 46.209.207.147
-  type: http
-  udp: true
-- name: 80.191.40.130:5678
-  port: 5678
-  server: 80.191.40.130
-  type: socks5
-  udp: true
-- name: 193.178.203.141:8080
-  port: 8080
-  server: 193.178.203.141
-  type: http
-  udp: true
-- name: 46.249.124.244:1390 (19682ms)
-  port: 1390
-  server: 46.249.124.244
-  type: http
-  udp: true
-- name: 185.193.209.1:8080
-  port: 8080
-  server: 185.193.209.1
-  type: http
-  udp: true
-- name: 178.252.165.226:1081
-  port: 1081
-  server: 178.252.165.226
-  type: socks5
-  udp: true
-- alterId: 4
-  cipher: auto
-  name: 185.143.233.114:80 (123ms)
-  network: ws
-  port: 80
-  server: 185.143.233.114
-  tls: false
-  type: vmess
-  udp: true
-  uuid: cf7f2d7c-d4f8-469a-bfd5-97484bb98d2c
-  ws-opts:
-    headers:
-      Host: 185.143.233.114
-    path: /
-- alterId: 4
-  cipher: auto
-  name: 2.189.59.7:443
-  network: ws
-  port: 443
-  server: 2.189.59.7
-  sni: obdii.cfd
-  tls: true
-  type: vmess
-  udp: true
-  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
-  ws-opts:
-    headers:
-      Host: obdii.cfd
-    path: /linkws
-- alterId: 4
-  cipher: auto
-  name: 2.189.59.5:443
-  network: ws
-  port: 443
-  server: 2.189.59.5
-  sni: obdii.cfd
-  tls: true
-  type: vmess
-  udp: true
-  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
-  ws-opts:
-    headers:
-      Host: obdii.cfd
-    path: /linkws
-- alterId: 4
-  cipher: auto
-  name: 2.189.59.6:443
-  network: ws
-  port: 443
-  server: 2.189.59.6
-  sni: obdii.cfd
-  tls: true
-  type: vmess
-  udp: true
-  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
-  ws-opts:
-    headers:
-      Host: obdii.cfd
-    path: /
-- alterId: 4
-  cipher: auto
-  name: 2.189.59.3:443
-  network: ws
-  port: 443
-  server: 2.189.59.3
-  sni: obdii.cfd
-  tls: true
-  type: vmess
-  udp: true
-  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
-  ws-opts:
-    headers:
-      Host: obdii.cfd
-    path: /
-- alterId: 4
-  cipher: auto
-  name: 2.189.59.4:443
-  network: ws
-  port: 443
-  server: 2.189.59.4
-  sni: obdii.cfd
-  tls: true
-  type: vmess
-  udp: true
-  uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d
-  ws-opts:
-    headers:
-      Host: obdii.cfd
-    path: /linkws
-- alterId: 4
-  cipher: auto
-  name: 185.24.255.24:80
-  network: ws
-  port: 80
-  server: 185.24.255.24
-  tls: false
-  type: vmess
-  udp: true
-  uuid: 80abb903-24e0-4dbd-9c2f-a57e9a267555
-  ws-opts:
-    headers:
-      Host: 185.24.255.24
-    path: /ws
-- alterId: 4
-  cipher: auto
-  name: 193.39.9.61:13909
-  network: ws
-  port: 13909
-  server: 193.39.9.61
-  tls: false
-  type: vmess
-  udp: true
-  uuid: a24e44ff-2737-45a7-d0e2-e4ef93762741
-  ws-opts:
-    headers:
-      Host: 193.39.9.61
-    path: /
-- cipher: aes-256-gcm
-  name: 103.130.147.40:1122
-  password: wc/eqRPrYjnxfAJ2JKnio7cG2Ko9K9DiMwzonRjU3LI=
-  port: 1122
-  server: 103.130.147.40
-  type: ss
-  udp: true
-- name: 5.202.84.234:3129
-  port: 3129
-  server: 5.202.84.234
-  type: http
-  udp: true
-- name: 46.34.165.86:443
-  port: 443
-  server: 46.34.165.86
-  type: http
-  udp: true
-- name: 37.75.246.67:8080
-  port: 8080
-  server: 37.75.246.67
-  type: socks5
-  udp: true
-- name: 78.39.253.48:8080
-  port: 8080
-  server: 78.39.253.48
-  type: socks5
-  udp: true
-- name: 46.209.30.11:8080
-  port: 8080
-  server: 46.209.30.11
-  type: http
-  udp: true
-- name: 45.82.138.121:3129
-  port: 3129
-  server: 45.82.138.121
-  type: http
-  udp: true
-- name: 185.134.96.222:8080 (6870ms)
-  port: 8080
-  server: 185.134.96.222
-  type: http
-  udp: true
-- name: 37.191.79.201:8080 (1762ms)
-  port: 8080
-  server: 37.191.79.201
-  type: http
-  udp: true
-- name: 80.191.40.131:5678
-  port: 5678
-  server: 80.191.40.131
-  type: http
-  udp: true
-- name: 85.9.87.26:8080
-  port: 8080
-  server: 85.9.87.26
-  type: http
-  udp: true
-- name: 46.209.15.187:8080
-  port: 8080
-  server: 46.209.15.187
-  type: http
-  udp: true
-- name: 89.42.197.84:60606
-  port: 60606
-  server: 89.42.197.84
-  type: socks5
-  udp: true
-- name: 178.252.171.229:8080
-  port: 8080
-  server: 178.252.171.229
-  type: http
-  udp: true
-- name: 185.145.185.218:8080
-  port: 8080
-  server: 185.145.185.218
-  type: http
-  udp: true
-- name: 37.75.246.67:8080
-  port: 8080
-  server: 37.75.246.67
-  type: http
-  udp: true
-- name: 78.38.67.95:4153
-  port: 4153
-  server: 78.38.67.95
-  type: socks5
-  udp: true
-- name: 62.60.167.90:1080
-  port: 1080
-  server: 62.60.167.90
-  type: socks5
-  udp: true
 - name: 109.95.61.203:1081
   port: 1081
   server: 109.95.61.203
@@ -622,42 +383,45 @@ proxies:
   server: 31.25.92.114
   type: http
   udp: true
+- name: 78.38.67.95:4153
+  port: 4153
+  server: 78.38.67.95
+  type: http
+  udp: true
+- name: 94.182.199.250:8080
+  port: 8080
+  server: 94.182.199.250
+  type: socks5
+  udp: true
+- name: 46.209.207.158:8080
+  port: 8080
+  server: 46.209.207.158
+  type: http
+  udp: true
+- name: 193.178.203.140:8080 (7393ms)
+  port: 8080
+  server: 193.178.203.140
+  type: http
+  udp: true
+- name: 37.75.246.67:8080
+  port: 8080
+  server: 37.75.246.67
+  type: http
+  udp: true
+- name: 5.202.84.234:3129
+  port: 3129
+  server: 5.202.84.234
+  type: http
+  udp: true
+- name: 178.252.171.229:8080
+  port: 8080
+  server: 178.252.171.229
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
   proxies:
-  - 46.209.207.147:8080
-  - 80.191.40.130:5678
-  - 193.178.203.141:8080
-  - 46.249.124.244:1390 (19682ms)
-  - 185.193.209.1:8080
-  - 178.252.165.226:1081
-  - 185.143.233.114:80 (123ms)
-  - 2.189.59.7:443
-  - 2.189.59.5:443
-  - 2.189.59.6:443
-  - 2.189.59.3:443
-  - 2.189.59.4:443
-  - 185.24.255.24:80
-  - 193.39.9.61:13909
-  - 103.130.147.40:1122
-  - 5.202.84.234:3129
-  - 46.34.165.86:443
-  - 37.75.246.67:8080
-  - 78.39.253.48:8080
-  - 46.209.30.11:8080
-  - 45.82.138.121:3129
-  - 185.134.96.222:8080 (6870ms)
-  - 37.191.79.201:8080 (1762ms)
-  - 80.191.40.131:5678
-  - 85.9.87.26:8080
-  - 46.209.15.187:8080
-  - 89.42.197.84:60606
-  - 178.252.171.229:8080
-  - 185.145.185.218:8080
-  - 37.75.246.67:8080
-  - 78.38.67.95:4153
-  - 62.60.167.90:1080
   - 109.95.61.203:1081
   - 80.191.40.133:5678
   - 37.191.79.201:8080
@@ -726,6 +490,13 @@ proxy-groups:
   - 185.134.99.61:4153
   - 87.247.174.160:2080
   - 31.25.92.114:8080
+  - 78.38.67.95:4153
+  - 94.182.199.250:8080
+  - 46.209.207.158:8080
+  - 193.178.203.140:8080 (7393ms)
+  - 37.75.246.67:8080
+  - 5.202.84.234:3129
+  - 178.252.171.229:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
