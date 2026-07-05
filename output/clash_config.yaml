@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 14
-  generated: '2026-07-05T04:59:49.209516'
+  active_proxies: 17
+  generated: '2026-07-05T10:55:20.588682'
   source: Iran Proxy Manager
-  total_proxies: 90
+  total_proxies: 103
 proxies:
 - name: 95.215.161.153:8080 (1086ms)
   port: 8080
@@ -553,6 +553,90 @@ proxies:
   server: 195.181.40.34
   type: http
   udp: true
+- alterId: 4
+  cipher: auto
+  name: 37.32.23.122:443 (276ms)
+  network: ws
+  port: 443
+  server: 37.32.23.122
+  sni: 37.32.23.122
+  tls: true
+  type: vmess
+  udp: true
+  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
+  ws-opts:
+    headers:
+      Host: 37.32.23.122
+    path: /websocket/
+- alterId: 4
+  cipher: auto
+  name: 185.231.181.82:8443
+  network: ws
+  port: 8443
+  server: 185.231.181.82
+  tls: false
+  type: vmess
+  udp: true
+  uuid: 37b0f4af-2fbb-4b40-92e2-894bf7bf598c
+  ws-opts:
+    headers:
+      Host: mim.emperorr.sbs
+    path: /ws
+- name: 37.191.95.202:80
+  port: 80
+  server: 37.191.95.202
+  type: http
+  udp: true
+- name: 93.118.125.41:9000 (946ms)
+  port: 9000
+  server: 93.118.125.41
+  type: http
+  udp: true
+- name: 37.143.147.34:58256
+  port: 58256
+  server: 37.143.147.34
+  type: http
+  udp: true
+- name: 81.90.144.170:9000
+  port: 9000
+  server: 81.90.144.170
+  type: http
+  udp: true
+- name: 185.171.54.36:4153
+  port: 4153
+  server: 185.171.54.36
+  type: http
+  udp: true
+- name: 5.202.120.123:3129
+  port: 3129
+  server: 5.202.120.123
+  type: http
+  udp: true
+- name: 46.245.123.30:1081
+  port: 1081
+  server: 46.245.123.30
+  type: http
+  udp: true
+- name: 185.171.54.34:4153
+  port: 4153
+  server: 185.171.54.34
+  type: http
+  udp: true
+- name: 37.191.79.201:8080 (11189ms)
+  port: 8080
+  server: 37.191.79.201
+  type: http
+  udp: true
+- name: 80.191.40.133:5678
+  port: 5678
+  server: 80.191.40.133
+  type: socks5
+  udp: true
+- name: 84.241.30.38:8080
+  port: 8080
+  server: 84.241.30.38
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -647,6 +731,19 @@ proxy-groups:
   - 37.191.95.202:80
   - 79.175.188.203:443 (2544ms)
   - 195.181.40.34:8080
+  - 37.32.23.122:443 (276ms)
+  - 185.231.181.82:8443
+  - 37.191.95.202:80
+  - 93.118.125.41:9000 (946ms)
+  - 37.143.147.34:58256
+  - 81.90.144.170:9000
+  - 185.171.54.36:4153
+  - 5.202.120.123:3129
+  - 46.245.123.30:1081
+  - 185.171.54.34:4153
+  - 37.191.79.201:8080 (11189ms)
+  - 80.191.40.133:5678
+  - 84.241.30.38:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
