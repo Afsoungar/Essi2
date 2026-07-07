@@ -1239,15 +1239,26 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 185.109.244.69:8080 (5945ms)
+  type: http
+  server: 185.109.244.69
+  port: 8080
+  added_date: '2026-07-07'
+  last_checked: '2026-07-07'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 5945
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
 metadata:
-  total_count: 102
-  active_count: 13
-  last_updated: '2026-07-07 17:48:16'
+  total_count: 103
+  active_count: 14
+  last_updated: '2026-07-07 22:45:45'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260707_163526.log
+  log_file: output/logs/proxy_update_20260707_221534.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
