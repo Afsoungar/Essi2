@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 13
-  generated: '2026-07-14T03:36:17.216308'
+  active_proxies: 15
+  generated: '2026-07-14T09:57:31.247935'
   source: Iran Proxy Manager
-  total_proxies: 96
+  total_proxies: 110
 proxies:
 - name: 151.232.18.66:5678
   port: 5678
@@ -585,6 +585,95 @@ proxies:
   server: 217.219.83.186
   type: http
   udp: true
+- alterId: 4
+  cipher: auto
+  name: 37.32.23.122:443 (185ms)
+  network: ws
+  port: 443
+  server: 37.32.23.122
+  sni: 37.32.23.122
+  tls: true
+  type: vmess
+  udp: true
+  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
+  ws-opts:
+    headers:
+      Host: 37.32.23.122
+    path: /websocket/
+- alterId: 4
+  cipher: auto
+  name: 185.231.181.82:8443
+  network: ws
+  port: 8443
+  server: 185.231.181.82
+  tls: false
+  type: vmess
+  udp: true
+  uuid: 37b0f4af-2fbb-4b40-92e2-894bf7bf598c
+  ws-opts:
+    headers:
+      Host: mim.emperorr.sbs
+    path: /ws
+- name: 31.25.92.114:8080
+  port: 8080
+  server: 31.25.92.114
+  type: http
+  udp: true
+- name: 185.212.195.34:8085
+  port: 8085
+  server: 185.212.195.34
+  type: http
+  udp: true
+- name: 195.181.40.34:8080
+  port: 8080
+  server: 195.181.40.34
+  type: http
+  udp: true
+- name: 37.191.95.202:80 (24790ms)
+  port: 80
+  server: 37.191.95.202
+  type: http
+  udp: true
+- name: 46.245.123.30:1081
+  port: 1081
+  server: 46.245.123.30
+  type: http
+  udp: true
+- name: 84.241.30.38:8080
+  port: 8080
+  server: 84.241.30.38
+  type: http
+  udp: true
+- name: 81.90.144.170:9000
+  port: 9000
+  server: 81.90.144.170
+  type: http
+  udp: true
+- name: 80.191.40.133:5678
+  port: 5678
+  server: 80.191.40.133
+  type: http
+  udp: true
+- name: 185.212.195.34:8085
+  port: 8085
+  server: 185.212.195.34
+  type: socks5
+  udp: true
+- name: 79.127.30.250:8080
+  port: 8080
+  server: 79.127.30.250
+  type: http
+  udp: true
+- name: 213.207.198.254:8080
+  port: 8080
+  server: 213.207.198.254
+  type: http
+  udp: true
+- name: 5.202.120.123:3129
+  port: 3129
+  server: 5.202.120.123
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -685,6 +774,20 @@ proxy-groups:
   - 78.39.253.48:8080
   - 193.178.203.141:8080
   - 217.219.83.186:2222
+  - 37.32.23.122:443 (185ms)
+  - 185.231.181.82:8443
+  - 31.25.92.114:8080
+  - 185.212.195.34:8085
+  - 195.181.40.34:8080
+  - 37.191.95.202:80 (24790ms)
+  - 46.245.123.30:1081
+  - 84.241.30.38:8080
+  - 81.90.144.170:9000
+  - 80.191.40.133:5678
+  - 185.212.195.34:8085
+  - 79.127.30.250:8080
+  - 213.207.198.254:8080
+  - 5.202.120.123:3129
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
