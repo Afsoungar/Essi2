@@ -1228,15 +1228,72 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 103.130.147.40:1122
+  type: ss
+  server: 103.130.147.40
+  port: 1122
+  added_date: '2026-07-15'
+  last_checked: '2026-07-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt
+  cipher: aes-256-gcm
+  password: wc/eqRPrYjnxfAJ2JKnio7cG2Ko9K9DiMwzonRjU3LI=
+- name: 46.209.30.11:8080 (7019ms)
+  type: http
+  server: 46.209.30.11
+  port: 8080
+  added_date: '2026-07-15'
+  last_checked: '2026-07-15'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 7019
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 87.107.74.39:1028
+  type: socks5
+  server: 87.107.74.39
+  port: 1028
+  added_date: '2026-07-15'
+  last_checked: '2026-07-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 78.38.67.95:4153
+  type: socks5
+  server: 78.38.67.95
+  port: 4153
+  added_date: '2026-07-15'
+  last_checked: '2026-07-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 87.107.78.242:1543
+  type: socks5
+  server: 87.107.78.242
+  port: 1543
+  added_date: '2026-07-15'
+  last_checked: '2026-07-15'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 101
-  active_count: 15
-  last_updated: '2026-07-15 10:06:10'
+  total_count: 106
+  active_count: 16
+  last_updated: '2026-07-15 16:13:58'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260715_091310.log
+  log_file: output/logs/proxy_update_20260715_153818.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
