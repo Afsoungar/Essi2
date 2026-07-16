@@ -1,216 +1,9 @@
 metadata:
-  active_proxies: 17
-  generated: '2026-07-15T22:53:28.117337'
+  active_proxies: 9
+  generated: '2026-07-16T04:45:36.012641'
   source: Iran Proxy Manager
-  total_proxies: 112
+  total_proxies: 84
 proxies:
-- name: 81.12.54.13:9090
-  port: 9090
-  server: 81.12.54.13
-  type: http
-  udp: true
-- name: 185.145.185.218:8080
-  port: 8080
-  server: 185.145.185.218
-  type: socks5
-  udp: true
-- name: 185.4.29.243:7887
-  port: 7887
-  server: 185.4.29.243
-  type: socks5
-  udp: true
-- name: 109.230.89.126:3129
-  port: 3129
-  server: 109.230.89.126
-  type: http
-  udp: true
-- name: 80.191.46.62:1090
-  port: 1090
-  server: 80.191.46.62
-  type: http
-  udp: true
-- name: 5.202.52.101:6220 (7943ms)
-  port: 6220
-  server: 5.202.52.101
-  type: http
-  udp: true
-- name: 84.241.29.213:8080
-  port: 8080
-  server: 84.241.29.213
-  type: http
-  udp: true
-- name: 5.200.72.62:3129
-  port: 3129
-  server: 5.200.72.62
-  type: http
-  udp: true
-- name: 185.129.213.210:8080 (9513ms)
-  port: 8080
-  server: 185.129.213.210
-  type: http
-  udp: true
-- name: 5.202.52.103:6220 (2710ms)
-  port: 6220
-  server: 5.202.52.103
-  type: http
-  udp: true
-- name: 185.145.185.218:8080 (5961ms)
-  port: 8080
-  server: 185.145.185.218
-  type: http
-  udp: true
-- name: 85.133.190.40:8097 (2405ms)
-  port: 8097
-  server: 85.133.190.40
-  type: http
-  udp: true
-- name: 46.209.207.146:8080
-  port: 8080
-  server: 46.209.207.146
-  type: http
-  udp: true
-- name: 37.255.203.235:8080
-  port: 8080
-  server: 37.255.203.235
-  type: http
-  udp: true
-- name: 78.39.253.49:8080
-  port: 8080
-  server: 78.39.253.49
-  type: http
-  udp: true
-- name: 85.9.87.26:8080
-  port: 8080
-  server: 85.9.87.26
-  type: http
-  udp: true
-- alterId: 4
-  cipher: auto
-  name: 195.137.167.100:443
-  network: ws
-  port: 443
-  server: 195.137.167.100
-  sni: y-old-mode-9c0diab.wiriy73548.workers.dev
-  tls: true
-  type: vmess
-  udp: true
-  uuid: f584de15-2034-4170-a723-f48c2bae5e0f
-  ws-opts:
-    headers:
-      Host: y-old-mode-9c0diab.wiriy73548.workers.dev
-    path: /afrhms16v.bestxray.buzz/linkws
-- alterId: 4
-  cipher: auto
-  name: 195.137.167.148:443
-  network: ws
-  port: 443
-  server: 195.137.167.148
-  sni: nd-truth-210a8hwjhs.bonar11011.workers.dev
-  tls: true
-  type: vmess
-  udp: true
-  uuid: 03fcc618-b93d-6796-6aed-8a38c975d581
-  ws-opts:
-    headers:
-      Host: nd-truth-210a8hwjhs.bonar11011.workers.dev
-    path: /kellie.makeup/linkvws
-- name: 193.178.203.140:8080 (4290ms)
-  port: 8080
-  server: 193.178.203.140
-  type: http
-  udp: true
-- name: 37.75.246.67:8080
-  port: 8080
-  server: 37.75.246.67
-  type: http
-  udp: true
-- name: 94.182.225.248:3129
-  port: 3129
-  server: 94.182.225.248
-  type: http
-  udp: true
-- name: 94.182.199.250:8080
-  port: 8080
-  server: 94.182.199.250
-  type: http
-  udp: true
-- name: 87.107.78.242:1543
-  port: 1543
-  server: 87.107.78.242
-  type: http
-  udp: true
-- name: 178.252.171.226:8080
-  port: 8080
-  server: 178.252.171.226
-  type: http
-  udp: true
-- name: 185.109.244.69:8080
-  port: 8080
-  server: 185.109.244.69
-  type: http
-  udp: true
-- name: 5.160.200.109:8088
-  port: 8088
-  server: 5.160.200.109
-  type: http
-  udp: true
-- name: 185.129.213.210:8080
-  port: 8080
-  server: 185.129.213.210
-  type: socks5
-  udp: true
-- cipher: chacha20-ietf-poly1305
-  name: 2.144.23.23:2053
-  password: KpikV0WcN54ul7ytP0QOGW7njSS9xqqy/Ji85PM4KQQ=
-  port: 2053
-  server: 2.144.23.23
-  type: ss
-  udp: true
-- name: 81.12.70.99:8080
-  port: 8080
-  server: 81.12.70.99
-  type: http
-  udp: true
-- name: 5.202.171.181:9050 (4665ms)
-  port: 9050
-  server: 5.202.171.181
-  type: http
-  udp: true
-- name: 45.82.138.121:3128
-  port: 3128
-  server: 45.82.138.121
-  type: socks5
-  udp: true
-- name: 185.172.214.189:8080
-  port: 8080
-  server: 185.172.214.189
-  type: socks5
-  udp: true
-- name: 93.126.6.68:3128
-  port: 3128
-  server: 93.126.6.68
-  type: socks5
-  udp: true
-- name: 87.107.184.182:8080 (5151ms)
-  port: 8080
-  server: 87.107.184.182
-  type: http
-  udp: true
-- name: 46.209.207.152:8080
-  port: 8080
-  server: 46.209.207.152
-  type: http
-  udp: true
-- name: 5.160.247.48:8443
-  port: 8443
-  server: 5.160.247.48
-  type: http
-  udp: true
-- name: 79.127.30.25:8080
-  port: 8080
-  server: 79.127.30.25
-  type: socks5
-  udp: true
 - name: 185.140.232.54:8080
   port: 8080
   server: 185.140.232.54
@@ -684,47 +477,55 @@ proxies:
   server: 91.199.27.249
   type: http
   udp: true
+- name: 185.129.202.34:5678
+  port: 5678
+  server: 185.129.202.34
+  type: socks5
+  udp: true
+- name: 78.39.253.48:8080
+  port: 8080
+  server: 78.39.253.48
+  type: socks5
+  udp: true
+- name: 193.39.9.122:3127
+  port: 3127
+  server: 193.39.9.122
+  type: http
+  udp: true
+- name: 109.230.89.126:3129
+  port: 3129
+  server: 109.230.89.126
+  type: http
+  udp: true
+- name: 5.200.72.62:3129
+  port: 3129
+  server: 5.200.72.62
+  type: http
+  udp: true
+- name: 5.202.52.101:6220
+  port: 6220
+  server: 5.202.52.101
+  type: http
+  udp: true
+- name: 80.191.46.62:1090
+  port: 1090
+  server: 80.191.46.62
+  type: http
+  udp: true
+- name: 37.255.203.235:8080
+  port: 8080
+  server: 37.255.203.235
+  type: http
+  udp: true
+- name: 185.109.244.69:8080
+  port: 8080
+  server: 185.109.244.69
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
   proxies:
-  - 81.12.54.13:9090
-  - 185.145.185.218:8080
-  - 185.4.29.243:7887
-  - 109.230.89.126:3129
-  - 80.191.46.62:1090
-  - 5.202.52.101:6220 (7943ms)
-  - 84.241.29.213:8080
-  - 5.200.72.62:3129
-  - 185.129.213.210:8080 (9513ms)
-  - 5.202.52.103:6220 (2710ms)
-  - 185.145.185.218:8080 (5961ms)
-  - 85.133.190.40:8097 (2405ms)
-  - 46.209.207.146:8080
-  - 37.255.203.235:8080
-  - 78.39.253.49:8080
-  - 85.9.87.26:8080
-  - 195.137.167.100:443
-  - 195.137.167.148:443
-  - 193.178.203.140:8080 (4290ms)
-  - 37.75.246.67:8080
-  - 94.182.225.248:3129
-  - 94.182.199.250:8080
-  - 87.107.78.242:1543
-  - 178.252.171.226:8080
-  - 185.109.244.69:8080
-  - 5.160.200.109:8088
-  - 185.129.213.210:8080
-  - 2.144.23.23:2053
-  - 81.12.70.99:8080
-  - 5.202.171.181:9050 (4665ms)
-  - 45.82.138.121:3128
-  - 185.172.214.189:8080
-  - 93.126.6.68:3128
-  - 87.107.184.182:8080 (5151ms)
-  - 46.209.207.152:8080
-  - 5.160.247.48:8443
-  - 79.127.30.25:8080
   - 185.140.232.54:8080
   - 45.131.4.90:80
   - 78.39.253.48:8080
@@ -800,6 +601,15 @@ proxy-groups:
   - 80.191.40.131:5678
   - 193.39.9.122:3129
   - 91.199.27.249:8080
+  - 185.129.202.34:5678
+  - 78.39.253.48:8080
+  - 193.39.9.122:3127
+  - 109.230.89.126:3129
+  - 5.200.72.62:3129
+  - 5.202.52.101:6220
+  - 80.191.46.62:1090
+  - 37.255.203.235:8080
+  - 185.109.244.69:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
