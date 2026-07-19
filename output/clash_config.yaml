@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 12
-  generated: '2026-07-19T15:52:12.504014'
+  active_proxies: 14
+  generated: '2026-07-19T22:51:38.269831'
   source: Iran Proxy Manager
-  total_proxies: 117
+  total_proxies: 120
 proxies:
 - name: 185.212.195.34:8085 (931ms)
   port: 8085
@@ -707,6 +707,21 @@ proxies:
   server: 217.219.162.114
   type: socks5
   udp: true
+- name: 185.129.213.210:8080 (912ms)
+  port: 8080
+  server: 185.129.213.210
+  type: http
+  udp: true
+- name: 46.209.207.152:8080
+  port: 8080
+  server: 46.209.207.152
+  type: http
+  udp: true
+- name: 95.215.161.153:8080 (947ms)
+  port: 8080
+  server: 95.215.161.153
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -828,6 +843,9 @@ proxy-groups:
   - 193.39.9.122:3129
   - 31.7.65.18:443
   - 217.219.162.114:5678
+  - 185.129.213.210:8080 (912ms)
+  - 46.209.207.152:8080
+  - 95.215.161.153:8080 (947ms)
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
