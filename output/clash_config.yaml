@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 18
-  generated: '2026-07-25T10:16:50.954348'
+  active_proxies: 20
+  generated: '2026-07-25T16:26:07.643172'
   source: Iran Proxy Manager
-  total_proxies: 125
+  total_proxies: 138
 proxies:
 - name: 46.209.207.152:8080
   port: 8080
@@ -740,6 +740,71 @@ proxies:
   server: 185.145.185.218
   type: http
   udp: true
+- name: 95.38.187.127:1081
+  port: 1081
+  server: 95.38.187.127
+  type: socks5
+  udp: true
+- name: 79.175.177.57:1081
+  port: 1081
+  server: 79.175.177.57
+  type: http
+  udp: true
+- name: 5.63.9.218:10818
+  port: 10818
+  server: 5.63.9.218
+  type: http
+  udp: true
+- name: 80.191.40.131:5678
+  port: 5678
+  server: 80.191.40.131
+  type: http
+  udp: true
+- name: 37.32.12.255:30000
+  port: 30000
+  server: 37.32.12.255
+  type: http
+  udp: true
+- name: 95.38.187.127:1081
+  port: 1081
+  server: 95.38.187.127
+  type: http
+  udp: true
+- name: 46.209.207.158:8080
+  port: 8080
+  server: 46.209.207.158
+  type: http
+  udp: true
+- name: 151.232.18.66:5678
+  port: 5678
+  server: 151.232.18.66
+  type: socks5
+  udp: true
+- name: 31.7.65.18:443
+  port: 443
+  server: 31.7.65.18
+  type: socks5
+  udp: true
+- name: 93.126.6.68:3128
+  port: 3128
+  server: 93.126.6.68
+  type: socks5
+  udp: true
+- name: 185.109.244.69:8080 (13240ms)
+  port: 8080
+  server: 185.109.244.69
+  type: http
+  udp: true
+- name: 109.230.89.126:3129
+  port: 3129
+  server: 109.230.89.126
+  type: http
+  udp: true
+- name: 193.39.9.122:3127 (19076ms)
+  port: 3127
+  server: 193.39.9.122
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -869,6 +934,19 @@ proxy-groups:
   - 81.12.70.99:8080
   - 85.133.169.45:8118
   - 185.145.185.218:8080
+  - 95.38.187.127:1081
+  - 79.175.177.57:1081
+  - 5.63.9.218:10818
+  - 80.191.40.131:5678
+  - 37.32.12.255:30000
+  - 95.38.187.127:1081
+  - 46.209.207.158:8080
+  - 151.232.18.66:5678
+  - 31.7.65.18:443
+  - 93.126.6.68:3128
+  - 185.109.244.69:8080 (13240ms)
+  - 109.230.89.126:3129
+  - 193.39.9.122:3127 (19076ms)
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
