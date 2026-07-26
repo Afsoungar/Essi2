@@ -1529,15 +1529,26 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 37.191.95.202:80 (4223ms)
+  type: http
+  server: 37.191.95.202
+  port: 80
+  added_date: '2026-07-26'
+  last_checked: '2026-07-26'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 4223
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
 metadata:
-  total_count: 129
-  active_count: 13
-  last_updated: '2026-07-26 16:00:41'
+  total_count: 130
+  active_count: 14
+  last_updated: '2026-07-26 23:19:29'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260726_150959.log
+  log_file: output/logs/proxy_update_20260726_220344.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
