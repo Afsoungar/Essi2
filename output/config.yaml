@@ -1513,15 +1513,70 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 217.218.179.33:10808
+  type: socks5
+  server: 217.218.179.33
+  port: 10808
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 2.181.34.250:8080
+  type: http
+  server: 2.181.34.250
+  port: 8080
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 185.214.39.152:9050
+  type: http
+  server: 185.214.39.152
+  port: 9050
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 46.249.124.244:1390
+  type: http
+  server: 46.249.124.244
+  port: 1390
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 89.46.219.134:8000
+  type: http
+  server: 89.46.219.134
+  port: 8000
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 metadata:
-  total_count: 127
+  total_count: 132
   active_count: 22
-  last_updated: '2026-08-09 08:55:24'
+  last_updated: '2026-08-09 15:44:11'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260809_075548.log
+  log_file: output/logs/proxy_update_20260809_144018.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
