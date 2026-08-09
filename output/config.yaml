@@ -1568,15 +1568,103 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 93.118.127.222:1081
+  type: socks5
+  server: 93.118.127.222
+  port: 1081
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&country=IR
+- name: 80.191.40.133:5678
+  type: http
+  server: 80.191.40.133
+  port: 5678
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 81.12.70.99:8080 (11865ms)
+  type: http
+  server: 81.12.70.99
+  port: 8080
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 11865
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 185.172.214.189:8080
+  type: socks5
+  server: 185.172.214.189
+  port: 8080
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 185.88.177.4:80
+  type: socks5
+  server: 185.88.177.4
+  port: 80
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 94.183.6.226:9090
+  type: http
+  server: 94.183.6.226
+  port: 9090
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 217.219.45.50:3129
+  type: http
+  server: 217.219.45.50
+  port: 3129
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 109.230.83.178:5060
+  type: http
+  server: 109.230.83.178
+  port: 5060
+  added_date: '2026-08-09'
+  last_checked: '2026-08-09'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 metadata:
-  total_count: 132
-  active_count: 22
-  last_updated: '2026-08-09 15:44:11'
+  total_count: 140
+  active_count: 23
+  last_updated: '2026-08-09 22:42:45'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260809_144018.log
+  log_file: output/logs/proxy_update_20260809_213817.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
