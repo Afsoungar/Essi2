@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 10
-  generated: '2026-08-12T03:23:38.571868'
+  active_proxies: 11
+  generated: '2026-08-12T09:27:20.366080'
   source: Iran Proxy Manager
-  total_proxies: 109
+  total_proxies: 121
 proxies:
 - name: 85.133.242.171:5443
   port: 5443
@@ -636,6 +636,96 @@ proxies:
   server: 85.133.190.40
   type: http
   udp: true
+- alterId: 4
+  cipher: auto
+  name: 185.143.234.120:80 (139ms)
+  network: ws
+  port: 80
+  server: 185.143.234.120
+  sni: koochehpas.com
+  tls: true
+  type: vmess
+  udp: true
+  uuid: b831381d-6324-4d53-ad4f-8cda48b30811
+  ws-opts:
+    headers:
+      Host: koochehpas.com
+    path: /graphql
+- alterId: 4
+  cipher: auto
+  name: 195.137.167.148:443
+  network: ws
+  port: 443
+  server: 195.137.167.148
+  sni: nd-truth-210a8hwjhs.bonar11011.workers.dev
+  tls: true
+  type: vmess
+  udp: true
+  uuid: 03fcc618-b93d-6796-6aed-8a38c975d581
+  ws-opts:
+    headers:
+      Host: nd-truth-210a8hwjhs.bonar11011.workers.dev
+    path: /kellie.makeup/linkvws
+- alterId: 4
+  cipher: auto
+  name: 195.137.167.100:443
+  network: ws
+  port: 443
+  server: 195.137.167.100
+  sni: y-old-mode-9c0diab.wiriy73548.workers.dev
+  tls: true
+  type: vmess
+  udp: true
+  uuid: f584de15-2034-4170-a723-f48c2bae5e0f
+  ws-opts:
+    headers:
+      Host: y-old-mode-9c0diab.wiriy73548.workers.dev
+    path: /afrhms16v.bestxray.buzz/linkws
+- name: 94.183.6.226:9090
+  port: 9090
+  server: 94.183.6.226
+  type: http
+  udp: true
+- name: 89.46.219.134:8000
+  port: 8000
+  server: 89.46.219.134
+  type: http
+  udp: true
+- name: 85.9.87.26:8080
+  port: 8080
+  server: 85.9.87.26
+  type: socks5
+  udp: true
+- name: 2.188.229.150:7020
+  port: 7020
+  server: 2.188.229.150
+  type: socks5
+  udp: true
+- name: 95.38.160.79:10809
+  port: 10809
+  server: 95.38.160.79
+  type: socks5
+  udp: true
+- name: 46.245.123.30:1080
+  port: 1080
+  server: 46.245.123.30
+  type: socks5
+  udp: true
+- name: 91.228.133.191:8888
+  port: 8888
+  server: 91.228.133.191
+  type: socks5
+  udp: true
+- name: 185.172.214.189:8080
+  port: 8080
+  server: 185.172.214.189
+  type: socks5
+  udp: true
+- name: 93.118.127.222:1081
+  port: 1081
+  server: 93.118.127.222
+  type: socks5
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -749,6 +839,18 @@ proxy-groups:
   - 37.255.247.203:8080
   - 185.214.39.152:9050 (3951ms)
   - 85.133.190.40:8097 (1293ms)
+  - 185.143.234.120:80 (139ms)
+  - 195.137.167.148:443
+  - 195.137.167.100:443
+  - 94.183.6.226:9090
+  - 89.46.219.134:8000
+  - 85.9.87.26:8080
+  - 2.188.229.150:7020
+  - 95.38.160.79:10809
+  - 46.245.123.30:1080
+  - 91.228.133.191:8888
+  - 185.172.214.189:8080
+  - 93.118.127.222:1081
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
