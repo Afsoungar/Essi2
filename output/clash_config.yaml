@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 18
-  generated: '2026-09-03T05:04:42.402960'
+  active_proxies: 21
+  generated: '2026-09-03T12:34:39.436004'
   source: Iran Proxy Manager
-  total_proxies: 118
+  total_proxies: 131
 proxies:
 - name: 87.107.109.74:10819
   port: 10819
@@ -612,6 +612,100 @@ proxies:
   server: 185.212.195.34
   type: http
   udp: true
+- alterId: 4
+  cipher: auto
+  name: 37.32.23.122:443
+  network: ws
+  port: 443
+  server: 37.32.23.122
+  sni: 37.32.23.122
+  tls: true
+  type: vmess
+  udp: true
+  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
+  ws-opts:
+    headers:
+      Host: 37.32.23.122
+    path: /websocket/
+- alterId: 4
+  cipher: auto
+  name: 185.143.234.120:80 (123ms)
+  network: ws
+  port: 80
+  server: 185.143.234.120
+  tls: false
+  type: vmess
+  udp: true
+  uuid: b831381d-6324-4d53-ad4f-8cda48b30811
+  ws-opts:
+    headers:
+      Host: koochehpas.com
+    path: /graphql
+- alterId: 4
+  cipher: auto
+  name: 185.59.113.4:443
+  network: ws
+  port: 443
+  server: 185.59.113.4
+  sni: amir.amirport.ir
+  tls: true
+  type: vmess
+  udp: true
+  uuid: efc02ac5-685e-4c88-b3da-ce3dfc236585
+  ws-opts:
+    headers:
+      Host: amir.amirport.ir
+    path: /
+- name: 2.181.34.250:8080 (6822ms)
+  port: 8080
+  server: 2.181.34.250
+  type: http
+  udp: true
+- name: 81.12.89.74:4153
+  port: 4153
+  server: 81.12.89.74
+  type: http
+  udp: true
+- name: 185.109.244.69:8080
+  port: 8080
+  server: 185.109.244.69
+  type: http
+  udp: true
+- name: 91.223.116.132:3128
+  port: 3128
+  server: 91.223.116.132
+  type: socks5
+  udp: true
+- name: 87.107.68.231:1081
+  port: 1081
+  server: 87.107.68.231
+  type: socks5
+  udp: true
+- name: 80.191.40.131:5678
+  port: 5678
+  server: 80.191.40.131
+  type: socks5
+  udp: true
+- name: 62.60.210.173:1080 (3036ms)
+  port: 1080
+  server: 62.60.210.173
+  type: socks5
+  udp: true
+- name: 91.106.80.70:2080
+  port: 2080
+  server: 91.106.80.70
+  type: http
+  udp: true
+- name: 2.179.95.57:8080
+  port: 8080
+  server: 2.179.95.57
+  type: http
+  udp: true
+- name: 5.200.72.62:3129
+  port: 3129
+  server: 5.200.72.62
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -734,6 +828,19 @@ proxy-groups:
   - 31.47.38.2:80 (1872ms)
   - 93.118.127.234:8080
   - 185.212.195.34:8085 (847ms)
+  - 37.32.23.122:443
+  - 185.143.234.120:80 (123ms)
+  - 185.59.113.4:443
+  - 2.181.34.250:8080 (6822ms)
+  - 81.12.89.74:4153
+  - 185.109.244.69:8080
+  - 91.223.116.132:3128
+  - 87.107.68.231:1081
+  - 80.191.40.131:5678
+  - 62.60.210.173:1080 (3036ms)
+  - 91.106.80.70:2080
+  - 2.179.95.57:8080
+  - 5.200.72.62:3129
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
