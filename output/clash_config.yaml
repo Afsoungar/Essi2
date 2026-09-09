@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 13
-  generated: '2026-09-09T12:46:21.445091'
+  active_proxies: 14
+  generated: '2026-09-09T18:26:08.035044'
   source: Iran Proxy Manager
-  total_proxies: 109
+  total_proxies: 120
 proxies:
 - name: 93.118.127.234:8080
   port: 8080
@@ -577,6 +577,70 @@ proxies:
   server: 62.60.210.173
   type: socks5
   udp: true
+- alterId: 4
+  cipher: auto
+  name: 185.143.234.120:80 (107ms)
+  network: ws
+  port: 80
+  server: 185.143.234.120
+  tls: false
+  type: vmess
+  udp: true
+  uuid: b831381d-6324-4d53-ad4f-8cda48b30811
+  ws-opts:
+    headers:
+      Host: koochehpas.com
+    path: /graphql
+- name: 2.179.95.57:8080
+  port: 8080
+  server: 2.179.95.57
+  type: http
+  udp: true
+- name: 2.181.34.250:8080
+  port: 8080
+  server: 2.181.34.250
+  type: http
+  udp: true
+- name: 80.191.40.133:5678
+  port: 5678
+  server: 80.191.40.133
+  type: http
+  udp: true
+- name: 87.107.109.254:2180
+  port: 2180
+  server: 87.107.109.254
+  type: socks5
+  udp: true
+- name: 217.219.83.186:2222
+  port: 2222
+  server: 217.219.83.186
+  type: socks5
+  udp: true
+- name: 178.252.165.226:1080
+  port: 1080
+  server: 178.252.165.226
+  type: socks5
+  udp: true
+- name: 46.245.123.30:1080
+  port: 1080
+  server: 46.245.123.30
+  type: socks5
+  udp: true
+- name: 31.7.65.18:443
+  port: 443
+  server: 31.7.65.18
+  type: socks5
+  udp: true
+- name: 78.39.253.48:8080
+  port: 8080
+  server: 78.39.253.48
+  type: http
+  udp: true
+- name: 81.90.158.110:3129
+  port: 3129
+  server: 81.90.158.110
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -690,6 +754,17 @@ proxy-groups:
   - 46.100.94.217:1080
   - 185.60.59.245:10808
   - 62.60.210.173:1080
+  - 185.143.234.120:80 (107ms)
+  - 2.179.95.57:8080
+  - 2.181.34.250:8080
+  - 80.191.40.133:5678
+  - 87.107.109.254:2180
+  - 217.219.83.186:2222
+  - 178.252.165.226:1080
+  - 46.245.123.30:1080
+  - 31.7.65.18:443
+  - 78.39.253.48:8080
+  - 81.90.158.110:3129
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
