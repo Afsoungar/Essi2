@@ -1,159 +1,9 @@
 metadata:
   active_proxies: 13
-  generated: '2026-09-20T23:45:43.116041'
+  generated: '2026-09-21T05:42:05.220583'
   source: Iran Proxy Manager
-  total_proxies: 113
+  total_proxies: 103
 proxies:
-- name: 178.252.171.229:8080
-  port: 8080
-  server: 178.252.171.229
-  type: http
-  udp: true
-- name: 185.214.39.2:9944
-  port: 9944
-  server: 185.214.39.2
-  type: socks5
-  udp: true
-- name: 217.11.23.106:8080
-  port: 8080
-  server: 217.11.23.106
-  type: socks5
-  udp: true
-- name: 85.133.250.27:80
-  port: 80
-  server: 85.133.250.27
-  type: socks5
-  udp: true
-- name: 5.202.191.225:8080
-  port: 8080
-  server: 5.202.191.225
-  type: socks5
-  udp: true
-- name: 80.191.46.62:1090
-  port: 1090
-  server: 80.191.46.62
-  type: socks5
-  udp: true
-- name: 81.90.144.170:9000
-  port: 9000
-  server: 81.90.144.170
-  type: http
-  udp: true
-- alterId: 4
-  cipher: auto
-  name: 37.32.23.122:443
-  network: ws
-  port: 443
-  server: 37.32.23.122
-  sni: 37.32.23.122
-  tls: true
-  type: vmess
-  udp: true
-  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
-  ws-opts:
-    headers:
-      Host: 37.32.23.122
-    path: /websocket/
-- name: 5.200.72.58:3129
-  port: 3129
-  server: 5.200.72.58
-  type: http
-  udp: true
-- name: 80.191.40.131:5678
-  port: 5678
-  server: 80.191.40.131
-  type: http
-  udp: true
-- name: 93.118.123.196:1081
-  port: 1081
-  server: 93.118.123.196
-  type: http
-  udp: true
-- name: 87.107.68.231:1081
-  port: 1081
-  server: 87.107.68.231
-  type: socks5
-  udp: true
-- name: 78.38.67.95:4153
-  port: 4153
-  server: 78.38.67.95
-  type: socks5
-  udp: true
-- name: 62.60.210.173:1080
-  port: 1080
-  server: 62.60.210.173
-  type: socks5
-  udp: true
-- name: 217.219.83.186:2222
-  port: 2222
-  server: 217.219.83.186
-  type: http
-  udp: true
-- alterId: 4
-  cipher: auto
-  name: 2.189.59.2:443
-  network: ws
-  port: 443
-  server: 2.189.59.2
-  sni: germany-linkws.pages.dev
-  tls: true
-  type: vmess
-  udp: true
-  uuid: 62aa5f80-0328-4004-a375-7f5a59df4022
-  ws-opts:
-    headers:
-      Host: germany-linkws.pages.dev
-    path: /Telegram/XV2ray
-- name: 185.212.195.34:8085 (1965ms)
-  port: 8085
-  server: 185.212.195.34
-  type: http
-  udp: true
-- name: 195.181.40.34:8080
-  port: 8080
-  server: 195.181.40.34
-  type: http
-  udp: true
-- name: 94.182.199.250:8080
-  port: 8080
-  server: 94.182.199.250
-  type: socks5
-  udp: true
-- name: 217.219.162.114:5678
-  port: 5678
-  server: 217.219.162.114
-  type: socks5
-  udp: true
-- name: 85.133.162.36:8080
-  port: 8080
-  server: 85.133.162.36
-  type: http
-  udp: true
-- name: 5.160.247.48:8443
-  port: 8443
-  server: 5.160.247.48
-  type: http
-  udp: true
-- name: 193.178.203.141:8080
-  port: 8080
-  server: 193.178.203.141
-  type: http
-  udp: true
-- name: 46.209.207.158:8080
-  port: 8080
-  server: 46.209.207.158
-  type: http
-  udp: true
-- name: 185.109.244.69:8080
-  port: 8080
-  server: 185.109.244.69
-  type: http
-  udp: true
-- name: 37.148.9.84:2080
-  port: 2080
-  server: 37.148.9.84
-  type: socks5
-  udp: true
 - name: 5.202.120.123:3129
   port: 3129
   server: 5.202.120.123
@@ -616,36 +466,90 @@ proxies:
   server: 185.100.45.93
   type: socks5
   udp: true
+- name: 185.232.155.243:1081
+  port: 1081
+  server: 185.232.155.243
+  type: socks5
+  udp: true
+- name: 178.252.134.190:3129
+  port: 3129
+  server: 178.252.134.190
+  type: http
+  udp: true
+- name: 188.136.208.253:8080
+  port: 8080
+  server: 188.136.208.253
+  type: http
+  udp: true
+- name: 46.209.207.146:8080
+  port: 8080
+  server: 46.209.207.146
+  type: http
+  udp: true
+- name: 46.209.207.147:8080
+  port: 8080
+  server: 46.209.207.147
+  type: http
+  udp: true
+- name: 193.178.203.141:8080
+  port: 8080
+  server: 193.178.203.141
+  type: socks5
+  udp: true
+- name: 109.230.83.178:5060
+  port: 5060
+  server: 109.230.83.178
+  type: socks5
+  udp: true
+- name: 178.252.171.226:8080
+  port: 8080
+  server: 178.252.171.226
+  type: socks5
+  udp: true
+- name: 77.104.76.230:9001
+  port: 9001
+  server: 77.104.76.230
+  type: http
+  udp: true
+- name: 46.209.207.148:8080
+  port: 8080
+  server: 46.209.207.148
+  type: http
+  udp: true
+- name: 5.200.72.61:3129
+  port: 3129
+  server: 5.200.72.61
+  type: http
+  udp: true
+- name: 193.178.203.141:8080
+  port: 8080
+  server: 193.178.203.141
+  type: http
+  udp: true
+- name: 46.28.74.98:3129
+  port: 3129
+  server: 46.28.74.98
+  type: http
+  udp: true
+- name: 93.118.109.220:8080 (7243ms)
+  port: 8080
+  server: 93.118.109.220
+  type: http
+  udp: true
+- name: 5.200.72.58:3129
+  port: 3129
+  server: 5.200.72.58
+  type: http
+  udp: true
+- name: 87.107.68.231:1081
+  port: 1081
+  server: 87.107.68.231
+  type: socks5
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
   proxies:
-  - 178.252.171.229:8080
-  - 185.214.39.2:9944
-  - 217.11.23.106:8080
-  - 85.133.250.27:80
-  - 5.202.191.225:8080
-  - 80.191.46.62:1090
-  - 81.90.144.170:9000
-  - 37.32.23.122:443
-  - 5.200.72.58:3129
-  - 80.191.40.131:5678
-  - 93.118.123.196:1081
-  - 87.107.68.231:1081
-  - 78.38.67.95:4153
-  - 62.60.210.173:1080
-  - 217.219.83.186:2222
-  - 2.189.59.2:443
-  - 185.212.195.34:8085 (1965ms)
-  - 195.181.40.34:8080
-  - 94.182.199.250:8080
-  - 217.219.162.114:5678
-  - 85.133.162.36:8080
-  - 5.160.247.48:8443
-  - 193.178.203.141:8080
-  - 46.209.207.158:8080
-  - 185.109.244.69:8080
-  - 37.148.9.84:2080
   - 5.202.120.123:3129
   - 5.202.197.66:9050
   - 109.72.198.3:8080
@@ -733,6 +637,22 @@ proxy-groups:
   - 2.179.95.57:8080
   - 46.245.123.30:1080
   - 185.100.45.93:8080
+  - 185.232.155.243:1081
+  - 178.252.134.190:3129
+  - 188.136.208.253:8080
+  - 46.209.207.146:8080
+  - 46.209.207.147:8080
+  - 193.178.203.141:8080
+  - 109.230.83.178:5060
+  - 178.252.171.226:8080
+  - 77.104.76.230:9001
+  - 46.209.207.148:8080
+  - 5.200.72.61:3129
+  - 193.178.203.141:8080
+  - 46.28.74.98:3129
+  - 93.118.109.220:8080 (7243ms)
+  - 5.200.72.58:3129
+  - 87.107.68.231:1081
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
