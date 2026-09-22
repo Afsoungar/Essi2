@@ -1048,15 +1048,48 @@ proxies:
   udp: true
   ping: 0
   source: https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt
+- name: 80.191.40.131:5678
+  type: http
+  server: 80.191.40.131
+  port: 5678
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 46.28.74.98:3128
+  type: socks5
+  server: 46.28.74.98
+  port: 3128
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 93.126.6.68:3128
+  type: socks5
+  server: 93.126.6.68
+  port: 3128
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
 metadata:
-  total_count: 92
+  total_count: 95
   active_count: 12
-  last_updated: '2026-09-22 05:19:08'
+  last_updated: '2026-09-22 13:15:14'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260922_044222.log
+  log_file: output/logs/proxy_update_20260922_123013.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
