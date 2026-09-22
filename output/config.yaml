@@ -878,15 +878,185 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 185.143.234.120:80 (114ms)
+  type: vmess
+  server: 185.143.234.120
+  port: 80
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 114
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: b831381d-6324-4d53-ad4f-8cda48b30811
+  cipher: auto
+  network: ws
+  tls: false
+  alterId: 4
+  ws-opts:
+    path: /graphql
+    headers:
+      Host: koochehpas.com
+- name: 185.143.233.114:80 (106ms)
+  type: vmess
+  server: 185.143.233.114
+  port: 80
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 106
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: cf7f2d7c-d4f8-469a-bfd5-97484bb98d2c
+  cipher: auto
+  network: ws
+  tls: false
+  alterId: 4
+  ws-opts:
+    path: /
+    headers:
+      Host: 185.143.233.114
+- name: 185.24.255.24:80
+  type: vmess
+  server: 185.24.255.24
+  port: 80
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: 80abb903-24e0-4dbd-9c2f-a57e9a267555
+  cipher: auto
+  network: ws
+  tls: false
+  alterId: 4
+  ws-opts:
+    path: /ws
+    headers:
+      Host: 185.24.255.24
+- name: 81.90.158.110:3129
+  type: http
+  server: 81.90.158.110
+  port: 3129
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 31.14.124.45:8080
+  type: http
+  server: 31.14.124.45
+  port: 8080
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 5.160.103.45:80
+  type: http
+  server: 5.160.103.45
+  port: 80
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 78.157.46.76:8090
+  type: http
+  server: 78.157.46.76
+  port: 8090
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 5.144.133.195:9050
+  type: http
+  server: 5.144.133.195
+  port: 9050
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 185.212.195.34:8085
+  type: socks5
+  server: 185.212.195.34
+  port: 8085
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 85.9.87.26:8080
+  type: socks5
+  server: 85.9.87.26
+  port: 8080
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 78.39.253.48:8080
+  type: socks5
+  server: 78.39.253.48
+  port: 8080
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 188.213.196.103:10808
+  type: socks5
+  server: 188.213.196.103
+  port: 10808
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt
+- name: 2.184.51.130:10800
+  type: socks5
+  server: 2.184.51.130
+  port: 10800
+  added_date: '2026-09-22'
+  last_checked: '2026-09-22'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt
 metadata:
-  total_count: 79
-  active_count: 10
-  last_updated: '2026-09-22 00:46:49'
+  total_count: 92
+  active_count: 12
+  last_updated: '2026-09-22 05:19:08'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20260921_235913.log
+  log_file: output/logs/proxy_update_20260922_044222.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
