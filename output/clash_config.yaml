@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 17
-  generated: '2026-09-27T06:02:36.139807'
+  active_proxies: 18
+  generated: '2026-09-27T14:10:04.695888'
   source: Iran Proxy Manager
-  total_proxies: 107
+  total_proxies: 119
 proxies:
 - name: 188.136.208.253:8080
   port: 8080
@@ -576,6 +576,66 @@ proxies:
   server: 81.90.144.170
   type: http
   udp: true
+- name: 5.202.243.218:8080 (698ms)
+  port: 8080
+  server: 5.202.243.218
+  type: http
+  udp: true
+- name: 217.11.23.106:8080
+  port: 8080
+  server: 217.11.23.106
+  type: http
+  udp: true
+- name: 193.178.203.141:8080
+  port: 8080
+  server: 193.178.203.141
+  type: http
+  udp: true
+- name: 46.209.15.187:8080
+  port: 8080
+  server: 46.209.15.187
+  type: http
+  udp: true
+- name: 78.39.253.48:8080
+  port: 8080
+  server: 78.39.253.48
+  type: http
+  udp: true
+- name: 217.219.162.114:5678
+  port: 5678
+  server: 217.219.162.114
+  type: socks5
+  udp: true
+- name: 94.182.177.92:80
+  port: 80
+  server: 94.182.177.92
+  type: socks5
+  udp: true
+- name: 80.191.243.212:1080
+  port: 1080
+  server: 80.191.243.212
+  type: socks5
+  udp: true
+- name: 89.46.219.130:8080
+  port: 8080
+  server: 89.46.219.130
+  type: socks5
+  udp: true
+- name: 87.107.109.254:2180
+  port: 2180
+  server: 87.107.109.254
+  type: socks5
+  udp: true
+- name: 213.207.198.254:8080
+  port: 8080
+  server: 213.207.198.254
+  type: socks5
+  udp: true
+- name: 85.133.169.45:8118
+  port: 8118
+  server: 85.133.169.45
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -687,6 +747,18 @@ proxy-groups:
   - 88.135.36.246:1080
   - 62.60.210.173:1080 (4798ms)
   - 81.90.144.170:9000
+  - 5.202.243.218:8080 (698ms)
+  - 217.11.23.106:8080
+  - 193.178.203.141:8080
+  - 46.209.15.187:8080
+  - 78.39.253.48:8080
+  - 217.219.162.114:5678
+  - 94.182.177.92:80
+  - 80.191.243.212:1080
+  - 89.46.219.130:8080
+  - 87.107.109.254:2180
+  - 213.207.198.254:8080
+  - 85.133.169.45:8118
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
