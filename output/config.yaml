@@ -982,15 +982,50 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 5.160.198.244:443
+  type: ss
+  server: 5.160.198.244
+  port: 443
+  added_date: '2026-10-03'
+  last_checked: '2026-10-03'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/ss.txt
+  cipher: chacha20-ietf-poly1305
+  password: 44xgqIHCG64I2kMxXzr4AexLc3TmyXX1oYY5C68s2ck=
+- name: 5.144.133.195:9050
+  type: http
+  server: 5.144.133.195
+  port: 9050
+  added_date: '2026-10-03'
+  last_checked: '2026-10-03'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 93.118.123.196:1081
+  type: socks5
+  server: 93.118.123.196
+  port: 1081
+  added_date: '2026-10-03'
+  last_checked: '2026-10-03'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all
 metadata:
-  total_count: 86
+  total_count: 89
   active_count: 11
-  last_updated: '2026-10-03 01:25:38'
+  last_updated: '2026-10-03 13:14:52'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20261003_001935.log
+  log_file: output/logs/proxy_update_20261003_122310.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
