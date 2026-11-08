@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 4
-  generated: '2026-11-08T01:32:49.273314'
+  active_proxies: 5
+  generated: '2026-11-08T15:51:03.339378'
   source: Iran Proxy Manager
-  total_proxies: 64
+  total_proxies: 72
 proxies:
 - name: 185.214.39.2:9944
   port: 9944
@@ -352,6 +352,55 @@ proxies:
   server: 94.183.6.226
   type: http
   udp: true
+- alterId: 4
+  cipher: auto
+  name: 185.143.234.120:80 (134ms)
+  network: ws
+  port: 80
+  server: 185.143.234.120
+  tls: false
+  type: vmess
+  udp: true
+  uuid: b831381d-6324-4d53-ad4f-8cda48b30811
+  ws-opts:
+    headers:
+      Host: koochehpas.com
+    path: /graphql
+- name: 81.12.28.35:3129
+  port: 3129
+  server: 81.12.28.35
+  type: http
+  udp: true
+- name: 31.14.124.45:8080
+  port: 8080
+  server: 31.14.124.45
+  type: http
+  udp: true
+- name: 178.252.171.226:8080
+  port: 8080
+  server: 178.252.171.226
+  type: http
+  udp: true
+- name: 85.133.162.37:8080
+  port: 8080
+  server: 85.133.162.37
+  type: http
+  udp: true
+- name: 89.46.219.130:8080
+  port: 8080
+  server: 89.46.219.130
+  type: socks5
+  udp: true
+- name: 80.210.50.126:9999
+  port: 9999
+  server: 80.210.50.126
+  type: socks5
+  udp: true
+- name: 178.252.134.190:3129
+  port: 3129
+  server: 178.252.134.190
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -420,6 +469,14 @@ proxy-groups:
   - 185.112.35.184:3129
   - 5.63.9.218:10818
   - 94.183.6.226:9090
+  - 185.143.234.120:80 (134ms)
+  - 81.12.28.35:3129
+  - 31.14.124.45:8080
+  - 178.252.171.226:8080
+  - 85.133.162.37:8080
+  - 89.46.219.130:8080
+  - 80.210.50.126:9999
+  - 178.252.134.190:3129
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy

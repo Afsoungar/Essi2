@@ -731,15 +731,112 @@ proxies:
   udp: true
   ping: 0
   source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
+- name: 185.143.234.120:80 (134ms)
+  type: vmess
+  server: 185.143.234.120
+  port: 80
+  added_date: '2026-11-08'
+  last_checked: '2026-11-08'
+  is_active: true
+  country: IR
+  udp: true
+  ping: 134
+  source: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/splitted/vmess.txt
+  uuid: b831381d-6324-4d53-ad4f-8cda48b30811
+  cipher: auto
+  network: ws
+  tls: false
+  alterId: 4
+  ws-opts:
+    path: /graphql
+    headers:
+      Host: koochehpas.com
+- name: 81.12.28.35:3129
+  type: http
+  server: 81.12.28.35
+  port: 3129
+  added_date: '2026-11-08'
+  last_checked: '2026-11-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 31.14.124.45:8080
+  type: http
+  server: 31.14.124.45
+  port: 8080
+  added_date: '2026-11-08'
+  last_checked: '2026-11-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 178.252.171.226:8080
+  type: http
+  server: 178.252.171.226
+  port: 8080
+  added_date: '2026-11-08'
+  last_checked: '2026-11-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=IR
+- name: 85.133.162.37:8080
+  type: http
+  server: 85.133.162.37
+  port: 8080
+  added_date: '2026-11-08'
+  last_checked: '2026-11-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=https&country=IR
+- name: 89.46.219.130:8080
+  type: socks5
+  server: 89.46.219.130
+  port: 8080
+  added_date: '2026-11-08'
+  last_checked: '2026-11-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt
+- name: 80.210.50.126:9999
+  type: socks5
+  server: 80.210.50.126
+  port: 9999
+  added_date: '2026-11-08'
+  last_checked: '2026-11-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt
+- name: 178.252.134.190:3129
+  type: http
+  server: 178.252.134.190
+  port: 3129
+  added_date: '2026-11-08'
+  last_checked: '2026-11-08'
+  is_active: false
+  country: IR
+  udp: true
+  ping: 0
+  source: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all
 metadata:
-  total_count: 64
-  active_count: 4
-  last_updated: '2026-11-08 01:32:49'
+  total_count: 72
+  active_count: 5
+  last_updated: '2026-11-08 15:51:03'
   retention_days: 3
   min_proxies: 50
   sources_used: 23
   log_retention_days: 14
-  log_file: output/logs/proxy_update_20261108_001843.log
+  log_file: output/logs/proxy_update_20261108_141101.log
   clash_compatible: true
   alterId_min: 4
   udp_enabled: true
