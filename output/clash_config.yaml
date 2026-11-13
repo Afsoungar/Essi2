@@ -1,8 +1,8 @@
 metadata:
   active_proxies: 10
-  generated: '2026-11-13T02:55:49.414494'
+  generated: '2026-11-13T18:16:09.609043'
   source: Iran Proxy Manager
-  total_proxies: 78
+  total_proxies: 92
 proxies:
 - name: 217.219.83.186:2222
   port: 2222
@@ -431,6 +431,76 @@ proxies:
   server: 81.90.144.170
   type: http
   udp: true
+- name: 78.109.206.198:80
+  port: 80
+  server: 78.109.206.198
+  type: http
+  udp: true
+- name: 78.38.67.95:4153
+  port: 4153
+  server: 78.38.67.95
+  type: http
+  udp: true
+- name: 46.209.207.158:8080
+  port: 8080
+  server: 46.209.207.158
+  type: http
+  udp: true
+- name: 93.118.120.60:8080
+  port: 8080
+  server: 93.118.120.60
+  type: socks5
+  udp: true
+- name: 46.209.207.149:8080
+  port: 8080
+  server: 46.209.207.149
+  type: socks5
+  udp: true
+- name: 46.38.138.184:1080
+  port: 1080
+  server: 46.38.138.184
+  type: socks5
+  udp: true
+- name: 195.146.33.226:10808
+  port: 10808
+  server: 195.146.33.226
+  type: socks5
+  udp: true
+- name: 81.29.249.82:5071
+  port: 5071
+  server: 81.29.249.82
+  type: socks5
+  udp: true
+- name: 195.158.230.124:10803
+  port: 10803
+  server: 195.158.230.124
+  type: socks5
+  udp: true
+- name: 188.213.196.103:10808
+  port: 10808
+  server: 188.213.196.103
+  type: socks5
+  udp: true
+- name: 2.184.51.130:10800
+  port: 10800
+  server: 2.184.51.130
+  type: socks5
+  udp: true
+- name: 195.181.40.34:8080
+  port: 8080
+  server: 195.181.40.34
+  type: http
+  udp: true
+- name: 185.109.244.69:8080
+  port: 8080
+  server: 185.109.244.69
+  type: http
+  udp: true
+- name: 178.252.171.229:8080
+  port: 8080
+  server: 178.252.171.229
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -513,6 +583,20 @@ proxy-groups:
   - 46.209.15.187:8080 (1971ms)
   - 80.191.46.62:1090
   - 81.90.144.170:9000
+  - 78.109.206.198:80
+  - 78.38.67.95:4153
+  - 46.209.207.158:8080
+  - 93.118.120.60:8080
+  - 46.209.207.149:8080
+  - 46.38.138.184:1080
+  - 195.146.33.226:10808
+  - 81.29.249.82:5071
+  - 195.158.230.124:10803
+  - 188.213.196.103:10808
+  - 2.184.51.130:10800
+  - 195.181.40.34:8080
+  - 185.109.244.69:8080
+  - 178.252.171.229:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
