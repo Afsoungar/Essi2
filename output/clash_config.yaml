@@ -1,8 +1,8 @@
 metadata:
-  active_proxies: 6
-  generated: '2026-11-15T02:06:09.320680'
+  active_proxies: 8
+  generated: '2026-11-15T15:45:26.650395'
   source: Iran Proxy Manager
-  total_proxies: 56
+  total_proxies: 74
 proxies:
 - name: 79.175.133.48:8080 (12468ms)
   port: 8080
@@ -284,6 +284,133 @@ proxies:
   server: 93.118.123.196
   type: socks5
   udp: true
+- alterId: 4
+  cipher: auto
+  name: 37.32.23.122:443
+  network: ws
+  port: 443
+  server: 37.32.23.122
+  sni: 37.32.23.122
+  tls: true
+  type: vmess
+  udp: true
+  uuid: d12bc882-43c7-415e-87c5-2a7fdc8371c0
+  ws-opts:
+    headers:
+      Host: 37.32.23.122
+    path: /websocket/
+- alterId: 4
+  cipher: auto
+  name: 185.143.234.120:80 (137ms)
+  network: ws
+  port: 80
+  server: 185.143.234.120
+  tls: false
+  type: vmess
+  udp: true
+  uuid: b831381d-6324-4d53-ad4f-8cda48b30811
+  ws-opts:
+    headers:
+      Host: koochehpas.com
+    path: /graphql
+- alterId: 4
+  cipher: auto
+  name: 185.143.233.114:80 (125ms)
+  network: ws
+  port: 80
+  server: 185.143.233.114
+  tls: false
+  type: vmess
+  udp: true
+  uuid: cf7f2d7c-d4f8-469a-bfd5-97484bb98d2c
+  ws-opts:
+    headers:
+      Host: 185.143.233.114
+    path: /
+- alterId: 4
+  cipher: auto
+  name: 185.24.255.24:80
+  network: ws
+  port: 80
+  server: 185.24.255.24
+  tls: false
+  type: vmess
+  udp: true
+  uuid: 80abb903-24e0-4dbd-9c2f-a57e9a267555
+  ws-opts:
+    headers:
+      Host: 185.24.255.24
+    path: /ws
+- name: 78.157.46.76:8090
+  port: 8090
+  server: 78.157.46.76
+  type: http
+  udp: true
+- name: 87.107.68.231:1081
+  port: 1081
+  server: 87.107.68.231
+  type: socks5
+  udp: true
+- name: 89.46.219.130:8080
+  port: 8080
+  server: 89.46.219.130
+  type: socks5
+  udp: true
+- name: 94.183.150.152:1080
+  port: 1080
+  server: 94.183.150.152
+  type: socks5
+  udp: true
+- name: 185.109.244.69:8080
+  port: 8080
+  server: 185.109.244.69
+  type: socks5
+  udp: true
+- name: 93.118.123.196:1080
+  port: 1080
+  server: 93.118.123.196
+  type: socks5
+  udp: true
+- name: 5.144.133.195:9050
+  port: 9050
+  server: 5.144.133.195
+  type: socks5
+  udp: true
+- name: 84.241.25.131:10808
+  port: 10808
+  server: 84.241.25.131
+  type: socks5
+  udp: true
+- name: 37.32.43.137:1080
+  port: 1080
+  server: 37.32.43.137
+  type: socks5
+  udp: true
+- name: 91.92.129.8:10808
+  port: 10808
+  server: 91.92.129.8
+  type: socks5
+  udp: true
+- name: 62.60.210.173:1080
+  port: 1080
+  server: 62.60.210.173
+  type: socks5
+  udp: true
+- name: 5.200.72.58:3129
+  port: 3129
+  server: 5.200.72.58
+  type: http
+  udp: true
+- name: 5.198.179.172:10810
+  port: 10810
+  server: 5.198.179.172
+  type: http
+  udp: true
+- name: 46.100.35.25:8080
+  port: 8080
+  server: 46.100.35.25
+  type: http
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -344,6 +471,24 @@ proxy-groups:
   - 93.118.120.60:8080
   - 89.46.219.131:80 (14548ms)
   - 93.118.123.196:1081
+  - 37.32.23.122:443
+  - 185.143.234.120:80 (137ms)
+  - 185.143.233.114:80 (125ms)
+  - 185.24.255.24:80
+  - 78.157.46.76:8090
+  - 87.107.68.231:1081
+  - 89.46.219.130:8080
+  - 94.183.150.152:1080
+  - 185.109.244.69:8080
+  - 93.118.123.196:1080
+  - 5.144.133.195:9050
+  - 84.241.25.131:10808
+  - 37.32.43.137:1080
+  - 91.92.129.8:10808
+  - 62.60.210.173:1080
+  - 5.200.72.58:3129
+  - 5.198.179.172:10810
+  - 46.100.35.25:8080
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
