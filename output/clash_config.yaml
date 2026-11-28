@@ -1,8 +1,8 @@
 metadata:
   active_proxies: 7
-  generated: '2026-11-28T04:26:17.217712'
+  generated: '2026-11-28T19:20:27.547915'
   source: Iran Proxy Manager
-  total_proxies: 66
+  total_proxies: 90
 proxies:
 - name: 78.109.206.198:80
   port: 80
@@ -371,6 +371,126 @@ proxies:
   server: 109.122.240.157
   type: http
   udp: true
+- name: 80.191.46.62:1090
+  port: 1090
+  server: 80.191.46.62
+  type: http
+  udp: true
+- name: 81.12.89.73:8080
+  port: 8080
+  server: 81.12.89.73
+  type: http
+  udp: true
+- name: 195.181.40.34:8080
+  port: 8080
+  server: 195.181.40.34
+  type: http
+  udp: true
+- name: 185.109.244.69:8080
+  port: 8080
+  server: 185.109.244.69
+  type: http
+  udp: true
+- name: 93.118.123.196:1081
+  port: 1081
+  server: 93.118.123.196
+  type: http
+  udp: true
+- name: 80.191.46.61:1099
+  port: 1099
+  server: 80.191.46.61
+  type: http
+  udp: true
+- name: 94.183.150.152:1081
+  port: 1081
+  server: 94.183.150.152
+  type: http
+  udp: true
+- name: 5.144.133.195:9050
+  port: 9050
+  server: 5.144.133.195
+  type: http
+  udp: true
+- name: 5.63.9.218:10818
+  port: 10818
+  server: 5.63.9.218
+  type: http
+  udp: true
+- name: 46.100.44.35:1086
+  port: 1086
+  server: 46.100.44.35
+  type: socks5
+  udp: true
+- name: 80.191.243.212:1080
+  port: 1080
+  server: 80.191.243.212
+  type: socks5
+  udp: true
+- name: 46.209.207.147:8080
+  port: 8080
+  server: 46.209.207.147
+  type: socks5
+  udp: true
+- name: 78.38.67.95:4153
+  port: 4153
+  server: 78.38.67.95
+  type: socks5
+  udp: true
+- name: 178.252.165.226:1080
+  port: 1080
+  server: 178.252.165.226
+  type: socks5
+  udp: true
+- name: 37.143.147.34:58256
+  port: 58256
+  server: 37.143.147.34
+  type: socks5
+  udp: true
+- name: 46.38.138.184:1080
+  port: 1080
+  server: 46.38.138.184
+  type: socks5
+  udp: true
+- name: 195.146.33.226:10808
+  port: 10808
+  server: 195.146.33.226
+  type: socks5
+  udp: true
+- name: 81.29.249.82:5071
+  port: 5071
+  server: 81.29.249.82
+  type: socks5
+  udp: true
+- name: 195.158.230.124:10803
+  port: 10803
+  server: 195.158.230.124
+  type: socks5
+  udp: true
+- name: 188.213.196.103:10808
+  port: 10808
+  server: 188.213.196.103
+  type: socks5
+  udp: true
+- name: 2.184.51.130:10800
+  port: 10800
+  server: 2.184.51.130
+  type: socks5
+  udp: true
+- name: 2.179.95.57:8080
+  port: 8080
+  server: 2.179.95.57
+  type: http
+  udp: true
+- name: 46.209.207.148:8080
+  port: 8080
+  server: 46.209.207.148
+  type: http
+  udp: true
+- name: 93.118.123.196:1081
+  port: 1081
+  server: 93.118.123.196
+  type: socks5
+  udp: true
 proxy-groups:
 - interval: 300
   name: 🚀 Auto Select
@@ -441,6 +561,30 @@ proxy-groups:
   - 2.188.210.83:4443
   - 185.140.232.21:1400
   - 109.122.240.157:8118
+  - 80.191.46.62:1090
+  - 81.12.89.73:8080
+  - 195.181.40.34:8080
+  - 185.109.244.69:8080
+  - 93.118.123.196:1081
+  - 80.191.46.61:1099
+  - 94.183.150.152:1081
+  - 5.144.133.195:9050
+  - 5.63.9.218:10818
+  - 46.100.44.35:1086
+  - 80.191.243.212:1080
+  - 46.209.207.147:8080
+  - 78.38.67.95:4153
+  - 178.252.165.226:1080
+  - 37.143.147.34:58256
+  - 46.38.138.184:1080
+  - 195.146.33.226:10808
+  - 81.29.249.82:5071
+  - 195.158.230.124:10803
+  - 188.213.196.103:10808
+  - 2.184.51.130:10800
+  - 2.179.95.57:8080
+  - 46.209.207.148:8080
+  - 93.118.123.196:1081
   type: url-test
   url: http://www.gstatic.com/generate_204
 - name: 🌍 Proxy
